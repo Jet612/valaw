@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+src/valaw/__pycache__/
 *.py[cod]
 *$py.class
 
