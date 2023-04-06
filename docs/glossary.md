@@ -6,8 +6,8 @@
 - [gameName](#gamename)
 - [tagLine](#tagline)
 - [Riot Id](#riot-id)
-## PUUID (Player Universally Unique Identifier)
-A PUUID or Player Universally Unique Identifier simply put is a players ID.
+## PUUID
+A PUUID stands for: Player Universally Unique Identifier, simply put it's a players ID.
 
 Each account has a unique ID. The PUUID that the Official Riot API uses is different from the puuid the unofficial PUUID is. The PUUID's used in the official API is a encrypted form of the actual users ID. More information about PUUID's can be found in the Riot Games article [here](https://www.riotgames.com/en/DevRel/player-universally-unique-identifiers-and-a-new-security-layer)
 ## Cluster(s)
