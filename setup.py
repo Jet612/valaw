@@ -10,7 +10,7 @@ setup(
     description="An asynchronous API wrapper for VALORANT's API",
     long_description=long_desc,
     long_description_content_type="text/markdown",
-    url="(https://github.com/Jet612/valaw",
+    url="https://github.com/Jet612/valaw",
     project_urls={
         "Documentation": "https://github.com/Jet612/valaw/tree/main/docs",
         "Issue Tracker": "https://github.com/Jet612/valaw/issues",
