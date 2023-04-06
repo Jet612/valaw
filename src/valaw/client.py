@@ -65,7 +65,7 @@ class Account:
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}", headers=headers) as resp:
                 return await verify_content(resp)
             
-    async def GET_getByRiotId(self, game_name: str, tag_line: str, cluster: str = None):
+    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None):
         """Get account by Riot ID."""
 
         if cluster != None:
@@ -82,7 +82,7 @@ class Account:
                 "Origin": "https://developer.riotgames.com",
                 "X-Riot-Token": self.token
             }
-            async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{game_name}/{tag_line}", headers=headers) as resp:
+            async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}", headers=headers) as resp:
                 return await verify_content(resp)
             
     async def GET_getByAccessToken(self, authorization: str, cluster: str = None):
