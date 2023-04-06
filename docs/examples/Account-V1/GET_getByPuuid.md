@@ -6,9 +6,9 @@ Get account by PUUID.
 async def GET_getByPuuid(self, puuid: str, cluster: str = None):
 ```
 # Arguments
-- [puuid](https://github.com/Jet612/valaw/docs/glossary.md#puuid): String
+- [puuid](https://github.com/Jet612/valaw/tree/main/docs/glossary.md#puuid): String
 ### Keyword Arguments
-- [cluster](https://github.com/Jet612/valaw/docs/glossary.md#clusters): String = None
+- [cluster](https://github.com/Jet612/valaw/tree/main/docs/glossary.md#clusters): String = None
 # Examples
 Basic example (Just required arguments)
 ```py
