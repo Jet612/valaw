@@ -4,7 +4,7 @@
     - [Importing the Package](#importing-the-package)
     - [Examples](#examples)
 - [Getting a Riot API Token](#getting-a-riot-api-token)
-- []
+- [Endpoints](#endpoints)
 
 # Getting Started
 - [Installing the Package](#installing-the-package)
@@ -116,5 +116,7 @@ https://developer.riotgames.com/apis#account-v1/GET_getActiveShard
 ```py
 await client.account.GET_getActiveShard("PUUID")
 ```
+
+[Back to top](#contents)
 
 
