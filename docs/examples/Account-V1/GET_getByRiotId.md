@@ -6,10 +6,10 @@ Get account by riot id.
 async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None):
 ```
 # Arguments
-- [gameName](https://github.com/Jet612/valaw/docs/glossary.md#gamename): String
-- [tagLine](https://github.com/Jet612/valaw/docs/glossary.md#tagline): String
+- [gameName](https://github.com/Jet612/valaw/tree/main/docs/glossary.md#gamename): String
+- [tagLine](https://github.com/Jet612/valaw/tree/main/docs/glossary.md#tagline): String
 ### Keyword Arguments
-- [cluster](https://github.com/Jet612/valaw/docs/glossary.md#clusters): String = None
+- [cluster](https://github.com/Jet612/valaw/tree/main/docs/glossary.md#clusters): String = None
 # Examples
 Basic example (Just required arguments)
 ```py

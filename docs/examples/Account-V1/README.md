@@ -6,5 +6,5 @@ URL: https://developer.riotgames.com/apis#account-v1
 class Account:
 ```
 ## Functions
-- [GET_getByPuuid](https://github.com/Jet612/valaw/docs/examples/Account-V1/GET_getByPuuid.md)
-- [GET_getByRiotId](https://github.com/Jet612/valaw/docs/examples/Account-V1/GET_getByRiotId.md)
+- [GET_getByPuuid](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByPuuid.md)
+- [GET_getByRiotId](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByRiotId.md)
