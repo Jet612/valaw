@@ -5,3 +5,9 @@
 
 # Documentation
 The documentation for this wrapper can be found [here](https://github.com/Jet612/valaw/tree/main/docs).
+
+# Quick Links
+- [Discord](https://discord.gg/mVXpvunBbF)
+- [PyPI](https://pypi.org/project/valaw/)
+- [GitHub](https://github.com/Jet612/valaw)
+- [Documentation](https://github.com/Jet612/valaw/tree/main/docs)
