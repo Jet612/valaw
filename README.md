@@ -11,3 +11,5 @@ The documentation for this wrapper can be found [here](https://github.com/Jet612
 - [PyPI](https://pypi.org/project/valaw/)
 - [GitHub](https://github.com/Jet612/valaw)
 - [Documentation](https://github.com/Jet612/valaw/tree/main/docs)
+
+This project is owned and maintained by Jet612#6164 other contributors can be found [here](https://github.com/Jet612/valaw/graphs/contributors)
