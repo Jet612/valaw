@@ -79,6 +79,8 @@ Click on the endpoint you want to view or visit the [Examples](https://github.co
 ## Account-V1
 - [GET_getByPuuid](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByPuuid.md)
 - [GET_getByRiotId](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByRiotId.md)
+- [GET_getByAccessToken](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByAccessToken.md)
+- [GET_getActiveShard](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getActiveShard.md)
 
 [Back to top](#contents)
 

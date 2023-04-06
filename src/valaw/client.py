@@ -45,7 +45,7 @@ class Account:
         self.token = token
         self.cluster = cluster
 
-    async def GET_getByPuuid(self, puuid: str, cluster: str = None):
+    async def GET_getByPuuid(self, puuid: str, cluster: str = None) -> dict:
         """Get account by PUUID."""
 
         if cluster != None:
@@ -65,7 +65,7 @@ class Account:
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}", headers=headers) as resp:
                 return await verify_content(resp)
             
-    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None):
+    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None) -> dict:
         """Get account by Riot ID."""
 
         if cluster != None:
@@ -85,7 +85,7 @@ class Account:
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}", headers=headers) as resp:
                 return await verify_content(resp)
             
-    async def GET_getByAccessToken(self, authorization: str, cluster: str = None):
+    async def GET_getByAccessToken(self, authorization: str, cluster: str = None) -> dict:
         """Get account by access token."""
 
         if cluster != None:
@@ -106,7 +106,7 @@ class Account:
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me", headers=headers) as resp:
                 return await verify_content(resp)
             
-    async def GET_getActiveShard(self, puuid: str, cluster: str = None):
+    async def GET_getActiveShard(self, puuid: str, cluster: str = None) -> dict:
         """Get active shard for a player."""
 
         if cluster != None:
