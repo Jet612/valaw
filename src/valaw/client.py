@@ -41,6 +41,8 @@ class Client:
 
         # Subclasses
         self.account = Account(token, cluster)
+        self.content = Content(token, cluster)
+        self.match = Match(token, cluster)
 
         # Beta/Development message
         print("valaw: This library is still in development, please report any bugs to https://github.com/Jet612/valaw/issues.")
