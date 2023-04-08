@@ -5,6 +5,8 @@ import json
 ### Variables ###
 regions = ["ap", "br", "esports", "eu", "kr", "latam", "na"]
 clusters = ["americas", "asia", "esports", "europe"]
+locales = ['ar-ae', 'de-de', 'en-gb', 'en-us', 'es-es', 'es-mx', 'fr-fr', 'id-id', 'it-it', 'ja-jp', 'ko-kr', 'pl-pl', 'pt-br', 'ru-ru', 'th-th', 'tr-tr', 'vi-vn', 'zh-cn', 'zh-tw']
+queues = ["competitive", "unrated", "spikerush", "tournamentmode", "deathmatch", "onefa", "ggteam"]
 
 ### Custom Exceptions ###
 class Exceptions:
@@ -127,4 +129,100 @@ class Account:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}", headers=headers) as resp:
+                return await verify_content(resp)
+
+class Content:
+    def __init__(self, token: str, cluster: str):
+        self.token = token
+        self.cluster = cluster
+
+    async def GET_getContent(self, region: str, locale: str = "") -> dict:
+        """Get content optionally filtered by locale. A locale is recommended to be used for faster response times."""
+
+        if region.lower() not in regions:
+            raise Exceptions.InvalidRegion(f"Invalid region, valid regions are: {regions}.")
+
+        if locale != None:
+            if locale.lower() not in locales:
+                raise Exceptions.InvalidLocale(f"Invalid locale, valid locales are: {locales}.")
+            locale = f"?locale={locale}"
+
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Origin": "https://developer.riotgames.com",
+                "X-Riot-Token": self.token
+            }
+            async with session.get(f"https://{region}.api.riotgames.com/val/content/v1/contents{locale}", headers=headers) as resp:
+                return await verify_content(resp)
+            
+class Match:
+    def __init__(self, token: str, cluster: str):
+        self.token = token
+        self.cluster = cluster
+
+    async def GET_getMatch(self, matchId: str, region: str):
+        """Get match by id."""
+
+        if region.lower() not in regions:
+            raise Exceptions.InvalidRegion(f"Invalid region, valid regions are: {regions}.")
+
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Origin": "https://developer.riotgames.com",
+                "X-Riot-Token": self.token
+            }
+            async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", headers=headers) as resp:
+                return await verify_content(resp)
+            
+    async def GET_getMatchlist(self, puuid: str, region: str):
+        """Get matchlist for games played by puuid."""
+
+        if region.lower() not in regions:
+            raise Exceptions.InvalidRegion(f"Invalid region, valid regions are: {regions}.")
+
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Origin": "https://developer.riotgames.com",
+                "X-Riot-Token": self.token
+            }
+            async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}", headers=headers) as resp:
+                return await verify_content(resp)
+            
+    async def GET_getRecent(self, queue: str, region: str):
+        """
+        Get recent matches.
+
+        Returns a list of match ids that have completed 
+        in the last 10 minutes for live regions and 12 hours 
+        for the esports routing value. NA/LATAM/BR share a 
+        match history deployment. As such, recent matches 
+        will return a combined list of matches from those 
+        three regions. Requests are load balanced so you may 
+        see some inconsistencies as matches are added/removed 
+        from the list.
+        """
+
+        if region.lower() not in regions:
+            raise Exceptions.InvalidRegion(f"Invalid region, valid regions are: {regions}.")
+        if queue.lower() not in queues:
+            raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {queues}.")
+
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Origin": "https://developer.riotgames.com",
+                "X-Riot-Token": self.token
+            }
+            async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}", headers=headers) as resp:
                 return await verify_content(resp)
