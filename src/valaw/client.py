@@ -163,7 +163,7 @@ class Match:
         self.token = token
         self.cluster = cluster
 
-    async def GET_getMatch(self, matchId: str, region: str):
+    async def GET_getMatch(self, matchId: str, region: str) -> dict:
         """Get match by id."""
 
         if region.lower() not in regions:
@@ -180,7 +180,7 @@ class Match:
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", headers=headers) as resp:
                 return await verify_content(resp)
             
-    async def GET_getMatchlist(self, puuid: str, region: str):
+    async def GET_getMatchlist(self, puuid: str, region: str) -> dict:
         """Get matchlist for games played by puuid."""
 
         if region.lower() not in regions:
@@ -197,7 +197,7 @@ class Match:
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}", headers=headers) as resp:
                 return await verify_content(resp)
             
-    async def GET_getRecent(self, queue: str, region: str):
+    async def GET_getRecent(self, queue: str, region: str) -> dict:
         """
         Get recent matches.
 
