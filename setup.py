@@ -5,7 +5,7 @@ with open("README.md", "r") as readme:
 
 setup(
     name="valaw",
-    version="0.0.2",
+    version="0.0.3",
     author="Jet612",
     description="An asynchronous API wrapper for VALORANT's API",
     long_description=long_desc,
