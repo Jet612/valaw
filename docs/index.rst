@@ -10,6 +10,8 @@ Welcome to valaw's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   pages/testing
+
 
 
 Indices and tables
