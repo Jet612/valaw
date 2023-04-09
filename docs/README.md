@@ -74,21 +74,21 @@ More information can be found in the [Riot Games Developer Documentation](https:
 # Endpoints
 These are the list of endpoints that are currently implemented in the package. If you see a missing endpoint, please open an [issue](https://github.com/Jet612/valaw/issues) or visit the [Riot Games Documentation](https://developer.riotgames.com/apis) for a full list of the available endpoints.
 
-Click on the endpoint you want to view or visit the [Examples](https://github.com/Jet612/valaw/tree/main/docs/examples) directory.
+Click on the endpoint you want to view or visit the [Examples](https://github.com/Jet612/valaw/tree/main/docs/endpoints) directory.
 
 ## Account-V1
-- [GET_getByPuuid](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByPuuid.md)
-- [GET_getByRiotId](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByRiotId.md)
-- [GET_getByAccessToken](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByAccessToken.md)
-- [GET_getActiveShard](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getActiveShard.md)
+- [GET_getByPuuid](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Account-V1/GET_getByPuuid.md)
+- [GET_getByRiotId](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Account-V1/GET_getByRiotId.md)
+- [GET_getByAccessToken](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Account-V1/GET_getByAccessToken.md)
+- [GET_getActiveShard](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Account-V1/GET_getActiveShard.md)
 
 ## Content-V1
-- [GET_getContent](https://github.com/Jet612/valaw/tree/main/docs/examples/Content-V1/GET_getContent.md)
+- [GET_getContent](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Content-V1/GET_getContent.md)
 
 ## Match-V1
-- [GET_getMatch](https://github.com/Jet612/valaw/tree/main/docs/examples/Match-V1/GET_getMatch.md)
-- [GET_getMatchlist](https://github.com/Jet612/valaw/tree/main/docs/examples/Match-V1/GET_getMatchlist.md)
-- [GET_getRecent](https://github.com/Jet612/valaw/tree/main/docs/examples/Match-V1/GET_getRecent.md)
+- [GET_getMatch](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Match-V1/GET_getMatch.md)
+- [GET_getMatchlist](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Match-V1/GET_getMatchlist.md)
+- [GET_getRecent](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Match-V1/GET_getRecent.md)
 
 [Back to top](#contents)
 

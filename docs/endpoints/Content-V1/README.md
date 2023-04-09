@@ -6,4 +6,4 @@ URL: https://developer.riotgames.com/apis#val-content-v1
 class Content:
 ```
 ## Functions
-- [GET_getContent](https://github.com/Jet612/valaw/tree/main/docs/examples/Content-V1/GET_getContent.md)
+- [GET_getContent](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Content-V1/GET_getContent.md)
