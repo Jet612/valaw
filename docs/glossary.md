@@ -20,6 +20,9 @@ A PUUID stands for: Player Universally Unique Identifier, simply put it's a play
 
 Each account has a unique ID. The PUUID that the Official Riot API uses is different from the puuid the unofficial PUUID is. The PUUID's used in the official API is a encrypted form of the actual users ID. More information about PUUID's can be found in the Riot Games article [here](https://www.riotgames.com/en/DevRel/player-universally-unique-identifiers-and-a-new-security-layer)
 
+## Queue(s)
+A queue is the type of match that is being played. Valid queues are: `competitive`, `unrated`, `spikerush`, `tournamentmode`, `deathmatch`, `onefa`, `ggteam`.
+
 ## Region(s)
 A region is a group of servers that are used to connect to the Riot Games API. Normally each continent has its own region. Valid regions are: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na`. You should always use the region that the account is connected to, even if you or the server you are using is in a different region and is closer to you.
 

@@ -82,6 +82,14 @@ Click on the endpoint you want to view or visit the [Examples](https://github.co
 - [GET_getByAccessToken](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getByAccessToken.md)
 - [GET_getActiveShard](https://github.com/Jet612/valaw/tree/main/docs/examples/Account-V1/GET_getActiveShard.md)
 
+## Content-V1
+- [GET_getContent](https://github.com/Jet612/valaw/tree/main/docs/examples/Content-V1/GET_getContent.md)
+
+## Match-V1
+- [GET_getMatch](https://github.com/Jet612/valaw/tree/main/docs/examples/Match-V1/GET_getMatch.md)
+- [GET_getMatchlist](https://github.com/Jet612/valaw/tree/main/docs/examples/Match-V1/GET_getMatchlist.md)
+- [GET_getRecent](https://github.com/Jet612/valaw/tree/main/docs/examples/Match-V1/GET_getRecent.md)
+
 [Back to top](#contents)
 
 
