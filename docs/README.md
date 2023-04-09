@@ -74,7 +74,7 @@ More information can be found in the [Riot Games Developer Documentation](https:
 # Endpoints
 These are the list of endpoints that are currently implemented in the package. If you see a missing endpoint, please open an [issue](https://github.com/Jet612/valaw/issues) or visit the [Riot Games Documentation](https://developer.riotgames.com/apis) for a full list of the available endpoints.
 
-Click on the endpoint you want to view or visit the [Examples](https://github.com/Jet612/valaw/tree/main/docs/endpoints) directory.
+Click on an endpoint below or visit the [endpoints](https://github.com/Jet612/valaw/tree/main/docs/endpoints) directory.
 
 ## Account-V1
 - [GET_getByPuuid](https://github.com/Jet612/valaw/tree/main/docs/endpoints/Account-V1/GET_getByPuuid.md)
