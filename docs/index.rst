@@ -28,7 +28,7 @@ Quick Links
    pages/glossary
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Endpoints
    :glob:
 

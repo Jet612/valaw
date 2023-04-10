@@ -21,7 +21,7 @@ For example, if you want to get the content you can do::
     async def func():
         content_data = await client.content.GET_getContent("region")
 
-For other endpoints and examples see 
+For other endpoints and examples see :ref:`endpoints`
 
 
 
