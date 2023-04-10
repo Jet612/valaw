@@ -23,5 +23,14 @@ For example, if you want to get the content you can do::
 
 For other endpoints and examples see :ref:`endpoints`
 
+All of that put together looks like::
+
+    import valaw
+
+    client = valaw.Client("Riot_API_Token", "cluster")
+
+    async def func():
+        content_data = await client.content.GET_getContent("region")
+
 
 
