@@ -14,6 +14,23 @@ Quick Links
 
 
 .. toctree::
+   :maxdepth: 1
    :caption: Getting Started
 
    pages/gettingStarted/installation
+   pages/gettingStarted/tutorial
+   pages/gettingStarted/apiToken
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Glossary
+
+   pages/glossary
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Endpoints
+   :glob:
+
+   pages/endpoints/endpoints
+   pages/endpoints/Account-V1/*
