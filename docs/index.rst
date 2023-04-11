@@ -12,6 +12,8 @@ Quick Links
 - `GitHub <https://github.com/Jet612/valaw>`_
 - `Documentation <https://github.com/Jet612/valaw/tree/main/docs>`_
 
+Table of Contents
+=================
 
 .. toctree::
    :maxdepth: 1
@@ -23,14 +25,14 @@ Quick Links
 
 .. toctree::
    :maxdepth: 1
-   :caption: Glossary
-
-   pages/glossary
-
-.. toctree::
-   :maxdepth: 1
    :caption: Endpoints
    :glob:
 
    pages/endpoints/endpoints
    pages/endpoints/Account-V1/*
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Glossary
+
+   pages/glossary

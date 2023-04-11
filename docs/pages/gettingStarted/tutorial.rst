@@ -13,7 +13,7 @@ Then, you can initialize the client::
 
 Before you can use the client, you will need a Riot Games API token. 
 If you don't already have one you can follow :ref:`gettingStarted-apiToken` to get one.
-The :ref:`glossary-cluster` should be the :ref:`glossary-cluster` that is closest to you.
+The :term:`cluster` should be the :term:`cluster` that is closest to you.
 
 After you have initialized the client, you can use it to make requests to the API.
 For example, if you want to get the content you can do::
