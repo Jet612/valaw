@@ -10,7 +10,6 @@ Quick Links
 - `Discord <https://discord.gg/mVXpvunBbF>`_
 - `PyPI <https://pypi.org/project/valaw/>`_
 - `GitHub <https://github.com/Jet612/valaw>`_
-- `Documentation <https://github.com/Jet612/valaw/tree/main/docs>`_
 
 Table of Contents
 =================
