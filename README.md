@@ -1,15 +1,15 @@
 # valaw
  An asynchronous API wrapper for VALORANT's API.
  
- This project is still in beta and most features are not yet implimented, read the [docs](https://github.com/Jet612/valaw/tree/main/docs) to see what is currently implimented.
+ This project is still in beta and most features are not yet implimented, read the [docs](https://valaw.readthedocs.io/) to see what is currently implimented.
 
 # Documentation
-The documentation for this wrapper can be found [here](https://github.com/Jet612/valaw/tree/main/docs).
+The documentation for this wrapper can be found [here](https://valaw.readthedocs.io/).
 
 # Quick Links
 - [Discord](https://discord.gg/mVXpvunBbF)
 - [PyPI](https://pypi.org/project/valaw/)
 - [GitHub](https://github.com/Jet612/valaw)
-- [Documentation](https://github.com/Jet612/valaw/tree/main/docs)
+- [Documentation](https://valaw.readthedocs.io/)
 
 This project is owned and maintained by Jet612#6164, other contributors can be found [here](https://github.com/Jet612/valaw/graphs/contributors)

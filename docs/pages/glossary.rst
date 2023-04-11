@@ -1,6 +1,6 @@
-========
-Glossary
-========
+=====
+Terms
+=====
 
 .. glossary::
     Cluster
@@ -30,5 +30,4 @@ Glossary
     tagLine
         The tagLine is the tag of the account. The tag is the name displayed to the right of the # (hashtag) in their :term:`Riot Id`.
 
-Back to :ref:`top of page<Glossary>`
-
+Back to :ref:`top of page<Terms>`
