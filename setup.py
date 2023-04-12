@@ -12,7 +12,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Jet612/valaw",
     project_urls={
-        "Documentation": "https://github.com/Jet612/valaw/tree/main/docs",
+        "Documentation": "https://valaw.readthedocs.io",
         "Issue Tracker": "https://github.com/Jet612/valaw/issues",
         "Chat/Support": "https://discord.gg/mVXpvunBbF",
     },
@@ -21,6 +21,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers"
     ],
     package_dir={"": "src"},
     packages=find_namespace_packages(where="src"),
