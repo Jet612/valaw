@@ -35,3 +35,9 @@ Table of Contents
    :caption: Glossary
 
    pages/glossary
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Miscellaneous
+
+   pages/miscellaneous/assets
