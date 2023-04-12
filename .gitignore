@@ -8,6 +8,7 @@ src/valaw/__pycache__/
 *.so
 
 # vscode
+.vscode/
 .vscode
 
 # Distribution / packaging
