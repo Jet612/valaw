@@ -17,10 +17,14 @@ Installing the latest version
     .. group-tab:: from GitHub
         .. prompt:: bash
 
-            pip install git+https://github.com/Jet612/valaw
+            pip install git+https://github.com/Jet612/valaw/releases/latest
 
 Installing a specific version
 =============================
+
+.. note::
+    Some versions on GitHub may have a tag on the end of the version number, for example, 1.2.3-beta.
+    For a list of all the versions on GitHub, see `releases <https://github.com/Jet612/valaw/releases>`_.
 
 .. tabs::
     .. group-tab:: from PyPI
@@ -32,9 +36,6 @@ Installing a specific version
         .. prompt:: bash
 
             pip install git+https://github.com/Jet612/valaw/tree/1.2.3
-
-Some version on GitHub may have a tag on the end of the version number, for example, 1.2.3-beta.
-For a list of all the versions on GitHub, see `releases <https://github.com/Jet612/valaw/releases>`_.
 
 Importing the library
 =====================
