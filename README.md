@@ -1,4 +1,4 @@
-![valaw logo](assets/logo_border_wide.png)
+![valaw logo](assets/logo_border_wide_720.png)
 
 valaw is an asynchronous API wrapper for VALORANT's API.
  
