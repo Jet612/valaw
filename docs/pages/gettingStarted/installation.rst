@@ -9,12 +9,12 @@ Installing the latest version
 
 .. tabs::
 
-    .. tab:: from PyPI
+    .. group-tab:: from PyPI
         .. prompt:: bash
 
             pip install valaw
 
-    .. tab:: from GitHub
+    .. group-tab:: from GitHub
         .. prompt:: bash
 
             pip install git+https://github.com/Jet612/valaw
@@ -22,13 +22,16 @@ Installing the latest version
 Installing a specific version
 =============================
 
-Installing from PyPI::
+.. tabs::
+    .. group-tab:: from PyPI
+        .. prompt:: bash
 
-    pip install valaw==1.2.3
+            pip install valaw==1.2.3
 
-Installing from GitHub::
+    .. group-tab:: from GitHub
+        .. prompt:: bash
 
-    pip install git+https://github.com/Jet612/valaw/tree/1.2.3
+            pip install git+https://github.com/Jet612/valaw/tree/1.2.3
 
 Some version on GitHub may have a tag on the end of the version number, for example, 1.2.3-beta.
 For a list of all the versions on GitHub, see `releases <https://github.com/Jet612/valaw/releases>`_.
