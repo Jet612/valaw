@@ -9,15 +9,15 @@ Installing the latest version
 
 .. tabs::
 
-    .. tab:: PyPI
+    .. tab:: from PyPI
+        .. prompt:: bash
 
             pip install valaw
 
-    .. tab:: GitHub
+    .. tab:: from GitHub
+        .. prompt:: bash
 
-        pip install git+https://github.com/Jet612/valaw
-
-    .. code-tab:: 
+            pip install git+https://github.com/Jet612/valaw
 
 Installing a specific version
 =============================
