@@ -26,12 +26,12 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ['_static']
-html_logo = 'assets/logo_web_docs.png'
 html_favicon = 'assets/logo_border_64.png'
+html_logo = 'assets/banner2.png'
 html_theme_options = {
     'analytics_id': 'G-ZM9GVL505C',  #  Provided by Google in your dashboard
     'analytics_anonymize_ip': False,
-    'logo_only': False,
+    'logo_only': True,
     'display_version': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
