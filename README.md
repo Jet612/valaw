@@ -1,7 +1,8 @@
-# valaw
- An asynchronous API wrapper for VALORANT's API.
+![valaw logo](assets/logo_border_wide.png)
+
+valaw is an asynchronous API wrapper for VALORANT's API.
  
- This project is still in beta and most features are not yet implimented, read the [docs](https://valaw.readthedocs.io/) to see what is currently implimented.
+This project is still in beta and most features are not yet implimented, read the [docs](https://valaw.readthedocs.io/) to see what is currently implimented.
 
 # Documentation
 The documentation for this wrapper can be found [here](https://valaw.readthedocs.io/).
