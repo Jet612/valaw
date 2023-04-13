@@ -1,5 +1,3 @@
-.. _gettingStarted-installation:
-
 ============
 Installation
 ============

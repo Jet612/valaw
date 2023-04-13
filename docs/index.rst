@@ -23,12 +23,11 @@ Table of Contents
    pages/gettingStarted/apiToken
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Endpoints
    :glob:
 
    pages/endpoints/endpoints
-   pages/endpoints/Account-V1/*
 
 .. toctree::
    :maxdepth: 1
