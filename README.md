@@ -1,9 +1,7 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/Jet612/valaw/main/assets/logo_border_wide.png"  width="40%" height="40%">
-</p>
+<img src="https://raw.githubusercontent.com/Jet612/valaw/main/assets/banner.png">
 
 valaw is an asynchronous API wrapper for VALORANT's API.
- 
+
 This project is still in beta and most features are not yet implimented, read the [docs](https://valaw.readthedocs.io/) to see what is currently implimented.
 
 # Documentation
