@@ -7,13 +7,17 @@ Installation
 Installing the latest version
 =============================
 
-Installing from PyPI::
+.. tabs::
 
-    pip install valaw
+    .. tab:: PyPI
 
-Installing from GitHub::
+            pip install valaw
 
-    pip install git+https://github.com/Jet612/valaw
+    .. tab:: GitHub
+
+        pip install git+https://github.com/Jet612/valaw
+
+    .. code-tab:: 
 
 Installing a specific version
 =============================
