@@ -11,6 +11,9 @@ Terms
     gameName
         The gameName is the username of the account. The username is the name displayed to the left of the # (hashtag) in their :term:`Riot Id`.
 
+    locale
+        The locale is the language that the data will be returned in. Valid locales are: `ar-ae`, `de-de`, `en-gb`, `en-us`, `es-es`, `es-mx`, `fr-fr`, `id-id`, `it-it`, `ja-jp`, `ko-kr`, `pl-pl`, `pt-br`, `ru-ru`, `th-th`, `tr-tr`, `vi-vn`, `zh-cn`, `zh-tw`
+
     PUUID
         A PUUID stands for: Player Universally Unique Identifier, simply put it's a players ID.
 
@@ -25,7 +28,7 @@ Terms
         If you use a region that is not associated with the account you will get a 404: "Data not found - resource not found" error.
 
     Riot Id
-        The Riot Id is the username (:term:`gameName`) and tag (:term:tagLine) of the account. The Riot Id is displayed as `gameName#tagLine` with the username and tag separated by a # (hashtag).
+        The Riot Id is the username (:term:`gameName`) and tag (:term:`tagLine`) of the account. The Riot Id is displayed as `gameName#tagLine` with the username and tag separated by a # (hashtag).
 
     tagLine
         The tagLine is the tag of the account. The tag is the name displayed to the right of the # (hashtag) in their :term:`Riot Id`.
