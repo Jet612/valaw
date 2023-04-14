@@ -22,7 +22,7 @@ Arguments
 * :term:`region`: String
 
 Keyword Arguments
-----------------
+-----------------
 
 * :term:`locale`: String = "" (None)
 
@@ -30,7 +30,7 @@ Examples
 ========
 
 Basic example (Just required arguments)
---------------------------------------
+---------------------------------------
 
 .. note::
     
