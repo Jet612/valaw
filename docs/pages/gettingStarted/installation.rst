@@ -41,8 +41,11 @@ To import the library, use the following code::
 
     import valaw
 
-If you want to import the library as a different name, use the following code::
+If you want to import the library as a different name, use::
 
     import valaw as v
+
+.. note:: 
+    You don't have to use 'v', you can use any letter or word you want
 
 Back to :ref:`top of page<Installation>`
