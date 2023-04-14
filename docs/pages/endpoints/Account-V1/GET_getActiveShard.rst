@@ -11,6 +11,7 @@ Description
 ===========
 
 Get active shard for a player.
+
 .. code-block:: python
 
     async def GET_getActiveShard(self, puuid: str, cluster: str = None) -> dict:
