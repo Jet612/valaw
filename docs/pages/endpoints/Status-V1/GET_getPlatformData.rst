@@ -1,25 +1,24 @@
 ============
-GET_getMatch
+GET_getPlatformData
 ============
 
-* `Riot Documentation <https://developer.riotgames.com/apis#val-match-v1/GET_getMatch>`_
+* `Riot Documentation <https://developer.riotgames.com/apis#val-status-v1/GET_getPlatformData>`_
 * API URL::
 
-    https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}
+    https://{region}.api.riotgames.com/val/status/v1/platform-data
 
 Description
 ===========
 
-Get match by id.
+Get VALORANT status for the given platform.
 
 .. code-block:: python
 
-    async def GET_getMatch(self, matchId: str, region: str) -> dict:
+    async def GET_getPlatformData(self, region: str) -> dict:
 
 Arguments
 ---------
 
-* matchId: String
 * :term:`region`: String
 
 Examples
@@ -35,4 +34,4 @@ Basic example (Just required arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        match_data = await client.GET_getMatch("matchId", "region")
+        status_data = await client.GET_getPlatformData("region")

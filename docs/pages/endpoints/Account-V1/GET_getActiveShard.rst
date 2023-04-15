@@ -39,7 +39,7 @@ Basic example (Just required arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        account_data = await client.account.GET_getActiveShard("PUUID")
+        account_data = await client.GET_getActiveShard("PUUID")
 
 Advanced example (With Keyword Arguments)
 -----------------------------------------
@@ -52,4 +52,4 @@ Advanced example (With Keyword Arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        account_data = await client.account.GET_getActiveShard("puuid", cluster="cluster")
+        account_data = await client.GET_getActiveShard("puuid", cluster="cluster")

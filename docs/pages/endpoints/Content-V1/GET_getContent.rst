@@ -55,4 +55,4 @@ Advanced example (With Keyword Arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        content_data = await client.content.GET_getContent("region", locale="locale")
+        content_data = await client.GET_getContent("region", locale="locale")

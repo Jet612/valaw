@@ -40,7 +40,7 @@ Basic example (Just required arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        account_data = await client.account.GET_getByRiotId("gameName", "tagLine")
+        account_data = await client.GET_getByRiotId("gameName", "tagLine")
 
 Advanced example (With Keyword Arguments)
 -----------------------------------------
@@ -52,4 +52,4 @@ Advanced example (With Keyword Arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        account_data = await client.account.GET_getByRiotId("gameName", "tagLine", cluster="cluster")
+        account_data = await client.GET_getByRiotId("gameName", "tagLine", cluster="cluster")

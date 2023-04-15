@@ -39,18 +39,19 @@ class Client:
         self.token = token
         self.cluster = cluster
 
-        # Subclasses
-        self.account = Account(token, cluster)
-        self.content = Content(token, cluster)
-        self.match = Match(token, cluster)
-
         # Beta/Development message
         print("valaw: This library is still in development, please report any bugs to https://github.com/Jet612/valaw/issues.")
 
-class Account:
-    def __init__(self, token: str, cluster: str):
-        self.token = token
+    def change_cluster(self, cluster: str):
+        """Change the cluster."""
+
+        if cluster.lower() not in clusters:
+            raise Exceptions.InvalidCluster(f"Invalid cluster, valid clusters are: {clusters}.")
         self.cluster = cluster
+
+    ##################
+    ### ACCOUNT-V1 ###
+    ##################
 
     async def GET_getByPuuid(self, puuid: str, cluster: str = None) -> dict:
         """Get account by PUUID."""
@@ -133,10 +134,9 @@ class Account:
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}", headers=headers) as resp:
                 return await verify_content(resp)
 
-class Content:
-    def __init__(self, token: str, cluster: str):
-        self.token = token
-        self.cluster = cluster
+    ######################
+    ### VAL-CONTENT-V1 ###
+    ######################
 
     async def GET_getContent(self, region: str, locale: str = "") -> dict:
         """Get content optionally filtered by locale. A locale is recommended to be used for faster response times."""
@@ -159,11 +159,10 @@ class Content:
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/content/v1/contents{locale}", headers=headers) as resp:
                 return await verify_content(resp)
-            
-class Match:
-    def __init__(self, token: str, cluster: str):
-        self.token = token
-        self.cluster = cluster
+
+    ####################
+    ### VAL-MATCH-V1 ###
+    #################### 
 
     async def GET_getMatch(self, matchId: str, region: str) -> dict:
         """Get match by id."""
@@ -227,4 +226,49 @@ class Match:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}", headers=headers) as resp:
+                return await verify_content(resp)
+    
+    #####################
+    ### VAL-RANKED-V1 ###
+    #####################
+
+    async def GET_getLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> dict:
+        """Get leaderboard for the competitive queue"""
+
+        if region.lower() not in regions:
+            raise Exceptions.InvalidRegion(f"Invalid region, valid regions are: {regions}.")
+        
+        if size > 200 or size < 1:
+            raise ValueError(f"Invalid size, valid values: 1 to 200.")
+        
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Origin": "https://developer.riotgames.com",
+                "X-Riot-Token": self.token
+            }
+            async with session.get(f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}", headers=headers) as resp:
+                return await verify_content(resp)
+
+    #####################
+    ### VAL-STATUS-V1 ###
+    #####################
+
+    async def GET_getPlatformData(self, region: str) -> dict:
+        """Get VALORANT status for the given platform."""
+
+        if region.lower() not in regions:
+            raise Exceptions.InvalidRegion(f"Invalid region, valid regions are: {regions}.")
+
+        async with aiohttp.ClientSession() as session:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                "Origin": "https://developer.riotgames.com",
+                "X-Riot-Token": self.token
+            }
+            async with session.get(f"https://{region}.api.riotgames.com/val/status/v1/platform-data", headers=headers) as resp:
                 return await verify_content(resp)

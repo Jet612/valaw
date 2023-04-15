@@ -19,7 +19,7 @@ After you have initialized the client, you can use it to make requests to the AP
 For example, if you want to get the content you can do::
 
     async def func():
-        content_data = await client.content.GET_getContent("region")
+        content_data = await client.GET_getContent("region")
 
 For other endpoints and examples see :ref:`List of Endpoints`
 
@@ -30,7 +30,7 @@ All of that put together looks like::
     client = valaw.Client("Riot_API_Token", "cluster")
 
     async def func():
-        content_data = await client.content.GET_getContent("region")
+        content_data = await client.GET_getContent("region")
 
 
 
