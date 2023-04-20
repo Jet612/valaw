@@ -2,7 +2,6 @@
 
 valaw is an asynchronous API wrapper for Riot Games' `VALORANT API <https://developer.riotgames.com/>`_.
 
-This project is still in beta and most features are not yet implimented.
 
 Quick Links
 ===========
