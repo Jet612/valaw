@@ -72,7 +72,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
             
     async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None) -> dict:
         """Get account by Riot ID."""
@@ -92,7 +92,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
             
     async def GET_getByAccessToken(self, authorization: str, cluster: str = None) -> dict:
         """Get account by access token."""
@@ -113,7 +113,7 @@ class Client:
                 "Authorization": authorization
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
             
     async def GET_getActiveShard(self, puuid: str, cluster: str = None) -> dict:
         """Get active shard for a player."""
@@ -133,7 +133,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
 
     ######################
     ### VAL-CONTENT-V1 ###
@@ -159,7 +159,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/content/v1/contents{locale}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
 
     ####################
     ### VAL-MATCH-V1 ###
@@ -180,7 +180,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
             
     async def GET_getMatchlist(self, puuid: str, region: str) -> dict:
         """Get matchlist for games played by puuid."""
@@ -197,7 +197,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
             
     async def GET_getRecent(self, queue: str, region: str) -> dict:
         """
@@ -227,7 +227,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
     
     #####################
     ### VAL-RANKED-V1 ###
@@ -251,7 +251,7 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
 
     #####################
     ### VAL-STATUS-V1 ###
@@ -272,4 +272,4 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/status/v1/platform-data", headers=headers) as resp:
-                return await verify_content(resp)
+                return await verify_content(response=resp)
