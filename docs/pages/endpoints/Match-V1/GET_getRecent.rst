@@ -44,4 +44,4 @@ Basic example (Just required arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        recent_data = await client.match.GET_getRecent("queue", "region")
+        recent_data = await client.GET_getRecent("queue", "region")

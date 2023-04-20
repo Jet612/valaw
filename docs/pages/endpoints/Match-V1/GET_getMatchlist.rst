@@ -35,4 +35,4 @@ Basic example (Just required arguments)
     client = valaw.Client("riot_api_token", "cluster")
 
     async def func():
-        matchlist_data = await client.match.GET_getMatchlist("puuid", "region")
+        matchlist_data = await client.GET_getMatchlist("puuid", "region")
