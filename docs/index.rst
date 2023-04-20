@@ -1,3 +1,7 @@
+====
+Home
+====
+
 .. image:: assets/banner.png
 
 valaw is an asynchronous API wrapper for Riot Games' `VALORANT API <https://developer.riotgames.com/>`_.
