@@ -26,6 +26,7 @@ async def verify_content(response):
         return await response.json()
     elif content_type == "text/plain; charset=utf-8" or content_type == "text/plain":
         return json.loads(await response.text())
+    return response
 
 ### Client ###
 class Client:
