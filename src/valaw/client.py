@@ -16,7 +16,7 @@ class Exceptions:
         """Invalid Region."""
 
 ### Content Verify ###
-async def verify_content(response):
+async def verify_content(response: aiohttp.ClientResponse):
     """
     Helper function to verify response content-type & deal
     with the response appropriately 
