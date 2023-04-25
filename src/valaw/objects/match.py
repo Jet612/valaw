@@ -5,7 +5,7 @@ from typing import List, Optional
 class MatchlistEntryDto:
     matchId: str
     gameStartTimeMillis: int
-    teamId: str
+    queueId: str
 
 @dataclass
 class MatchlistDto:
