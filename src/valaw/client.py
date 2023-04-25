@@ -32,7 +32,6 @@ async def verify_content(response: aiohttp.ClientResponse):
     with the response appropriately 
     """
     content_type = response.headers.get("Content-Type")
-    print(content_type)
     if content_type == "application/json; charset=utf-8" or content_type == "application/json" or content_type == "application/json;charset=utf-8":
         return await response.json()
     elif content_type == "text/plain; charset=utf-8" or content_type == "text/plain" or content_type == "text/plain; charset=utf-8":
