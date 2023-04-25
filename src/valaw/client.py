@@ -60,6 +60,11 @@ class Client:
             raise Exceptions.InvalidCluster(f"Invalid cluster, valid clusters are: {clusters}.")
         self.cluster = cluster
 
+    def change_raw_data(self, raw_data: bool):
+        """Change the raw_data."""
+
+        self.raw_data = raw_data
+
     ##################
     ### ACCOUNT-V1 ###
     ##################
