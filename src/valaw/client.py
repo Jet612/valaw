@@ -88,6 +88,8 @@ class Client:
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -112,6 +114,8 @@ class Client:
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -137,6 +141,8 @@ class Client:
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -161,6 +167,8 @@ class Client:
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -191,6 +199,8 @@ class Client:
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/content/v1/contents{locale}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -216,6 +226,8 @@ class Client:
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -237,6 +249,8 @@ class Client:
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -271,6 +285,8 @@ class Client:
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -299,6 +315,8 @@ class Client:
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
@@ -324,6 +342,8 @@ class Client:
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/status/v1/platform-data", headers=headers) as resp:
                 raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
                 if raw_response.get("status") != None:
                     return fromdict(ErrorDto, raw_response)
                 else:
