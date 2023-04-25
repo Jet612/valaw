@@ -26,16 +26,16 @@ class LocalizedNamesDto:
 @dataclass
 class ActDto:
     name: str
-    localizedNames: Optional[LocalizedNamesDto] = None
     id: str
     isActive: bool
+    localizedNames: Optional[LocalizedNamesDto] = None
 
 @dataclass
 class ContentItemDto:
     name: str
-    localizedNames: Optional[LocalizedNamesDto] = None
     id: str
     assetName: str
+    localizedNames: Optional[LocalizedNamesDto] = None
     assetPath: Optional[str] = None
 
 @dataclass
