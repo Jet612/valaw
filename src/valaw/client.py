@@ -2,7 +2,7 @@
 import aiohttp
 import json
 from dataclass_wizard import fromdict
-from typing import Union
+from typing import Union, Dict
 
 from .objects.account import AccountDto, ActiveShardDto
 from .objects.match import MatchDto, MatchlistDto, RecentMatchesDto
@@ -69,7 +69,7 @@ class Client:
     ### ACCOUNT-V1 ###
     ##################
 
-    async def GET_getByPuuid(self, puuid: str, cluster: str = None) -> Union[AccountDto, ErrorDto]:
+    async def GET_getByPuuid(self, puuid: str, cluster: str = None) -> Union[AccountDto, ErrorDto, Dict]:
         """Get account by PUUID."""
 
         if cluster != None:
@@ -93,7 +93,7 @@ class Client:
                 else:
                     return fromdict(AccountDto, raw_response)
             
-    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None) -> Union[AccountDto, ErrorDto]:
+    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None) -> Union[AccountDto, ErrorDto, Dict]:
         """Get account by Riot ID."""
 
         if cluster != None:
@@ -117,7 +117,7 @@ class Client:
                 else:
                     return fromdict(AccountDto, raw_response)
             
-    async def GET_getByAccessToken(self, authorization: str, cluster: str = None) -> Union[AccountDto, ErrorDto]:
+    async def GET_getByAccessToken(self, authorization: str, cluster: str = None) -> Union[AccountDto, ErrorDto, Dict]:
         """Get account by access token."""
 
         if cluster != None:
@@ -142,7 +142,7 @@ class Client:
                 else:
                     return fromdict(AccountDto, raw_response)
             
-    async def GET_getActiveShard(self, puuid: str, cluster: str = None) -> Union[ActiveShardDto, ErrorDto]:
+    async def GET_getActiveShard(self, puuid: str, cluster: str = None) -> Union[ActiveShardDto, ErrorDto, Dict]:
         """Get active shard for a player."""
 
         if cluster != None:
@@ -170,7 +170,7 @@ class Client:
     ### VAL-CONTENT-V1 ###
     ######################
 
-    async def GET_getContent(self, region: str, locale: str = "") -> Union[ContentDto, ErrorDto]:
+    async def GET_getContent(self, region: str, locale: str = "") -> Union[ContentDto, ErrorDto, Dict]:
         """Get content optionally filtered by locale. A locale is recommended to be used for faster response times."""
 
         if region.lower() not in regions:
@@ -200,7 +200,7 @@ class Client:
     ### VAL-MATCH-V1 ###
     #################### 
 
-    async def GET_getMatch(self, matchId: str, region: str) -> Union[MatchDto, ErrorDto]:
+    async def GET_getMatch(self, matchId: str, region: str) -> Union[MatchDto, ErrorDto, Dict]:
         """Get match by id."""
 
         if region.lower() not in regions:
@@ -221,7 +221,7 @@ class Client:
                 else:
                     return fromdict(MatchDto, raw_response)
             
-    async def GET_getMatchlist(self, puuid: str, region: str) -> Union[MatchlistDto, ErrorDto]:
+    async def GET_getMatchlist(self, puuid: str, region: str) -> Union[MatchlistDto, ErrorDto, Dict]:
         """Get matchlist for games played by puuid."""
 
         if region.lower() not in regions:
@@ -242,7 +242,7 @@ class Client:
                 else:
                     return fromdict(MatchlistDto, raw_response)
             
-    async def GET_getRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, ErrorDto]:
+    async def GET_getRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, ErrorDto, Dict]:
         """
         Get recent matches.
 
@@ -280,7 +280,7 @@ class Client:
     ### VAL-RANKED-V1 ###
     #####################
 
-    async def GET_getLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, ErrorDto]:
+    async def GET_getLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, ErrorDto, Dict]:
         """Get leaderboard for the competitive queue"""
 
         if region.lower() not in regions:
@@ -308,7 +308,7 @@ class Client:
     ### VAL-STATUS-V1 ###
     #####################
 
-    async def GET_getPlatformData(self, region: str) -> Union[PlatformDataDto, ErrorDto]:
+    async def GET_getPlatformData(self, region: str) -> Union[PlatformDataDto, ErrorDto, Dict]:
         """Get VALORANT status for the given platform."""
 
         if region.lower() not in regions:
