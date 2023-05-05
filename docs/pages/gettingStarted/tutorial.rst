@@ -32,5 +32,11 @@ All of that put together looks like::
     async def func():
         content_data = await client.GET_getContent("region")
 
+Raw Request Data
+================
 
+If you want to get the raw requests data instead of the data in a class, you can do::
 
+    client = valaw.Client("Riot_API_Token", "cluster", raw_data=True)
+
+This will return the raw data from the request as dictionary.
