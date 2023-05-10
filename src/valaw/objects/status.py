@@ -23,9 +23,9 @@ class StatusDto:
     titles: List[ContentDto]
     updates: List[UpdateDto]
     created_at: str
-    archived_at: str
     updated_at: str
     platforms: List[str]
+    archived_at: Optional[str] = None
 
 @dataclass
 class PlatformDataDto:

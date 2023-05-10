@@ -5,7 +5,7 @@ from typing import List, Optional
 class MatchlistEntryDto:
     matchId: str
     gameStartTimeMillis: int
-    teamId: str
+    queueId: str
 
 @dataclass
 class MatchlistDto:
@@ -64,7 +64,7 @@ class KillDto:
     killer: str
     victim: str
     victimLocation: LocationDto
-    assistants: List[str]
+    assistants: Optional[List[str]]
     playerLocations: List[PlayerLocationsDto]
     finishingDamage: FinishingDamageDto
 

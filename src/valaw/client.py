@@ -1,11 +1,15 @@
 ### Imports ###
 import aiohttp
 import json
+from dataclass_wizard import fromdict
+from typing import Union, Dict
 
-from .objects.account import AccountDto
+from .objects.account import AccountDto, ActiveShardDto
 from .objects.match import MatchDto, MatchlistDto, RecentMatchesDto
 from .objects.ranked import LeaderboardDto
 from .objects.status import PlatformDataDto
+from .objects.content import ContentDto
+from .objects.error import ErrorDto
 
 
 ### Variables ###
@@ -28,16 +32,14 @@ async def verify_content(response: aiohttp.ClientResponse):
     with the response appropriately 
     """
     content_type = response.headers.get("Content-Type")
-    print(content_type)
     if content_type == "application/json; charset=utf-8" or content_type == "application/json" or content_type == "application/json;charset=utf-8":
         return await response.json()
     elif content_type == "text/plain; charset=utf-8" or content_type == "text/plain" or content_type == "text/plain; charset=utf-8":
         return json.loads(await response.text())
-    return response
 
 ### Client ###
 class Client:
-    def __init__(self, token: str, cluster: str):
+    def __init__(self, token: str, cluster: str, raw_data: bool = False):
         """Initialize the client."""
 
         # Checking if the arguments are valid
@@ -46,6 +48,7 @@ class Client:
         
         self.token = token
         self.cluster = cluster
+        self.raw_data = raw_data
 
         # Beta/Development message
         print("valaw: This library is still in development, please report any bugs to https://github.com/Jet612/valaw/issues.")
@@ -57,11 +60,16 @@ class Client:
             raise Exceptions.InvalidCluster(f"Invalid cluster, valid clusters are: {clusters}.")
         self.cluster = cluster
 
+    def change_raw_data(self, raw_data: bool):
+        """Change the raw_data."""
+
+        self.raw_data = raw_data
+
     ##################
     ### ACCOUNT-V1 ###
     ##################
 
-    async def GET_getByPuuid(self, puuid: str, cluster: str = None) -> dict:
+    async def GET_getByPuuid(self, puuid: str, cluster: str = None) -> Union[AccountDto, ErrorDto, Dict]:
         """Get account by PUUID."""
 
         if cluster != None:
@@ -79,9 +87,15 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(AccountDto, raw_response)
             
-    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None) -> dict:
+    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: str = None) -> Union[AccountDto, ErrorDto, Dict]:
         """Get account by Riot ID."""
 
         if cluster != None:
@@ -99,9 +113,15 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(AccountDto, raw_response)
             
-    async def GET_getByAccessToken(self, authorization: str, cluster: str = None) -> dict:
+    async def GET_getByAccessToken(self, authorization: str, cluster: str = None) -> Union[AccountDto, ErrorDto, Dict]:
         """Get account by access token."""
 
         if cluster != None:
@@ -120,9 +140,15 @@ class Client:
                 "Authorization": authorization
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(AccountDto, raw_response)
             
-    async def GET_getActiveShard(self, puuid: str, cluster: str = None) -> dict:
+    async def GET_getActiveShard(self, puuid: str, cluster: str = None) -> Union[ActiveShardDto, ErrorDto, Dict]:
         """Get active shard for a player."""
 
         if cluster != None:
@@ -140,13 +166,19 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(ActiveShardDto, raw_response)
 
     ######################
     ### VAL-CONTENT-V1 ###
     ######################
 
-    async def GET_getContent(self, region: str, locale: str = "") -> dict:
+    async def GET_getContent(self, region: str, locale: str = "") -> Union[ContentDto, ErrorDto, Dict]:
         """Get content optionally filtered by locale. A locale is recommended to be used for faster response times."""
 
         if region.lower() not in regions:
@@ -166,13 +198,19 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/content/v1/contents{locale}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(ContentDto, raw_response)
 
     ####################
     ### VAL-MATCH-V1 ###
     #################### 
 
-    async def GET_getMatch(self, matchId: str, region: str) -> dict:
+    async def GET_getMatch(self, matchId: str, region: str) -> Union[MatchDto, ErrorDto, Dict]:
         """Get match by id."""
 
         if region.lower() not in regions:
@@ -187,9 +225,15 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(MatchDto, raw_response)
             
-    async def GET_getMatchlist(self, puuid: str, region: str) -> dict:
+    async def GET_getMatchlist(self, puuid: str, region: str) -> Union[MatchlistDto, ErrorDto, Dict]:
         """Get matchlist for games played by puuid."""
 
         if region.lower() not in regions:
@@ -204,9 +248,15 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(MatchlistDto, raw_response)
             
-    async def GET_getRecent(self, queue: str, region: str) -> dict:
+    async def GET_getRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, ErrorDto, Dict]:
         """
         Get recent matches.
 
@@ -234,13 +284,19 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(RecentMatchesDto, raw_response)
     
     #####################
     ### VAL-RANKED-V1 ###
     #####################
 
-    async def GET_getLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> dict:
+    async def GET_getLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, ErrorDto, Dict]:
         """Get leaderboard for the competitive queue"""
 
         if region.lower() not in regions:
@@ -258,13 +314,19 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(LeaderboardDto, raw_response)
 
     #####################
     ### VAL-STATUS-V1 ###
     #####################
 
-    async def GET_getPlatformData(self, region: str) -> dict:
+    async def GET_getPlatformData(self, region: str) -> Union[PlatformDataDto, ErrorDto, Dict]:
         """Get VALORANT status for the given platform."""
 
         if region.lower() not in regions:
@@ -279,4 +341,10 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/status/v1/platform-data", headers=headers) as resp:
-                return await verify_content(response=resp)
+                raw_response = await verify_content(response=resp)
+                if self.raw_data == True:
+                    return raw_response
+                if raw_response.get("status") != None:
+                    return fromdict(ErrorDto, raw_response)
+                else:
+                    return fromdict(PlatformDataDto, raw_response)

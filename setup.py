@@ -5,7 +5,7 @@ with open("README.md", "r") as readme:
 
 setup(
     name="valaw",
-    version="0.0.5",
+    version="0.0.6",
     author="Jet612",
     description="An asynchronous API wrapper for VALORANT's API",
     long_description=long_desc,
@@ -29,6 +29,7 @@ setup(
     python_requires=">=3.8",
     install_requires=[
                     'aiohttp==3.8.3',
+                    'dataclass_wizard==0.22.2',
                     'setuptools==67.6.0'
                     ]
 )
