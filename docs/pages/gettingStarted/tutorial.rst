@@ -11,8 +11,10 @@ Then, you can initialize the client::
 
     client = valaw.Client("Riot_API_Token", "cluster")
 
-Before you can use the client, you will need a Riot Games API token. 
-If you don't already have one you can follow :ref:`Getting a Riot API Token` to get one.
+.. note:: 
+    Before you can use the client, you will need a Riot Games API token. 
+    If you don't already have one you can follow :ref:`Getting a Riot API Token` to get one.
+
 The :term:`cluster` should be the :term:`cluster` that is closest to you.
 
 After you have initialized the client, you can use it to make requests to the API.
@@ -31,6 +33,16 @@ All of that put together looks like::
 
     async def func():
         content_data = await client.GET_getContent("region")
+
+Raw Responses
+=============
+
+If you want to get the raw response from the API in the form of a dictionary instead of objects you can use `raw_data=True`::
+
+    async def func():
+        content_data = await client.GET_getContent("region", raw_data=True)
+
+
 
 
 
