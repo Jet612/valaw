@@ -1,6 +1,6 @@
-============
+===================
 GET_getPlatformData
-============
+===================
 
 * `Riot Documentation <https://developer.riotgames.com/apis#val-status-v1/GET_getPlatformData>`_
 * API URL::

@@ -1,6 +1,6 @@
-============
+==================
 GET_getLeaderboard
-============
+==================
 
 * `Riot Documentation <https://developer.riotgames.com/apis#val-ranked-v1/GET_getLeaderboard>`_
 * API URL::

@@ -24,3 +24,17 @@ The following endpoints are available:
     :caption: Match-V1
 
     Match-V1/*
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+    :caption: Ranked-V1
+
+    Ranked-V1/*
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+    :caption: Status-V1
+
+    Status-V1/*
