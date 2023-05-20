@@ -24,6 +24,11 @@ class Exceptions:
         """Invalid Cluster."""
     class InvalidRegion(ValueError):
         """Invalid Region."""
+    class RiotAPIResponseError(Exception):
+        """Riot API Response Error."""
+        def __init__(self, message: str):
+            self.message = message
+            super().__init__(self.message)
 
 ### Content Verify ###
 async def verify_content(response: aiohttp.ClientResponse):
@@ -39,7 +44,7 @@ async def verify_content(response: aiohttp.ClientResponse):
 
 ### Client ###
 class Client:
-    def __init__(self, token: str, cluster: str, raw_data: bool = False):
+    def __init__(self, token: str, cluster: str, raw_data: bool = False, errors: bool = True):
         """Initialize the client."""
 
         # Checking if the arguments are valid
@@ -49,6 +54,7 @@ class Client:
         self.token = token
         self.cluster = cluster
         self.raw_data = raw_data
+        self.errors = errors
 
         # Beta/Development message
         print("valaw: This library is still in development, please report any bugs to https://github.com/Jet612/valaw/issues.")
@@ -90,8 +96,13 @@ class Client:
                 raw_response = await verify_content(response=resp)
                 if self.raw_data == True:
                     return raw_response
+                
+                # Checking if the response is an error, then returning the appropriate object/exception
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(AccountDto, raw_response)
             
@@ -117,7 +128,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(AccountDto, raw_response)
             
@@ -144,7 +158,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(AccountDto, raw_response)
             
@@ -170,7 +187,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(ActiveShardDto, raw_response)
 
@@ -202,7 +222,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(ContentDto, raw_response)
 
@@ -229,7 +252,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(MatchDto, raw_response)
             
@@ -252,7 +278,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(MatchlistDto, raw_response)
             
@@ -288,7 +317,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(RecentMatchesDto, raw_response)
     
@@ -318,7 +350,10 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(LeaderboardDto, raw_response)
 
@@ -345,6 +380,9 @@ class Client:
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:
-                    return fromdict(ErrorDto, raw_response)
+                    if self.errors == True:
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                    else:
+                        return fromdict(ErrorDto, raw_response)
                 else:
                     return fromdict(PlatformDataDto, raw_response)
