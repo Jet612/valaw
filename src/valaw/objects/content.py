@@ -29,6 +29,8 @@ class ActDto:
     id: str
     isActive: bool
     localizedNames: Optional[LocalizedNamesDto] = None
+    type: str
+    parentId: Optional[str] = None
 
 @dataclass
 class ContentItemDto:
