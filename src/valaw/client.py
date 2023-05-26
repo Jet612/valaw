@@ -26,8 +26,10 @@ class Exceptions:
         """Invalid Region."""
     class RiotAPIResponseError(Exception):
         """Riot API Response Error."""
-        def __init__(self, message: str):
-            self.message = message
+        def __init__(self, status_code: int, status_message: str):
+            self.status_code = status_code
+            self.status_message = status_message
+            self.message = str(status_code) + " - " + status_message
             super().__init__(self.message)
 
 ### Content Verify ###
@@ -100,7 +102,7 @@ class Client:
                 # Checking if the response is an error, then returning the appropriate object/exception
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -129,7 +131,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -159,7 +161,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -188,7 +190,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -223,7 +225,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -253,7 +255,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -279,7 +281,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -318,7 +320,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -351,7 +353,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
@@ -381,7 +383,7 @@ class Client:
                     return raw_response
                 if raw_response.get("status") != None:
                     if self.errors == True:
-                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"] + ": " + raw_response["status"]["message"])
+                        raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                     else:
                         return fromdict(ErrorDto, raw_response)
                 else:
