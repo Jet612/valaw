@@ -7,8 +7,8 @@ Custom exceptions for VALAW.
 InvalidCluster
 ==============
 
-Description: Invalid Cluster
-Type: `ValueError <https://docs.python.org/3/library/exceptions.html#ValueError>`
+- Description: Invalid Cluster
+- Type: `ValueError <https://docs.python.org/3/library/exceptions.html#ValueError>`_
 
 .. code-block:: python
 
@@ -18,8 +18,8 @@ Type: `ValueError <https://docs.python.org/3/library/exceptions.html#ValueError>
 InvalidRegion
 =============
 
-Description: Invalid Region
-Type: Type: `ValueError <https://docs.python.org/3/library/exceptions.html#ValueError>`
+- Description: Invalid Region
+- Type: `ValueError <https://docs.python.org/3/library/exceptions.html#ValueError>`_
 
 .. code-block:: python
 
@@ -29,15 +29,12 @@ Type: Type: `ValueError <https://docs.python.org/3/library/exceptions.html#Value
 RiotAPIResponseError
 ====================
 
-Description: An error from the Riot API
-Type: `Exception <https://docs.python.org/3/library/exceptions.html#Exception>`
-
-Arguments
----------
-
-- status_code: The status code of the response
-- status_message: The status message of the response
-- message: The message of the exception
+- Description: An error from the Riot API
+- Type: `Exception <https://docs.python.org/3/library/exceptions.html#Exception>`_
+- Arguments
+    - status_code: The status code of the response
+    - status_message: The status message of the response
+    - message: The message of the exception
 
 
 .. code-block:: python
