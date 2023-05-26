@@ -9,7 +9,7 @@
 project = 'valaw'
 copyright = '2023, Jet612'
 author = 'Jet612'
-release = '0.0.6'
+release = '0.0.8'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

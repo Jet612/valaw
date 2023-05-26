@@ -38,6 +38,12 @@ Table of Contents
 
 .. toctree::
    :maxdepth: 1
+   :caption: Exceptions
+
+   pages/exceptions/exceptions
+
+.. toctree::
+   :maxdepth: 1
    :caption: Glossary
 
    pages/glossary
