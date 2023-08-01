@@ -12,19 +12,6 @@ class PlayerDto:
     tagLine: str = ""
 
 @dataclass
-class DetailsDto:
-    rankedRatingThreshold: int
-    startingPage: int
-    startingIndex: int
-
-@dataclass
-class TierDto:
-    tier_24: DetailsDto
-    tier_25: DetailsDto
-    tier_26: DetailsDto
-    tier_27: DetailsDto
-
-@dataclass
 class LeaderboardDto:
     actId: str
     players: List[PlayerDto]
@@ -32,7 +19,7 @@ class LeaderboardDto:
     immortalStartingPage: int
     immortalStartingIndex: int
     topTierRRThreshold: int
-    tierDetails: List[TierDto]
+    tierDetails: dict
     startIndex: int
     shard: str
     query: Optional[str]
