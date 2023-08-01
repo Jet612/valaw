@@ -58,9 +58,6 @@ class Client:
         self.raw_data = raw_data
         self.errors = errors
 
-        # Beta/Development message
-        print("valaw: This library is still in development, please report any bugs to https://github.com/Jet612/valaw/issues.")
-
     def change_cluster(self, cluster: str):
         """Change the cluster."""
 
