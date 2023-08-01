@@ -345,7 +345,10 @@ class Client:
                 "X-Riot-Token": self.token
             }
             async with session.get(f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}", headers=headers) as resp:
+                print(resp)
                 raw_response = await verify_content(response=resp)
+                print("-------------------------------------------------------")
+                print(raw_response)
                 if self.raw_data == True:
                     return raw_response
                 if raw_response.get("status") != None:

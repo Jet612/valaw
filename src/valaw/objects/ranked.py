@@ -19,10 +19,10 @@ class DetailsDto:
 
 @dataclass
 class TierDto:
-    24: DetailsDto
-    25: DetailsDto
-    26: DetailsDto
-    27: DetailsDto
+    tier_24: DetailsDto
+    tier_25: DetailsDto
+    tier_26: DetailsDto
+    tier_27: DetailsDto
 
 @dataclass
 class LeaderboardDto:
