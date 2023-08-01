@@ -3,9 +3,9 @@ from typing import List, Optional
 
 @dataclass
 class PlayerDto:
-    puuid: Optional[str]
-    gameName: Optional[str]
-    tagLine: Optional[str]
+    puuid: str = ""
+    gameName: str = "Private"
+    tagLine: str = ""
     leaderboardRank: int
     rankedRating: int
     numberOfWins: int
