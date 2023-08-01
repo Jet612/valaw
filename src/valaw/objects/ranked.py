@@ -9,10 +9,30 @@ class PlayerDto:
     leaderboardRank: int
     rankedRating: int
     numberOfWins: int
+    competitiveTier: int
+
+@dataclass
+class DetailsDto:
+    rankedRatingThreshold: int
+    startingPage: int
+    startingIndex: int
+
+@dataclass
+class TierDto:
+    24: DetailsDto
+    25: DetailsDto
+    26: DetailsDto
+    27: DetailsDto
 
 @dataclass
 class LeaderboardDto:
-    shard: str
     actId: str
-    totalPlayers: int
     players: List[PlayerDto]
+    totalPlayers: int
+    immortalStartingPage: int
+    immortalStartingIndex: int
+    topTierRRThreshold: int
+    tierDetails: List[TierDto]
+    startIndex: int
+    query: Optional[str]
+    shard: str
