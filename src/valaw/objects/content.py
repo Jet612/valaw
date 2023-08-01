@@ -28,8 +28,8 @@ class ActDto:
     name: str
     id: str
     isActive: bool
+    type: str
     localizedNames: Optional[LocalizedNamesDto] = None
-    atype: str
     parentId: Optional[str] = None
 
 @dataclass
