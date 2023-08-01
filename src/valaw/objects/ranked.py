@@ -34,5 +34,5 @@ class LeaderboardDto:
     topTierRRThreshold: int
     tierDetails: List[TierDto]
     startIndex: int
-    query: Optional[str]
     shard: str
+    query: Optional[str]
