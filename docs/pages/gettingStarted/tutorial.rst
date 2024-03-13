@@ -42,12 +42,3 @@ If you want to get the raw requests data instead of the data as an object, you c
     client = valaw.Client("Riot_API_Token", "cluster", raw_data=True)
 
 This will return the raw data from the request as dictionary.
-
-Returning Errors
-================
-
-If you don't want to have an error raised when the response returns an error, you can do::
-
-    client = valaw.Client("Riot_API_Token", "cluster", errors=False)
-
-This will return the error as an object instead of raising an error.
