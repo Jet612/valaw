@@ -53,7 +53,16 @@ async def verify_content(response: aiohttp.ClientResponse):
 
 ### Client ###
 class Client:
-    def __init__(self, token: str, cluster: str, raw_data: bool = False, errors: bool = True):
+    """The client that connects to the Riot Games API.
+
+    :param token: A Riot Games API access token used to authenticate requests.
+    :type token: str
+    :param cluster: The default cluster to use in requests. The nearest cluster to the host computer/server should be selected.
+    :type cluster: str
+    :param raw_data: Whether or not to send raw JSON data or not. If False, Riot Games API requests will return an object. Defaults to False.
+
+    """
+    def __init__(self, token: str, cluster: str, raw_data: bool = False):
         """Initialize the client."""
 
         # Checking if the arguments are valid
@@ -86,7 +95,7 @@ class Client:
         
         :param puuid: The PUUID of the account.
         :type puuid: str
-        :param cluster: The cluster to retreive from, defaults to self.cluster.
+        :param cluster: The cluster to retreive from. Defaults to self.cluster.
         :type cluster: str
         :rtype: Union[AccountDto, Dict]
         """
@@ -123,7 +132,7 @@ class Client:
         :type gameName: str
         :param tagLine: The tag line of the account (gameName#tagLine).
         :type tagLine: str
-        :param cluster: The cluster to retreive from, defaults to self.cluster.
+        :param cluster: The cluster to retreive from. Defaults to self.cluster.
         :type cluster: str
         :rtype: Union[AccountDto, Dict]
         """
@@ -156,7 +165,7 @@ class Client:
         
         :param authorization: The access token.
         :type authorization: str
-        :param cluster: The cluster to retreive from, defaults to self.cluster.
+        :param cluster: The cluster to retreive from. Defaults to self.cluster.
         :type cluster: str
         :rtype: Union[AccountDto, Dict]
         """
@@ -190,7 +199,7 @@ class Client:
         
         :param puuid: The PUUID of the account.
         :type puuid: str
-        :param cluster: The cluster to retreive from, defaults to self.cluster.
+        :param cluster: The cluster to retreive from. Defaults to self.cluster.
         :type cluster: str
         :rtype: Union[ActiveShardDto, Dict]
         """
