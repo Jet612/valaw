@@ -41,7 +41,7 @@ Basic example (Just required arguments)
     client = valaw.Client("riot_api_token", "cluster", raw_data=True)
 
 Methods
--------
+=======
 
 .. toctree::
     :maxdepth: 1
