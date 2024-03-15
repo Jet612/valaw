@@ -28,9 +28,15 @@ queues = ["competitive", "unrated", "spikerush", "tournamentmode", "deathmatch",
 ### Custom Exceptions ###
 class Exceptions:
     class InvalidCluster(ValueError):
-        """Invalid Cluster."""
+        """Invalid Cluster.
+        
+        Valid clusters are: americas, asia, esports, europe.
+        """
     class InvalidRegion(ValueError):
-        """Invalid Region."""
+        """Invalid Region.
+        
+        Valid regions are: ap, br, esports, eu, kr, latam, na.
+        """
     class RiotAPIResponseError(Exception):
         """Riot API Response Error.
         
