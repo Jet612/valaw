@@ -30,7 +30,7 @@ Table of Contents
    pages/gettingStarted/apiToken
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: API Reference
    
    pages/api
