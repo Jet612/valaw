@@ -11,13 +11,22 @@ copyright = '2023, Jet612'
 author = 'Jet612'
 release = '0.1.0'
 
+# -- Path setup --------------------------------------------------------------
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../src'))
+sys.path.append(os.path.abspath("extensions"))
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
+    'builder',
     'sphinx.ext.autosectionlabel', 
     'sphinx_tabs.tabs',
-    'sphinx-prompt'
+    'sphinx-prompt',
+    'sphinx.ext.autodoc',
+    'attributetable',
     ]
 
 templates_path = ['_templates']

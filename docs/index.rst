@@ -30,12 +30,10 @@ Table of Contents
    pages/gettingStarted/apiToken
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: API Reference
-   :glob:
    
-   pages/API Reference/Client/*
-   pages/API Reference/exceptions/*
+   pages/api
 
 .. toctree::
    :maxdepth: 1

@@ -4,12 +4,16 @@ import json
 from dataclass_wizard import fromdict
 from typing import Union, Dict
 
-from .objects.account import AccountDto, ActiveShardDto
-from .objects.match import MatchDto, MatchlistDto, RecentMatchesDto
-from .objects.ranked import LeaderboardDto
-from .objects.status import PlatformDataDto
-from .objects.content import ContentDto
-
+from .objects import (
+    AccountDto,
+    ActiveShardDto,
+    ContentDto,
+    MatchDto,
+    MatchlistDto,
+    RecentMatchesDto,
+    LeaderboardDto,
+    PlatformDataDto
+)
 
 ### Variables ###
 regions = ["ap", "br", "esports", "eu", "kr", "latam", "na"]
