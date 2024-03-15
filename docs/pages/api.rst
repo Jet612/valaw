@@ -10,6 +10,7 @@ Client
 Exceptions
 ~~~~~~~~~~
 .. autoclass:: Exceptions
+    :members:
     :noindex:
 
 Objects
