@@ -69,9 +69,9 @@ class Client:
     """The client that connects to the Riot Games API.
 
     :param token: A Riot Games API access token used to authenticate requests.
-    :type token: str
+    :type token: :class:`str`
     :param cluster: The default cluster to use in requests. The nearest cluster to the host computer/server should be selected.
-    :type cluster: str
+    :type cluster: :class:`str`
     :param raw_data: Whether or not to send raw JSON data or not. If False, Riot Games API requests will return an object. Defaults to False.
 
     """
@@ -107,10 +107,10 @@ class Client:
         Get account by PUUID.
         
         :param puuid: The PUUID of the account.
-        :type puuid: str
+        :type puuid: :class:`str`
         :param cluster: The cluster to retreive from. Defaults to self.cluster.
-        :type cluster: str
-        :rtype: Union[AccountDto, Dict]
+        :type cluster: :class:`str`
+        :rtype: Union[AccountDto, :class:`Dict`]
         """
 
         if cluster != None:
@@ -142,12 +142,12 @@ class Client:
         """Get account by Riot ID.
         
         :param gameName: The game name of the account (gameName#tagLine).
-        :type gameName: str
+        :type gameName: :class:`str`
         :param tagLine: The tag line of the account (gameName#tagLine).
-        :type tagLine: str
+        :type tagLine: :class:`str`
         :param cluster: The cluster to retreive from. Defaults to self.cluster.
-        :type cluster: str
-        :rtype: Union[AccountDto, Dict]
+        :type cluster: :class:`str`
+        :rtype: Union[AccountDto, :class:`Dict`]
         """
 
         if cluster != None:
@@ -177,10 +177,10 @@ class Client:
         """Get account by access token.
         
         :param authorization: The access token.
-        :type authorization: str
+        :type authorization: :class:`str`
         :param cluster: The cluster to retreive from. Defaults to self.cluster.
-        :type cluster: str
-        :rtype: Union[AccountDto, Dict]
+        :type cluster: :class:`str`
+        :rtype: Union[AccountDto, :class:`Dict`]
         """
 
         if cluster != None:
@@ -211,10 +211,10 @@ class Client:
         """Get active shard for a player.
         
         :param puuid: The PUUID of the account.
-        :type puuid: str
+        :type puuid: :class:`str`
         :param cluster: The cluster to retreive from. Defaults to self.cluster.
-        :type cluster: str
-        :rtype: Union[ActiveShardDto, Dict]
+        :type cluster: :class:`str`
+        :rtype: Union[ActiveShardDto, :class:`Dict`]
         """
 
         if cluster != None:
@@ -248,10 +248,10 @@ class Client:
         """Get content optionally filtered by locale. A locale is recommended to be used for faster response times.
         
         :param region: The region to execute against.
-        :type region: str
+        :type region: :class:`str`
         :param locale: The locale to retrieve data for, defaults to "".
-        :type locale: str
-        :rtype: Union[ContentDto, Dict]
+        :type locale: :class:`str`
+        :rtype: Union[ContentDto, :class:`Dict`]
         """
 
         if region.lower() not in regions:
@@ -287,10 +287,10 @@ class Client:
         """Get match by id.
         
         :param matchId: The match id.
-        :type matchId: str
+        :type matchId: :class:`str`
         :param region: The region to execute against.
-        :type region: str
-        :rtype: Union[MatchDto, Dict]
+        :type region: :class:`str`
+        :rtype: Union[MatchDto, :class:`Dict`]
         """
 
         if region.lower() not in regions:
@@ -317,10 +317,10 @@ class Client:
         """Get matchlist for games played by puuid.
         
         :param puuid: The PUUID of the account.
-        :type puuid: str
+        :type puuid: :class:`str`
         :param region: The region to execute against.
-        :type region: str
-        :rtype: Union[MatchlistDto, Dict]
+        :type region: :class:`str`
+        :rtype: Union[MatchlistDto, :class:`Dict`]
         """
 
         if region.lower() not in regions:
@@ -356,10 +356,10 @@ class Client:
         from the list.
 
         :param queue: The queue to retrieve recent matches for.
-        :type queue: str
+        :type queue: :class:`str`
         :param region: The region to execute against.
-        :type region: str
-        :rtype: Union[RecentMatchesDto, Dict]
+        :type region: :class:`str`
+        :rtype: Union[RecentMatchesDto, :class:`Dict`]
         """
 
         if region.lower() not in regions:
@@ -392,14 +392,14 @@ class Client:
         """Get leaderboard for the competitive queue.
         
         :param actId: The act id.
-        :type actId: str
+        :type actId: :class:`str`
         :param region: The region to execute against.
-        :type region: str
+        :type region: :class:`str`
         :param size: The amount of entries to retrieve, defaults to 200.
-        :type size: int
+        :type size: :class:`int`
         :param startIndex: The index to start from, defaults to 0.
-        :type startIndex: int
-        :rtype: Union[LeaderboardDto, Dict]
+        :type startIndex: :class:`int`
+        :rtype: Union[LeaderboardDto, :class:`Dict`]
         """
 
         if region.lower() not in regions:
@@ -433,8 +433,8 @@ class Client:
         """Get VALORANT status for the given platform.
         
         :param region: The region to execute against.
-        :type region: str
-        :rtype: Union[PlatformDataDto, Dict]
+        :type region: :class:`str`
+        :rtype: Union[PlatformDataDto, :class:`Dict`]
         """
 
         if region.lower() not in regions:
