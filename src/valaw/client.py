@@ -32,7 +32,10 @@ class Exceptions:
     class InvalidRegion(ValueError):
         """Invalid Region."""
     class RiotAPIResponseError(Exception):
-        """Riot API Response Error."""
+        """Riot API Response Error.
+        
+        More information about response errors can be found at: https://developer.riotgames.com/docs/portal#web-apis_response-codes
+        """
         def __init__(self, status_code: int, status_message: str):
             self.status_code = status_code
             self.status_message = status_message
