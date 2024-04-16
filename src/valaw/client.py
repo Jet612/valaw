@@ -2,7 +2,7 @@
 import aiohttp
 import json
 from dataclass_wizard import fromdict
-from typing import Union, Dict
+from typing import Union, Dict, List
 
 from .objects import (
     AccountDto,
@@ -103,8 +103,7 @@ class Client:
     ##################
 
     async def GET_getByPuuid(self, puuid: str, cluster: str = None) -> Union[AccountDto, Dict]:
-        """
-        Get account by PUUID.
+        """Get account by PUUID.
         
         :param puuid: The PUUID of the account.
         :type puuid: :class:`str`
@@ -456,3 +455,49 @@ class Client:
                     raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
                 else:
                     return fromdict(PlatformDataDto, raw_response)
+
+    ###########
+    ### RSO ###
+    ###########
+
+    def create_RSO_link(self, redirect_uri: str, client_id: str, response_type: str, scopes: List[str], login_hint: str = None, ui_locales: List[str] = None, state: str = None):
+        """Create a Riot Sign-On Link.
+
+        :param redirect_uri: OAuth2 callback route
+        :type redirect_uri: :class:`str`
+        :param client_id: Client ID of the RSO application
+        :type client_id: :class:`str`
+        :param response_type: OAuth2 response type, should be 'code' for authorization code flow
+        :type response_type: :class:`str`
+        :param scopes: List of scopes to request, must include 'openid' to authenticate, addition scopes are 'cpid', and 'offline_access'
+        :type scopes: List[:class:`str`]
+        :param login_hint: Used to specify hints to pre-populate data on the login page. Formats {regioncode}, {regioncode}|{username}, {regioncode}#{userid}. Defaults to None
+        :type login_hint: :class:`str`
+        :param ui_locales: List of BCP47 language tag values in order of most to least preferred. Defaults to None
+        :type ui_locales: List[:class:`str`]
+        :param state: Opaque value provided to authorize the endpoint, the same value will be returned to the redirect_uri. Defaults to None
+        :type state: :class:`str`
+
+        :returns: :class:`str`
+
+        For more information on RSO, visit https://developer.riotgames.com/docs/valorant#rso-integration
+        """
+
+        scopes = "+".join(scopes)
+
+        if login_hint != None:
+            login_hint = f"&login_hint={login_hint}"
+        else:
+            login_hint = ""
+        
+        if ui_locales != None:
+            ui_locales = f"&ui_locales={' '.join(ui_locales)}"
+        else:
+            ui_locales = ""
+
+        if state != None:
+            state = f"&state={state}"
+        else:
+            state = ""
+
+        return f"https://auth.riotgames.com/authorize?redirect_uri={redirect_uri}&client_id={client_id}&response_type={response_type}&scope={scopes}{login_hint}{ui_locales}{state}"
