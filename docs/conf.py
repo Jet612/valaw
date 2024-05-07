@@ -9,7 +9,7 @@
 project = 'valaw'
 copyright = '2023, Jet612'
 author = 'Jet612'
-release = '0.1.0'
+release = '0.1.02'
 
 # -- Path setup --------------------------------------------------------------
 import os
