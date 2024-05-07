@@ -135,8 +135,10 @@ class PlayerDto:
     characterId: str
     stats: PlayerStatsDto
     competitiveTier: int
+    isObserver: bool
     playerCard: str
     playerTitle: str
+    accountLevel: int
 
 @dataclass
 class MatchInfoDto:
