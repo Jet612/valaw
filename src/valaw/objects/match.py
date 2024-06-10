@@ -75,7 +75,7 @@ class PlayerRoundStatsDto:
     damage: List[DamageDto]
     score: int
     economy: EconomyDto
-    ability: Optional[AbilityDto]
+    ability: AbilityDto
 
 @dataclass
 class RoundResultDto:
@@ -123,7 +123,7 @@ class PlayerStatsDto:
     deaths: int
     assists: int
     playtimeMillis: int
-    abilityCasts: AbilityCastsDto
+    abilityCasts: Optional[AbilityCastsDto]
 
 @dataclass
 class PlayerDto:
