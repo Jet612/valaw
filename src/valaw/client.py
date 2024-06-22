@@ -32,11 +32,13 @@ class Exceptions:
         
         Valid clusters are: americas, asia, esports, europe.
         """
+
     class InvalidRegion(ValueError):
         """Invalid Region.
         
         Valid regions are: ap, br, esports, eu, kr, latam, na.
         """
+
     class RiotAPIResponseError(Exception):
         """Riot API Response Error.
         
@@ -47,8 +49,15 @@ class Exceptions:
             self.status_message = status_message
             self.message = str(status_code) + " - " + status_message
             super().__init__(self.message)
+
     class FailedToParseJSON(Exception):
         """Failed to parse JSON."""
+
+    class InvalidLocale(ValueError):
+        """Invalid Locale.
+        
+        Valid locales are: ar-ae, de-de, en-gb, en-us, es-es, es-mx, fr-fr, id-id, it-it, ja-jp, ko-kr, pl-pl, pt-br, ru-ru, th-th, tr-tr, vi-vn, zh-cn, zh-tw.
+        """
 
 ### Content Verify ###
 async def verify_content(response: aiohttp.ClientResponse):
