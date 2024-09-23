@@ -34,7 +34,7 @@ setup(
     python_requires=">=3.8",
     install_requires=[
                     'aiohttp==3.9.5',
-                    'dataclass_wizard==0.22.3',
+                    'dataclass_wizard==0.23.0',
                     'setuptools==70.3.0'
                     ]
 )
