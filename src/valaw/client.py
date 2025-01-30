@@ -94,7 +94,7 @@ async def verify_content(response: aiohttp.ClientResponse):
     :return: Parsed JSON response.
     """
     content_type = response.headers.get("Content-Type")
-    valid_json_types = {"application/json", "application/json; charset=utf-8"}
+    valid_json_types = {"application/json", "application/json; charset=utf-8", "application/json;charset=utf-8"}
     
     if content_type in valid_json_types:
         return await response.json()
@@ -102,6 +102,7 @@ async def verify_content(response: aiohttp.ClientResponse):
         return json.loads(await response.text())
     else:
         raise Exceptions.FailedToParseJSON(f"Failed to parse JSON, content-type: {content_type}.")
+
 
 ### Client ###
 class Client:
