@@ -463,6 +463,165 @@ class Client:
             if "status" in raw_response:
                 raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
             return fromdict(LeaderboardDto, raw_response)
+        
+    ############################
+    ### VAL-CONSOLE-MATCH-V1 ###
+    ############################
+
+    async def GET_getConsoleMatch(self, matchId: str, region: str) -> Union[MatchDto, Dict]:
+        """Get match console data.
+
+        :param matchId: The match id.
+        :type matchId: str
+        :param region: The region to execute against.
+        :type region: str
+        :rtype: Union[MatchDto, Dict]
+        :raises InvalidRegion: If the provided region is invalid.
+        :raises RiotAPIResponseError: If the API response indicates an error.
+        """
+        validate_region(region)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
+        async with self.session.get(
+            f"https://{region}.api.riotgames.com/val/match/console/v1/matches/{matchId}",
+            headers=headers
+        ) as resp:
+            raw_response = await verify_content(response=resp)
+            if self.raw_data:
+                return raw_response
+            if "status" in raw_response:
+                raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
+            return fromdict(MatchDto, raw_response)
+        
+    async def GET_getConsoleMatchlist(self, puuid: str, region: str) -> Union[MatchlistDto, Dict]:
+        """Get matchlist for console games played by puuid.
+
+        :param puuid: The PUUID of the account.
+        :type puuid: str
+        :param region: The region to execute against.
+        :type region: str
+        :rtype: Union[MatchlistDto, Dict]
+        :raises InvalidRegion: If the provided region is invalid.
+        :raises RiotAPIResponseError: If the API response indicates an error.
+        """
+        validate_region(region)
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
+        async with self.session.get(
+            f"https://{region}.api.riotgames.com/val/match/console/v1/matchlists/by-puuid/{puuid}",
+            headers=headers
+        ) as resp:
+            raw_response = await verify_content(response=resp)
+            if self.raw_data:
+                return raw_response
+            if "status" in raw_response:
+                raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
+            return fromdict(MatchlistDto, raw_response)
+        
+    async def GET_getConsoleRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, Dict]:
+        """Get recent console matches.
+
+        Returns a list of match ids that have completed 
+        in the last 10 minutes for live regions and 12 hours 
+        for the esports routing value. NA/LATAM/BR share a 
+        match history deployment. As such, recent matches 
+        will return a combined list of matches from those 
+        three regions. Requests are load balanced so you may 
+        see some inconsistencies as matches are added/removed 
+        from the list.
+
+        :param queue: The queue to retrieve recent matches for.
+        :type queue: str
+        :param region: The region to execute against.
+        :type region: str
+        :rtype: Union[RecentMatchesDto, Dict]
+        :raises InvalidRegion: If the provided region is invalid.
+        :raises InvalidQueue: If the provided queue is invalid.
+        :raises RiotAPIResponseError: If the API response indicates an error.
+        """
+        validate_region(region)
+        if queue.lower() not in QUEUES:
+            raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {QUEUES}.")
+
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
+        async with self.session.get(
+            f"https://{region}.api.riotgames.com/val/match/console/v1/recent-matches/by-queue/{queue}",
+            headers=headers
+        ) as resp:
+            raw_response = await verify_content(response=resp)
+            if self.raw_data:
+                return raw_response
+            if "status" in raw_response:
+                raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
+            return fromdict(RecentMatchesDto, raw_response)
+        
+    #############################
+    ### VAL-CONSOLE-RANKED-V1 ###
+    #############################
+
+    async def GET_getConsoleLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, Dict]:
+        """Get leaderboard for the console competitive queue.
+
+        :param actId: The act id.
+        :type actId: str
+        :param region: The region to execute against.
+        :type region: str
+        :param size: The amount of entries to retrieve, defaults to 200.
+        :type size: int
+        :param startIndex: The index to start from, defaults to 0.
+        :type startIndex: int
+        :rtype: Union[LeaderboardDto, Dict]
+        :raises InvalidRegion: If the provided region is invalid.
+        :raises ValueError: If the size is not between 1 and 200.
+        :raises RiotAPIResponseError: If the API response indicates an error.
+        """
+        validate_region(region)
+
+        if size > 200 or size < 1:
+            raise ValueError(f"Invalid size, valid values: 1 to 200.")
+        
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/112.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
+        async with self.session.get(
+            f"https://{region}.api.riotgames.com/val/console/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}",
+            headers=headers
+        ) as resp:
+            raw_response = await verify_content(response=resp)
+            if self.raw_data:
+                return raw_response
+            if "status" in raw_response:
+                raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
+            return fromdict(LeaderboardDto, raw_response)
 
     #####################
     ### VAL-STATUS-V1 ###
