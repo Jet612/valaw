@@ -32,6 +32,12 @@ QUEUES = [
 ]
 """List of valid queues."""
 
+CONSOLE_QUEUES = [
+    "console_unrated", "console_swiftplay", "console_hurm", "console_competitive",
+    "console_deathmatch"
+]
+"""List of valid console queues."""
+
 ### Custom Exceptions ###
 class Exceptions:
     class InvalidCluster(ValueError):
@@ -555,8 +561,8 @@ class Client:
         :raises RiotAPIResponseError: If the API response indicates an error.
         """
         validate_region(region)
-        if queue.lower() not in QUEUES:
-            raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {QUEUES}.")
+        if queue.lower() not in CONSOLE_QUEUES:
+            raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {CONSOLE_QUEUES}.")
 
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
