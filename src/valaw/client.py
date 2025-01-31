@@ -38,6 +38,9 @@ CONSOLE_QUEUES = [
 ]
 """List of valid console queues."""
 
+PLATFORM_TYPES = ["playstation", "xbox"]
+"""List of valid platform types."""
+
 ### Custom Exceptions ###
 class Exceptions:
     class InvalidCluster(ValueError):
@@ -67,6 +70,12 @@ class Exceptions:
     class InvalidQueue(ValueError):
         """Invalid Queue. Valid queues are: competitive, unrated, spikerush, ..."""
 
+    class InvalidPlatformType(ValueError):
+        """Invalid Platform Type. Valid platform types are: playstation, xbox."""
+
+    class InvalidRiotAPIKey(ValueError):
+        """Invalid Riot API Key. A Riot API key is required."""
+
 ### Helper Functions ###
 def validate_region(region: str):
     """Validate the provided region.
@@ -85,6 +94,24 @@ def validate_cluster(cluster: str):
     """
     if cluster.lower() not in CLUSTERS:
         raise Exceptions.InvalidCluster(f"Invalid cluster, valid clusters are: {CLUSTERS}.")
+    
+def validate_platform_type(platformType: str):
+    """Validate the provided platform.
+
+    :param platformType: The platform type to validate.
+    :raises InvalidPlatformType: If the platform type is not valid.
+    """
+    if platformType.lower() not in PLATFORM_TYPES:
+        raise Exceptions.InvalidPlatformType(f"Invalid platform type, valid platforms are: {PLATFORM_TYPES}.")
+    
+def validate_key(key: str):
+    """Validate the provided key.
+
+    :param key: The key to validate.
+    :raises InvalidKey: If the key is not valid.
+    """
+    if key is None or key == "":
+        raise Exceptions.InvalidRiotAPIKey("A Riot API key is required.")
 
 async def verify_content(response: aiohttp.ClientResponse):
     """Helper function to verify response content-type and handle the response appropriately.
@@ -119,6 +146,8 @@ class Client:
     def __init__(self, token: str, cluster: str, raw_data: bool = False):
         """Initialize the client."""
         validate_cluster(cluster)
+        validate_key(token)
+        
         self.token = token
         self.cluster = cluster
         self.raw_data = raw_data
@@ -507,18 +536,22 @@ class Client:
                 raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
             return fromdict(MatchDto, raw_response)
         
-    async def GET_getConsoleMatchlist(self, puuid: str, region: str) -> Union[MatchlistDto, Dict]:
+    async def GET_getConsoleMatchlist(self, puuid: str, region: str, platformType: str) -> Union[MatchlistDto, Dict]:
         """Get matchlist for console games played by puuid.
 
         :param puuid: The PUUID of the account.
         :type puuid: str
         :param region: The region to execute against.
         :type region: str
+        :param platformType: The platform type to retrieve matchlist for.
+        :type platformType: str
         :rtype: Union[MatchlistDto, Dict]
         :raises InvalidRegion: If the provided region is invalid.
+        :raises InvalidPlatformType: If the provided platform type is invalid.
         :raises RiotAPIResponseError: If the API response indicates an error.
         """
         validate_region(region)
+        validate_platform_type(platformType)
 
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -530,7 +563,7 @@ class Client:
             "X-Riot-Token": self.token
         }
         async with self.session.get(
-            f"https://{region}.api.riotgames.com/val/match/console/v1/matchlists/by-puuid/{puuid}",
+            f"https://{region}.api.riotgames.com/val/match/console/v1/matchlists/by-puuid/{puuid}?platformType={platformType}",
             headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
@@ -589,23 +622,27 @@ class Client:
     ### VAL-CONSOLE-RANKED-V1 ###
     #############################
 
-    async def GET_getConsoleLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, Dict]:
+    async def GET_getConsoleLeaderboard(self, actId: str, region: str, platformType: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, Dict]:
         """Get leaderboard for the console competitive queue.
 
         :param actId: The act id.
         :type actId: str
         :param region: The region to execute against.
         :type region: str
+        :param platformType: The platform type to retrieve leaderboard for.
+        :type platformType: str
         :param size: The amount of entries to retrieve, defaults to 200.
         :type size: int
         :param startIndex: The index to start from, defaults to 0.
         :type startIndex: int
         :rtype: Union[LeaderboardDto, Dict]
         :raises InvalidRegion: If the provided region is invalid.
+        :raises InvalidPlatformType: If the provided platform type is invalid.
         :raises ValueError: If the size is not between 1 and 200.
         :raises RiotAPIResponseError: If the API response indicates an error.
         """
         validate_region(region)
+        validate_platform_type(platformType)
 
         if size > 200 or size < 1:
             raise ValueError(f"Invalid size, valid values: 1 to 200.")
@@ -620,7 +657,7 @@ class Client:
             "X-Riot-Token": self.token
         }
         async with self.session.get(
-            f"https://{region}.api.riotgames.com/val/console/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}",
+            f"https://{region}.api.riotgames.com/val/console/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}&platformType={platformType}",
             headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
