@@ -1,6 +1,7 @@
 import asyncio
-import os
+import json
 from valaw.client import Client, Exceptions
+from datetime import datetime
 
 def what_is_missing(obj, json_dict):
     # Get the fields of the object
@@ -11,7 +12,10 @@ def what_is_missing(obj, json_dict):
     
     # Find missing fields
     missing_fields = [field for field in json_keys if field not in obj_fields]
-    
+        
+    with open(datetime.now().strftime("raw-%Y-%m-%d_%H-%M-%S.json"), "w") as f:
+        json.dump(json_dict, f)
+
     return missing_fields
 
 
