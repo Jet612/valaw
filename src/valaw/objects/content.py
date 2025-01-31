@@ -50,6 +50,7 @@ class ContentDto:
     skinLevels: List[ContentItemDto]
     equips: List[ContentItemDto]
     gameModes: List[ContentItemDto]
+    totems: List[ContentItemDto]
     sprays: List[ContentItemDto]
     sprayLevels: List[ContentItemDto]
     charms: List[ContentItemDto]
@@ -57,3 +58,4 @@ class ContentDto:
     playerCards: List[ContentItemDto]
     playerTitles: List[ContentItemDto]
     acts: List[ActDto]
+    ceremonies: List[ContentItemDto]

@@ -33,4 +33,7 @@ Terms
     tagLine
         The tagLine is the tag of the account. The tag is the name displayed to the right of the # (hashtag) in their :term:`Riot Id`.
 
+    platformType
+        The platformType is the platform that the player is on. Valid platform types are: `playstation`, `xbox`. These are only used for the console endpoints.
+
 Back to :ref:`top of page<Terms>`
