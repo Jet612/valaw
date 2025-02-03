@@ -33,7 +33,7 @@ setup(
     include_package_data=True,
     python_requires=">=3.8",
     install_requires=[
-                    'dataclass_wizard==0.23.0',
+                    'dataclass_wizard==0.35.0',
                     'aiohttp==3.10.10',
                     'setuptools==75.1.0'
                     ]
