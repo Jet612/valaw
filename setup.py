@@ -7,7 +7,7 @@ url = "https://github.com/Jet612/valaw"
 
 setup(
     name="valaw",
-    version="0.1.06",
+    version="0.1.07",
     author="Jet612",
     description="An asynchronous API wrapper for VALORANT's API",
     long_description=long_desc,
@@ -21,8 +21,7 @@ setup(
     },
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.9+",
         "Operating System :: OS Independent",
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
