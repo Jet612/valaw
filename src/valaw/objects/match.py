@@ -133,7 +133,7 @@ class PlayerDto:
     teamId: str
     partyId: str
     characterId: str
-    stats: PlayerStatsDto
+    stats: Optional[PlayerStatsDto]
     competitiveTier: int
     isObserver: bool
     playerCard: str
