@@ -37,6 +37,6 @@ setup(
     install_requires=[
                     'dataclass_wizard==0.23.0',
                     'aiohttp==3.10.10',
-                    'setuptools==75.1.0'
+                    'setuptools==80.0.0'
                     ]
 )
