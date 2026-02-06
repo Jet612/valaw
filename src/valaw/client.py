@@ -478,7 +478,7 @@ class Client:
         validate_region(region)
 
         if size > 200 or size < 1:
-            raise ValueError(f"Invalid size, valid values: 1 to 200.")
+            raise ValueError("Invalid size, valid values: 1 to 200.")
         
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -645,7 +645,7 @@ class Client:
         validate_platform_type(platformType)
 
         if size > 200 or size < 1:
-            raise ValueError(f"Invalid size, valid values: 1 to 200.")
+            raise ValueError("Invalid size, valid values: 1 to 200.")
         
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
