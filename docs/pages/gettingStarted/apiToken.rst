@@ -12,6 +12,6 @@ You will need a Riot Games API token to use 90% of the VALORANT API. You can get
 4. Click on either "Personal API Key" or "Production API Key".
 5. Fill out the form.
 
-A Production API Key could take up to a month to receive. (I'm not sure if this is always the case, make sure to check Official Riot Games Documentation for more information.)
+A Production API Key can take up to a month to receive. Check the `Official Riot Games Documentation <https://developer.riotgames.com/docs/portal#product-registration>`_ for the most up-to-date information.
 
 More information can be found in the `Riot Games Developer Documentation <https://developer.riotgames.com/docs/portal#product-registration>`_.
