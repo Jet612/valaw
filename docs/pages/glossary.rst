@@ -12,7 +12,7 @@ Terms
         The gameName is the username of the account. The username is the name displayed to the left of the # (hashtag) in their :term:`Riot Id`.
 
     locale
-        The locale is the language that the data will be returned in. Valid locales are: `ar-ae`, `de-de`, `en-gb`, `en-us`, `es-es`, `es-mx`, `fr-fr`, `id-id`, `it-it`, `ja-jp`, `ko-kr`, `pl-pl`, `pt-br`, `ru-ru`, `th-th`, `tr-tr`, `vi-vn`, `zh-cn`, `zh-tw`
+        The locale is the language that the data will be returned in. Valid locales are: `ar-AE`, `de-DE`, `en-GB`, `en-US`, `es-ES`, `es-MX`, `fr-FR`, `id-ID`, `it-IT`, `ja-JP`, `ko-KR`, `pl-PL`, `pt-BR`, `ru-RU`, `th-TH`, `tr-TR`, `vi-VN`, `zh-CN`, `zh-TW`
 
     PUUID
         A PUUID stands for: Player Universally Unique Identifier, simply put it's a players ID.

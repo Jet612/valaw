@@ -22,11 +22,13 @@ REGIONS = {"ap", "br", "esports", "eu", "kr", "latam", "na"}
 CLUSTERS = {"americas", "asia", "esports", "europe"}
 """Set of valid clusters."""
 LOCALES = {
-    'ar-ae', 'de-de', 'en-gb', 'en-us', 'es-es', 'es-mx', 'fr-fr',
-    'id-id', 'it-it', 'ja-jp', 'ko-kr', 'pl-pl', 'pt-br', 'ru-ru',
-    'th-th', 'tr-tr', 'vi-vn', 'zh-cn', 'zh-tw'
+    'ar-ae': 'ar-AE', 'de-de': 'de-DE', 'en-gb': 'en-GB', 'en-us': 'en-US',
+    'es-es': 'es-ES', 'es-mx': 'es-MX', 'fr-fr': 'fr-FR', 'id-id': 'id-ID',
+    'it-it': 'it-IT', 'ja-jp': 'ja-JP', 'ko-kr': 'ko-KR', 'pl-pl': 'pl-PL',
+    'pt-br': 'pt-BR', 'ru-ru': 'ru-RU', 'th-th': 'th-TH', 'tr-tr': 'tr-TR',
+    'vi-vn': 'vi-VN', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW'
 }
-"""Set of valid locales."""
+"""Dict mapping lowercase locale to its properly-cased form for the API."""
 QUEUES = {
     "competitive", "unrated", "spikerush", "tournamentmode",
     "deathmatch", "onefa", "ggteam", "hurm"
@@ -291,8 +293,8 @@ class Client:
         validate_region(region)
 
         if locale and locale.lower() not in LOCALES:
-            raise Exceptions.InvalidLocale(f"Invalid locale, valid locales are: {LOCALES}.")
-        locale_query = f"?locale={locale}" if locale else ""
+            raise Exceptions.InvalidLocale(f"Invalid locale, valid locales are: {list(LOCALES.values())}.")
+        locale_query = f"?locale={LOCALES[locale.lower()]}" if locale else ""
 
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/content/v1/contents{locale_query}",
