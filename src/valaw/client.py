@@ -3,7 +3,6 @@ import aiohttp
 import json
 from dataclass_wizard import fromdict
 from typing import Union, Dict, List, Optional
-from urllib.parse import quote
 
 from .objects import (
     AccountDto,
@@ -17,30 +16,30 @@ from .objects import (
 )
 
 ### Constants ###
-REGIONS = {"ap", "br", "esports", "eu", "kr", "latam", "na"}
-"""Set of valid regions."""
-CLUSTERS = {"americas", "asia", "esports", "europe"}
-"""Set of valid clusters."""
-LOCALES = {
+REGIONS = ["ap", "br", "esports", "eu", "kr", "latam", "na"]
+"""List of valid regions."""
+CLUSTERS = ["americas", "asia", "esports", "europe"]
+"""List of valid clusters."""
+LOCALES = [
     'ar-ae', 'de-de', 'en-gb', 'en-us', 'es-es', 'es-mx', 'fr-fr',
     'id-id', 'it-it', 'ja-jp', 'ko-kr', 'pl-pl', 'pt-br', 'ru-ru',
     'th-th', 'tr-tr', 'vi-vn', 'zh-cn', 'zh-tw'
-}
-"""Set of valid locales."""
-QUEUES = {
+]
+"""List of valid locales."""
+QUEUES = [
     "competitive", "unrated", "spikerush", "tournamentmode",
     "deathmatch", "onefa", "ggteam", "hurm"
-}
-"""Set of valid queues."""
+]
+"""List of valid queues."""
 
-CONSOLE_QUEUES = {
+CONSOLE_QUEUES = [
     "console_unrated", "console_swiftplay", "console_hurm", "console_competitive",
     "console_deathmatch"
-}
-"""Set of valid console queues."""
+]
+"""List of valid console queues."""
 
-PLATFORM_TYPES = {"playstation", "xbox"}
-"""Set of valid platform types."""
+PLATFORM_TYPES = ["playstation", "xbox"]
+"""List of valid platform types."""
 
 ### Custom Exceptions ###
 class Exceptions:
@@ -148,20 +147,11 @@ class Client:
         """Initialize the client."""
         validate_cluster(cluster)
         validate_key(token)
-
+        
         self.token = token
         self.cluster = cluster
         self.raw_data = raw_data
-        self._headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                          "AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/112.0.0.0 Safari/537.36",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
-            "Origin": "https://developer.riotgames.com",
-            "X-Riot-Token": self.token
-        }
-        self.session = aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=30))
+        self.session = aiohttp.ClientSession()  # Reuse session
 
     async def close(self):
         """Close the aiohttp session."""
@@ -181,9 +171,18 @@ class Client:
         cluster = cluster or self.cluster
         validate_cluster(cluster)
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -208,9 +207,18 @@ class Client:
         cluster = cluster or self.cluster
         validate_cluster(cluster)
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -233,7 +241,16 @@ class Client:
         cluster = cluster or self.cluster
         validate_cluster(cluster)
 
-        headers = {**self._headers, "Authorization": authorization}
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token,
+            "Authorization": authorization
+        }
         async with self.session.get(
             f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me",
             headers=headers
@@ -259,9 +276,18 @@ class Client:
         cluster = cluster or self.cluster
         validate_cluster(cluster)
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -294,9 +320,18 @@ class Client:
             raise Exceptions.InvalidLocale(f"Invalid locale, valid locales are: {LOCALES}.")
         locale_query = f"?locale={locale}" if locale else ""
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/content/v1/contents{locale_query}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -322,9 +357,18 @@ class Client:
         """
         validate_region(region)
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -346,9 +390,18 @@ class Client:
         """
         validate_region(region)
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -382,9 +435,18 @@ class Client:
         if queue.lower() not in QUEUES:
             raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {QUEUES}.")
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -418,9 +480,18 @@ class Client:
         if size > 200 or size < 1:
             raise ValueError("Invalid size, valid values: 1 to 200.")
         
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/112.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -445,9 +516,18 @@ class Client:
         :raises RiotAPIResponseError: If the API response indicates an error.
         """
         validate_region(region)
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/match/console/v1/matches/{matchId}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -473,9 +553,18 @@ class Client:
         validate_region(region)
         validate_platform_type(platformType)
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/match/console/v1/matchlists/by-puuid/{puuid}?platformType={platformType}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -509,9 +598,18 @@ class Client:
         if queue.lower() not in CONSOLE_QUEUES:
             raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {CONSOLE_QUEUES}.")
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/111.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/match/console/v1/recent-matches/by-queue/{queue}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -549,9 +647,18 @@ class Client:
         if size > 200 or size < 1:
             raise ValueError("Invalid size, valid values: 1 to 200.")
         
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/112.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/console/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}&platformType={platformType}",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -575,9 +682,18 @@ class Client:
         """
         validate_region(region)
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                          "AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/112.0.0.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Origin": "https://developer.riotgames.com",
+            "X-Riot-Token": self.token
+        }
         async with self.session.get(
             f"https://{region}.api.riotgames.com/val/status/v1/platform-data",
-            headers=self._headers
+            headers=headers
         ) as resp:
             raw_response = await verify_content(response=resp)
             if self.raw_data:
@@ -610,17 +726,10 @@ class Client:
         :return: The constructed Riot Sign-On link.
         :rtype: str
         """
-        scope = "+".join(quote(s, safe="") for s in scopes)
+        scopes = "+".join(scopes)
 
-        login_hint_query = f"&login_hint={quote(login_hint, safe='')}" if login_hint else ""
-        ui_locales_query = f"&ui_locales={quote(' '.join(ui_locales), safe='')}" if ui_locales else ""
-        state_query = f"&state={quote(state, safe='')}" if state else ""
+        login_hint_query = f"&login_hint={login_hint}" if login_hint else ""
+        ui_locales_query = f"&ui_locales={' '.join(ui_locales)}" if ui_locales else ""
+        state_query = f"&state={state}" if state else ""
 
-        return (
-            f"https://auth.riotgames.com/authorize"
-            f"?redirect_uri={quote(redirect_uri, safe='')}"
-            f"&client_id={quote(client_id, safe='')}"
-            f"&response_type={quote(response_type, safe='')}"
-            f"&scope={scope}"
-            f"{login_hint_query}{ui_locales_query}{state_query}"
-        )
+        return f"https://auth.riotgames.com/authorize?redirect_uri={redirect_uri}&client_id={client_id}&response_type={response_type}&scope={scopes}{login_hint_query}{ui_locales_query}{state_query}"
