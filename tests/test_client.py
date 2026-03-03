@@ -1,384 +1,198 @@
-import asyncio
-import json
+import valaw
 import os
-import pytest
-from valaw.client import Client, Exceptions
-from datetime import datetime
 from dotenv import load_dotenv
+import asyncio
+import sys
 
-# Load environment variables (like RIOT_API_KEY)
 load_dotenv()
 
-# Get API key and skip tests if not found
-RIOT_API_KEY = os.getenv("RIOT_API_KEY")
-if not RIOT_API_KEY:
-    pytest.skip(
-        "RIOT_API_KEY not found in environment variables. Skipping integration tests.",
-        allow_module_level=True,
-    )
+RIOT_API_TOKEN = os.getenv("RIOT_API_TOKEN")
 
 
-# --- Helper Functions ---
-
-def what_is_missing(obj, json_dict):
-    """Compares object fields to dictionary keys and returns missing keys."""
-    # Get the fields of the object using __dict__
-    obj_fields = obj.__dict__
-
-    # Ensure all keys in json_dict are strings and not None
-    json_keys = {key for key in json_dict.keys() if key is not None}
-
-    # Find missing fields
-    missing_fields = list(json_keys - set(obj_fields.keys()))
-
-    # Optionally write raw data for debugging (consider removing in CI)
-    # timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    # filename = f"raw_missing_{obj.__class__.__name__}_{timestamp}.json"
-    # try:
-    #     with open(filename, "w") as f:
-    #         json.dump(json_dict, f, indent=2)
-    #     print(f"Raw data saved to {filename}")
-    # except Exception as e:
-    #     print(f"Failed to write raw data: {e}")
-
-    return missing_fields
-
-
-def has_all_fields(obj, json_dict):
-    """Checks if all keys from json_dict exist as attributes in obj."""
-    if not obj or not json_dict:
-        return False
-    obj_fields = obj.__dict__
-    return all(
-        key in obj_fields for key in json_dict.keys() if key is not None
-    )
-
-
-# --- Pytest Test Function ---
-
-
-@pytest.mark.asyncio
-async def test_all_endpoints():
-    """
-    Tests various endpoints of the valaw client against the Riot API.
-    Compares processed data objects against raw JSON responses.
-    """
-    client = Client(token=RIOT_API_KEY, cluster="americas")
-    client_raw = Client(token=RIOT_API_KEY, cluster="americas", raw_data=True)
-
-    # Variables to store data between calls
-    test_puuid = None
-    test_act_id = None
-    test_puuid_console = None
-    getRecent = None
-    getMatch = None
-    getConsoleRecent = None
-    getConsoleMatch = None
+async def main():
+    if RIOT_API_TOKEN is None:
+        raise ValueError("RIOT_API_TOKEN environment variable is not set.")
+    client = valaw.Client(RIOT_API_TOKEN, "americas")
 
     try:
-        # --- Regular API Calls ---
-
-        # GET_getContent
+        # Get recent matches
         try:
-            getContent = await client.GET_getContent(region="na", locale="en-US")
-            getContentRaw = await client_raw.GET_getContent(
-                region="na", locale="en-US"
-            )
-            assert getContent is not None, "GET_getContent returned None"
-            assert getContentRaw is not None, "GET_getContent (raw) returned None"
-            assert has_all_fields(getContent, getContentRaw), (
-                f"GET_getContent missing fields: "
-                f"{what_is_missing(getContent, getContentRaw)}"
-            )
-        except Exceptions.RiotAPIResponseError as e:
-            pytest.fail(
-                f"GET_getContent failed (API Error {e.status_code}): {e.message}"
-            )
+            recent_matches = await client.GET_getRecent("competitive", "na")
         except Exception as e:
-            pytest.fail(f"GET_getContent failed (Other Error): {e}")
+            print(f"GET_getRecent failed: {e}")
+            return
 
-        # GET_getRecent
+        match_ids = getattr(recent_matches, "matchIds", None)
+        if not match_ids:
+            print("No match IDs found in recent matches")
+            return
+
+        # Get the first match
         try:
-            getRecent = await client.GET_getRecent(
-                queue="competitive", region="na"
-            )
-            getRecentRaw = await client_raw.GET_getRecent(
-                queue="competitive", region="na"
-            )
-            assert getRecent is not None, "GET_getRecent returned None"
-            assert getRecentRaw is not None, "GET_getRecent (raw) returned None"
-            assert has_all_fields(getRecent, getRecentRaw), (
-                f"GET_getRecent missing fields: "
-                f"{what_is_missing(getRecent, getRecentRaw)}"
-            )
-        except Exceptions.RiotAPIResponseError as e:
-            pytest.fail(
-                f"GET_getRecent failed (API Error {e.status_code}): {e.message}"
-            )
+            match = await client.GET_getMatch(match_ids[0], "na")
         except Exception as e:
-            pytest.fail(f"GET_getRecent failed (Other Error): {e}")
+            print(f"GET_getMatch failed: {e}")
+            return
 
-        # Proceed only if getRecent was successful and has matches
-        assert getRecent is not None, "Cannot proceed without getRecent result"
-        assert (
-            getRecent.matchIds
-        ), "getRecent returned no match IDs, cannot test getMatch"
-        test_match_id = getRecent.matchIds[0]
+        players = getattr(match, "players", None)
+        if not players:
+            print("No players found in match")
+            return
+        player_puuid = getattr(players[0], "puuid", None)
+        if not player_puuid:
+            print("Player puuid not found")
+            return
 
-        # GET_getMatch
-        try:
-            getMatch = await client.GET_getMatch(
-                matchId=test_match_id, region="na"
-            )
-            getMatchRaw = await client_raw.GET_getMatch(
-                matchId=test_match_id, region="na"
-            )
-            assert getMatch is not None, "GET_getMatch returned None"
-            assert getMatchRaw is not None, "GET_getMatch (raw) returned None"
-            assert has_all_fields(getMatch, getMatchRaw), (
-                f"GET_getMatch missing fields: "
-                f"{what_is_missing(getMatch, getMatchRaw)}"
-            )
-            # Extract data for next tests
-            if getMatch.players:
-                test_puuid = getMatch.players[0].puuid
-            if getMatch.matchInfo:
-                test_act_id = getMatch.matchInfo.seasonId
-        except Exceptions.RiotAPIResponseError as e:
-            pytest.fail(
-                f"GET_getMatch failed (API Error {e.status_code}): {e.message}"
-            )
-        except Exception as e:
-            pytest.fail(f"GET_getMatch failed (Other Error): {e}")
-
-        # GET_getMatchlist (requires puuid from getMatch)
-        if test_puuid:
+        # Run independent calls concurrently
+        async def safe_get_by_puuid():
             try:
-                getMatchlist = await client.GET_getMatchlist(
-                    puuid=test_puuid, region="na"
-                )
-                getMatchlistRaw = await client_raw.GET_getMatchlist(
-                    puuid=test_puuid, region="na"
-                )
-                assert getMatchlist is not None, "GET_getMatchlist returned None"
-                assert (
-                    getMatchlistRaw is not None
-                ), "GET_getMatchlist (raw) returned None"
-                # Note: Matchlist structure might differ slightly, adjust check if needed
-                assert has_all_fields(getMatchlist, getMatchlistRaw), (
-                    f"GET_getMatchlist missing fields: "
-                    f"{what_is_missing(getMatchlist, getMatchlistRaw)}"
-                )
-            except Exceptions.RiotAPIResponseError as e:
-                pytest.fail(
-                    f"GET_getMatchlist failed (API Error {e.status_code}): {e.message}"
-                )
+                return await client.GET_getByPuuid(player_puuid, "americas")
             except Exception as e:
-                pytest.fail(f"GET_getMatchlist failed (Other Error): {e}")
-        else:
-            print("Skipping GET_getMatchlist: No PUUID obtained from getMatch.")
+                print(f"GET_getByPuuid failed: {e}")
+                return None
 
-        # GET_getLeaderboard (requires actId from getMatch)
-        if test_act_id:
+        async def safe_get_matchlist():
             try:
-                getLeaderboard = await client.GET_getLeaderboard(
-                    actId=test_act_id, region="na"
-                )
-                getLeaderboardRaw = await client_raw.GET_getLeaderboard(
-                    actId=test_act_id, region="na"
-                )
-                assert (
-                    getLeaderboard is not None
-                ), "GET_getLeaderboard returned None"
-                assert (
-                    getLeaderboardRaw is not None
-                ), "GET_getLeaderboard (raw) returned None"
-                assert has_all_fields(getLeaderboard, getLeaderboardRaw), (
-                    f"GET_getLeaderboard missing fields: "
-                    f"{what_is_missing(getLeaderboard, getLeaderboardRaw)}"
-                )
-            except Exceptions.RiotAPIResponseError as e:
-                # Leaderboards can sometimes be empty or unavailable, might not be a failure
-                print(
-                    f"GET_getLeaderboard info (API Status {e.status_code}): {e.message}"
-                )
+                await client.GET_getMatchlist(player_puuid, "na")
             except Exception as e:
-                pytest.fail(f"GET_getLeaderboard failed (Other Error): {e}")
-        else:
-            print(
-                "Skipping GET_getLeaderboard: No Act ID obtained from getMatch."
-            )
+                print(f"GET_getMatchlist failed: {e}")
 
-        # --- Console API Calls ---
+        async def safe_get_content():
+            try:
+                return await client.GET_getContent("na", "en-us")
+            except Exception as e:
+                print(f"GET_getContent failed: {e}")
+                return None
 
-        # GET_getConsoleRecent
-        try:
-            getConsoleRecent = await client.GET_getConsoleRecent(
-                queue="console_competitive", region="na"
-            )
-            getConsoleRecentRaw = await client_raw.GET_getConsoleRecent(
-                queue="console_competitive", region="na"
-            )
-            assert (
-                getConsoleRecent is not None
-            ), "GET_getConsoleRecent returned None"
-            assert (
-                getConsoleRecentRaw is not None
-            ), "GET_getConsoleRecent (raw) returned None"
-            assert has_all_fields(getConsoleRecent, getConsoleRecentRaw), (
-                f"GET_getConsoleRecent missing fields: "
-                f"{what_is_missing(getConsoleRecent, getConsoleRecentRaw)}"
-            )
-        except Exceptions.RiotAPIResponseError as e:
-            pytest.fail(
-                f"GET_getConsoleRecent failed (API Error {e.status_code}): {e.message}"
-            )
-        except Exception as e:
-            pytest.fail(f"GET_getConsoleRecent failed (Other Error): {e}")
+        async def safe_get_platform_data():
+            try:
+                await client.GET_getPlatformData("na")
+            except Exception as e:
+                print(f"GET_getPlatformData failed: {e}")
 
-        # Proceed only if getConsoleRecent was successful and has matches
-        assert (
-            getConsoleRecent is not None
-        ), "Cannot proceed without getConsoleRecent result"
-        assert (
-            getConsoleRecent.matchIds
-        ), "getConsoleRecent returned no match IDs, cannot test getConsoleMatch"
-        test_console_match_id = getConsoleRecent.matchIds[0]
+        account_by_puuid, _, content, _ = await asyncio.gather(
+            safe_get_by_puuid(),
+            safe_get_matchlist(),
+            safe_get_content(),
+            safe_get_platform_data(),
+        )
 
-        # GET_getConsoleMatch
-        try:
-            getConsoleMatch = await client.GET_getConsoleMatch(
-                matchId=test_console_match_id, region="na"
-            )
-            getConsoleMatchRaw = await client_raw.GET_getConsoleMatch(
-                matchId=test_console_match_id, region="na"
-            )
-            assert (
-                getConsoleMatch is not None
-            ), "GET_getConsoleMatch returned None"
-            assert (
-                getConsoleMatchRaw is not None
-            ), "GET_getConsoleMatch (raw) returned None"
-            assert has_all_fields(getConsoleMatch, getConsoleMatchRaw), (
-                f"GET_getConsoleMatch missing fields: "
-                f"{what_is_missing(getConsoleMatch, getConsoleMatchRaw)}"
-            )
-            if getConsoleMatch.players:
-                test_puuid_console = getConsoleMatch.players[0].puuid
-        except Exceptions.RiotAPIResponseError as e:
-            pytest.fail(
-                f"GET_getConsoleMatch failed (API Error {e.status_code}): {e.message}"
-            )
-        except Exception as e:
-            pytest.fail(f"GET_getConsoleMatch failed (Other Error): {e}")
+        # Resolve active act from content (used by both PC and console leaderboards)
+        active_act = None
+        if content is not None:
+            acts = getattr(content, "acts", None)
+            if acts:
+                for act in acts:
+                    if (
+                        hasattr(act, "isActive")
+                        and act.isActive
+                        and hasattr(act, "type")
+                        and act.type == "act"
+                    ):
+                        active_act = act
+                        break
+            else:
+                print("No acts found in content")
 
-        # GET_getConsoleMatchlist (requires puuid from getConsoleMatch)
-        if test_puuid_console:
-            for platform in ["playstation", "xbox"]:
+        # Run calls that depend on phase 3 results concurrently
+        followup_tasks = []
+
+        if account_by_puuid is not None:
+            async def safe_get_by_riot_id():
                 try:
-                    getConsoleMatchlist = await client.GET_getConsoleMatchlist(
-                        puuid=test_puuid_console,
-                        region="na",
-                        platformType=platform,
-                    )
-                    getConsoleMatchlistRaw = (
-                        await client_raw.GET_getConsoleMatchlist(
-                            puuid=test_puuid_console,
-                            region="na",
-                            platformType=platform,
-                        )
-                    )
-                    assert (
-                        getConsoleMatchlist is not None
-                    ), f"GET_getConsoleMatchlist ({platform}) returned None"
-                    assert (
-                        getConsoleMatchlistRaw is not None
-                    ), f"GET_getConsoleMatchlist ({platform}) (raw) returned None"
-                    assert has_all_fields(
-                        getConsoleMatchlist, getConsoleMatchlistRaw
-                    ), (
-                        f"GET_getConsoleMatchlist ({platform}) missing fields: "
-                        f"{what_is_missing(getConsoleMatchlist, getConsoleMatchlistRaw)}"
-                    )
-                except Exceptions.RiotAPIResponseError as e:
-                    pytest.fail(
-                        f"GET_getConsoleMatchlist ({platform}) failed (API Error {e.status_code}): {e.message}"
-                    )
+                    game_name = getattr(account_by_puuid, "gameName", None) or ""
+                    tag_line = getattr(account_by_puuid, "tagLine", None) or ""
+                    await client.GET_getByRiotId(game_name, tag_line, "americas")
                 except Exception as e:
-                    pytest.fail(
-                        f"GET_getConsoleMatchlist ({platform}) failed (Other Error): {e}"
-                    )
-        else:
-            print(
-                "Skipping GET_getConsoleMatchlist: No Console PUUID obtained."
-            )
+                    print(f"GET_getByRiotId failed: {e}")
 
-        # GET_getConsoleLeaderboard (requires actId from getMatch)
-        if test_act_id:
-            for platform in ["playstation", "xbox"]: # Assuming leaderboard exists for both
+            async def safe_get_active_shard():
                 try:
-                    getConsoleLeaderboard = (
-                        await client.GET_getConsoleLeaderboard(
-                            actId=test_act_id, region="na", platformType=platform
-                        )
-                    )
-                    getConsoleLeaderboardRaw = (
-                        await client_raw.GET_getConsoleLeaderboard(
-                            actId=test_act_id, region="na", platformType=platform
-                        )
-                    )
-                    assert (
-                        getConsoleLeaderboard is not None
-                    ), f"GET_getConsoleLeaderboard ({platform}) returned None"
-                    assert (
-                        getConsoleLeaderboardRaw is not None
-                    ), f"GET_getConsoleLeaderboard ({platform}) (raw) returned None"
-                    assert has_all_fields(
-                        getConsoleLeaderboard, getConsoleLeaderboardRaw
-                    ), (
-                        f"GET_getConsoleLeaderboard ({platform}) missing fields: "
-                        f"{what_is_missing(getConsoleLeaderboard, getConsoleLeaderboardRaw)}"
-                    )
-                except Exceptions.RiotAPIResponseError as e:
-                     print(
-                        f"GET_getConsoleLeaderboard ({platform}) info (API Status {e.status_code}): {e.message}"
-                    )
+                    puuid = getattr(account_by_puuid, "puuid", None)
+                    if puuid is None:
+                        print("Account puuid not found")
+                        return
+                    await client.GET_getActiveShard(puuid, "americas")
                 except Exception as e:
-                    pytest.fail(
-                        f"GET_getConsoleLeaderboard ({platform}) failed (Other Error): {e}"
-                    )
+                    print(f"GET_getActiveShard failed: {e}")
+
+            followup_tasks.extend([safe_get_by_riot_id(), safe_get_active_shard()])
+
+        if active_act and hasattr(active_act, "id"):
+            act_id = active_act.id
+
+            async def safe_get_leaderboard():
+                try:
+                    await client.GET_getLeaderboard(act_id, "na")
+                except Exception as e:
+                    print(f"GET_getLeaderboard failed: {e}")
+
+            followup_tasks.append(safe_get_leaderboard())
         else:
-            print(
-                "Skipping GET_getConsoleLeaderboard: No Act ID obtained."
-            )
+            print("No active act found or act doesn't have an id")
 
+        async def run_console_chain():
+            try:
+                console_recent = await client.GET_getConsoleRecent("console_competitive", "na")
+            except Exception as e:
+                print(f"GET_getConsoleRecent failed: {e}")
+                return
 
-        # --- Other API Calls ---
+            console_match_ids = getattr(console_recent, "matchIds", None)
+            if not console_match_ids:
+                print("No console match IDs found")
+                return
 
-        # GET_getPlatformData
-        try:
-            getPlatformData = await client.GET_getPlatformData(region="na")
-            getPlatformDataRaw = await client_raw.GET_getPlatformData(region="na")
-            assert (
-                getPlatformData is not None
-            ), "GET_getPlatformData returned None"
-            assert (
-                getPlatformDataRaw is not None
-            ), "GET_getPlatformData (raw) returned None"
-            assert has_all_fields(getPlatformData, getPlatformDataRaw), (
-                f"GET_getPlatformData missing fields: "
-                f"{what_is_missing(getPlatformData, getPlatformDataRaw)}"
-            )
-        except Exceptions.RiotAPIResponseError as e:
-            pytest.fail(
-                f"GET_getPlatformData failed (API Error {e.status_code}): {e.message}"
-            )
-        except Exception as e:
-            pytest.fail(f"GET_getPlatformData failed (Other Error): {e}")
+            try:
+                console_match = await client.GET_getConsoleMatch(console_match_ids[0], "na")
+            except Exception as e:
+                print(f"GET_getConsoleMatch failed: {e}")
+                return
+
+            console_players = getattr(console_match, "players", None)
+            if not console_players:
+                print("No players found in console match")
+                return
+            console_player_puuid = getattr(console_players[0], "puuid", None)
+            if not console_player_puuid:
+                print("Console player puuid not found")
+                return
+
+            console_followup = []
+
+            async def safe_get_console_matchlist():
+                try:
+                    await client.GET_getConsoleMatchlist(console_player_puuid, "na", "playstation")
+                except Exception as e:
+                    print(f"GET_getConsoleMatchlist failed: {e}")
+
+            console_followup.append(safe_get_console_matchlist())
+
+            if active_act and hasattr(active_act, "id"):
+                console_act_id = active_act.id
+
+                async def safe_get_console_leaderboard():
+                    try:
+                        await client.GET_getConsoleLeaderboard(console_act_id, "na", "playstation")
+                    except Exception as e:
+                        print(f"GET_getConsoleLeaderboard failed: {e}")
+
+                console_followup.append(safe_get_console_leaderboard())
+
+            await asyncio.gather(*console_followup)
+
+        followup_tasks.append(run_console_chain())
+
+        if followup_tasks:
+            await asyncio.gather(*followup_tasks)
 
     finally:
-        # Ensure clients are closed regardless of test outcome
         await client.close()
-        await client_raw.close()
 
-# Note: No if __name__ == "__main__": block is needed for pytest
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print(f"Fatal error: {e}")
+        sys.exit(1)

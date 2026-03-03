@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=61"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "valaw"
@@ -29,6 +29,9 @@ Source = "https://github.com/Jet612/valaw"
 Documentation = "https://valaw.readthedocs.io"
 "Issue Tracker" = "https://github.com/Jet612/valaw/issues"
 "Chat/Support" = "https://discord.gg/mVXpvunBbF"
+
+[project.optional-dependencies]
+dev = ["python-dotenv"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
