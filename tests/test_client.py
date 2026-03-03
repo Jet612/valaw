@@ -22,8 +22,8 @@ async def request(fn):
             return await fn()
         except valaw.Exceptions.RiotAPIResponseError as e:
             if e.status_code == 429 and attempt == 0:
-                print("Rate limited, retrying in 1s...")
-                await asyncio.sleep(1)
+                print("Rate limited, retrying in 10s...")
+                await asyncio.sleep(10)
             else:
                 raise
 
