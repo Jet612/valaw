@@ -9,7 +9,7 @@ valaw is an asynchronous API wrapper for Riot Games' `VALORANT API <https://deve
 Help/Support
 ============
 
-If you need help/support with valaw, you can join the `Discord Server <https://discord.gg/mVXpvunBbF>`_. If you have incountered a bug, you can also open an issue on the `GitHub repository <https://github.com/Jet612/valaw/issues>`_.
+If you need help/support with valaw, you can join the `Discord Server <https://discord.gg/mVXpvunBbF>`_. If you have encountered a bug, you can also open an issue on the `GitHub repository <https://github.com/Jet612/valaw/issues>`_.
 
 Quick Links
 ===========

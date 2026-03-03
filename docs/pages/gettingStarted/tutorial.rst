@@ -2,41 +2,55 @@
 Quick Tutorial
 ==============
 
-First, install the valaw module. See :ref:`Installation` for directions. 
-After, you have installed valaw, you can import it into your project::
+First, install the valaw module. See :ref:`Installation` for directions.
+After you have installed valaw, you can import it into your project::
 
     import valaw
+    import asyncio
 
-Then, you can initialize the client::
+Then, initialize the client with your API token and the :term:`cluster` closest to you::
 
-    client = valaw.Client("Riot_API_Token", "cluster")
+    client = valaw.Client("Riot_API_Token", "americas")
 
-.. note:: 
-    Before you can use the client, you will need a Riot Games API token. 
-    If you don't already have one you can follow :ref:`Getting a Riot API Token` to get one.
-
-The :term:`cluster` should be the :term:`cluster` that is closest to you.
+.. note::
+    Before you can use the client, you will need a Riot Games API token.
+    If you don't already have one, follow :ref:`Getting a Riot API Token` to get one.
 
 After you have initialized the client, you can use it to make requests to the API.
-For example, if you want to get the content you can do::
+For example, to get the content for the ``na`` region::
 
-    async def func():
-        content_data = await client.GET_getContent("region")
+    async def main():
+        content_data = await client.GET_getContent("na", "en-US")
+        await client.close()
 
-All of that put together looks like::
+    asyncio.run(main())
+
+.. note::
+    All API methods are ``async`` and must be called inside an ``async`` function.
+    Always call ``client.close()`` when you are done to cleanly shut down the session.
+
+A full working example::
 
     import valaw
+    import asyncio
 
-    client = valaw.Client("Riot_API_Token", "cluster")
+    async def main():
+        client = valaw.Client("Riot_API_Token", "americas")
+        try:
+            content_data = await client.GET_getContent("na", "en-US")
+            print(content_data)
+        finally:
+            await client.close()
 
-    async def func():
-        content_data = await client.GET_getContent("region")
+    asyncio.run(main())
 
 Raw Request Data
 ================
 
-If you want to get the raw requests data instead of the data as an object, you can do::
+If you want to get the raw JSON data instead of a typed object, pass ``raw_data=True``::
 
-    client = valaw.Client("Riot_API_Token", "cluster", raw_data=True)
+    client = valaw.Client("Riot_API_Token", "americas", raw_data=True)
 
-This will return the raw data from the request as dictionary.
+This will return the raw response as a dictionary instead of a typed object.
+
+Back to :ref:`top of page<Quick Tutorial>`
