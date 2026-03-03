@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "valaw"
 version = "0.1.11"
-description = "An asynchronous API wrapper for VALORANT's API"
+description = "Async Python wrapper for the Official VALORANT API (Riot Games). Fast, typed, and easy to use."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }

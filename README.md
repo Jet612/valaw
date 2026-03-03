@@ -4,8 +4,8 @@
 [![PyPI Version](https://img.shields.io/pypi/v/valaw?style=for-the-badge)](https://pypi.org/project/valaw/)
 [![GitHub Issues](https://img.shields.io/github/issues/jet612/valaw?style=for-the-badge)](https://github.com/Jet612/valaw/issues)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/valaw?style=for-the-badge)](https://pypi.org/project/valaw/)
-[![Python Version](https://img.shields.io/pypi/pyversions/valaw?style=for-the-badge)](https://www.python.org/)
-[![GitHub Contributors](https://img.shields.io/github/contributors/jet612/valaw?style=for-the-badge)](https://github.com/Jet612/valaw/graphs/contributors)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/valaw?style=for-the-badge)](https://pypi.org/project/valaw/)
+
 
 
 valaw is an asynchronous API wrapper for VALORANT's API.
