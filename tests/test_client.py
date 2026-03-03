@@ -15,6 +15,19 @@ def fail(msg):
     failures.append(msg)
 
 
+async def request(fn):
+    """Call fn(), retrying once on 429 after a 1s delay."""
+    for attempt in range(2):
+        try:
+            return await fn()
+        except valaw.Exceptions.RiotAPIResponseError as e:
+            if e.status_code == 429 and attempt == 0:
+                print("Rate limited, retrying in 1s...")
+                await asyncio.sleep(1)
+            else:
+                raise
+
+
 async def main():
     if RIOT_API_TOKEN is None:
         raise ValueError("RIOT_API_TOKEN environment variable is not set.")
@@ -23,7 +36,7 @@ async def main():
     try:
         # Get recent matches
         try:
-            recent_matches = await client.GET_getRecent("competitive", "na")
+            recent_matches = await request(lambda: client.GET_getRecent("competitive", "na"))
         except Exception as e:
             fail(f"GET_getRecent: {e}")
             return
@@ -35,7 +48,7 @@ async def main():
 
         # Get the first match
         try:
-            match = await client.GET_getMatch(match_ids[0], "na")
+            match = await request(lambda: client.GET_getMatch(match_ids[0], "na"))
         except Exception as e:
             fail(f"GET_getMatch: {e}")
             return
@@ -52,27 +65,27 @@ async def main():
         # Run independent calls concurrently
         async def safe_get_by_puuid():
             try:
-                return await client.GET_getByPuuid(player_puuid, "americas")
+                return await request(lambda: client.GET_getByPuuid(player_puuid, "americas"))
             except Exception as e:
                 fail(f"GET_getByPuuid: {e}")
                 return None
 
         async def safe_get_matchlist():
             try:
-                await client.GET_getMatchlist(player_puuid, "na")
+                await request(lambda: client.GET_getMatchlist(player_puuid, "na"))
             except Exception as e:
                 fail(f"GET_getMatchlist: {e}")
 
         async def safe_get_content():
             try:
-                return await client.GET_getContent("na", "en-us")
+                return await request(lambda: client.GET_getContent("na", "en-us"))
             except Exception as e:
                 fail(f"GET_getContent: {e}")
                 return None
 
         async def safe_get_platform_data():
             try:
-                await client.GET_getPlatformData("na")
+                await request(lambda: client.GET_getPlatformData("na"))
             except Exception as e:
                 fail(f"GET_getPlatformData: {e}")
 
@@ -108,7 +121,7 @@ async def main():
                 try:
                     game_name = getattr(account_by_puuid, "gameName", None) or ""
                     tag_line = getattr(account_by_puuid, "tagLine", None) or ""
-                    await client.GET_getByRiotId(game_name, tag_line, "americas")
+                    await request(lambda: client.GET_getByRiotId(game_name, tag_line, "americas"))
                 except Exception as e:
                     fail(f"GET_getByRiotId: {e}")
 
@@ -118,7 +131,7 @@ async def main():
                     if puuid is None:
                         fail("GET_getActiveShard: account puuid not found")
                         return
-                    await client.GET_getActiveShard(puuid, "americas")
+                    await request(lambda: client.GET_getActiveShard(puuid, "americas"))
                 except Exception as e:
                     fail(f"GET_getActiveShard: {e}")
 
@@ -129,7 +142,7 @@ async def main():
 
             async def safe_get_leaderboard():
                 try:
-                    await client.GET_getLeaderboard(act_id, "na")
+                    await request(lambda: client.GET_getLeaderboard(act_id, "na"))
                 except Exception as e:
                     fail(f"GET_getLeaderboard: {e}")
 
@@ -139,7 +152,7 @@ async def main():
 
         async def run_console_chain():
             try:
-                console_recent = await client.GET_getConsoleRecent("console_competitive", "na")
+                console_recent = await request(lambda: client.GET_getConsoleRecent("console_competitive", "na"))
             except Exception as e:
                 fail(f"GET_getConsoleRecent: {e}")
                 return
@@ -150,7 +163,7 @@ async def main():
                 return
 
             try:
-                console_match = await client.GET_getConsoleMatch(console_match_ids[0], "na")
+                console_match = await request(lambda: client.GET_getConsoleMatch(console_match_ids[0], "na"))
             except Exception as e:
                 fail(f"GET_getConsoleMatch: {e}")
                 return
@@ -168,7 +181,7 @@ async def main():
 
             async def safe_get_console_matchlist():
                 try:
-                    await client.GET_getConsoleMatchlist(console_player_puuid, "na", "playstation")
+                    await request(lambda: client.GET_getConsoleMatchlist(console_player_puuid, "na", "playstation"))
                 except Exception as e:
                     fail(f"GET_getConsoleMatchlist: {e}")
 
@@ -179,7 +192,7 @@ async def main():
 
                 async def safe_get_console_leaderboard():
                     try:
-                        await client.GET_getConsoleLeaderboard(console_act_id, "na", "playstation")
+                        await request(lambda: client.GET_getConsoleLeaderboard(console_act_id, "na", "playstation"))
                     except Exception as e:
                         fail(f"GET_getConsoleLeaderboard: {e}")
 
