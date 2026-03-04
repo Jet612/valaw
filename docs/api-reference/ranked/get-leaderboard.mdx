@@ -1,0 +1,59 @@
+---
+title: "Get Leaderboard"
+description: "Get the competitive leaderboard for an act"
+---
+
+## GET\_getLeaderboard
+
+```python
+await client.GET_getLeaderboard(actId, region, size=200, startIndex=0)
+```
+
+Get the competitive leaderboard for an act.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `actId` | `str` | The act ID |
+| `region` | `str` | Region to query. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+| `size` | `int` | Number of entries to return (1–200). Defaults to `200` |
+| `startIndex` | `int` | Starting index for pagination. Defaults to `0` |
+
+**Returns:** [`LeaderboardDto`](/api-reference/objects/ranked-objects#leaderboarddto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        # Get the top 50 players for a specific act
+        leaderboard = await client.GET_getLeaderboard(
+            actId="act-id-here",
+            region="na",
+            size=50
+        )
+
+        print(f"Total players: {leaderboard.totalPlayers}")
+        for player in leaderboard.players:
+            name = player.gameName if player.gameName != "Private" else "[Private]"
+            print(f"  #{player.leaderboardRank} {name} — {player.rankedRating} RR")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  Some players have private profiles. For these entries, `gameName` is `"Private"` and `puuid`/`tagLine` are empty strings.
+</Note>
+
+<Tip>
+  Use `startIndex` to paginate through the full leaderboard. For example, to get entries 201–400, set `startIndex=200`.
+</Tip>

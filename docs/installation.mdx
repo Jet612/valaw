@@ -1,0 +1,60 @@
+---
+title: Installation
+description: Install Valaw using pip or uv
+---
+
+## Install Valaw
+
+Valaw is available on PyPI and can be installed using your preferred package manager.
+
+<CodeGroup>
+
+```bash pip
+pip install valaw
+```
+
+```bash uv
+uv add valaw
+```
+
+</CodeGroup>
+
+## Dependencies
+
+Valaw automatically installs the following required dependencies:
+
+- **aiohttp** (3.13.3): Async HTTP client for making API requests
+- **dataclass_wizard** (0.39.1): JSON deserialization into typed Python objects
+
+These dependencies are specified in the project's `pyproject.toml` and will be installed automatically.
+
+## Verify installation
+
+After installation, verify that Valaw is available in your Python environment:
+
+```python
+import valaw
+
+print(valaw.__author__)  # Should print: Jet612
+```
+
+If the import succeeds without errors, Valaw is installed correctly.
+
+## Optional dev dependencies
+
+If you're contributing to Valaw or running the test suite, install the optional dev dependencies:
+
+```bash
+pip install valaw[dev]
+```
+
+This includes:
+- **python-dotenv**: For loading environment variables from `.env` files
+
+## Next steps
+
+Now that Valaw is installed, you're ready to make your first API call:
+
+<Card title="Quickstart" icon="rocket" href="/quickstart">
+  Learn how to initialize the client and make your first request
+</Card>

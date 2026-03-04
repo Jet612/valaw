@@ -1,0 +1,51 @@
+---
+title: "Get Platform Data"
+description: "Get VALORANT platform status for a region"
+---
+
+## GET\_getPlatformData
+
+```python
+await client.GET_getPlatformData(region)
+```
+
+Get VALORANT platform status (maintenances and incidents) for a region.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `region` | `str` | Region to query. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+
+**Returns:** [`PlatformDataDto`](/api-reference/objects/status-objects#platformdatadto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        status = await client.GET_getPlatformData("na")
+        print(f"Platform: {status.name}")
+
+        if status.incidents:
+            print(f"Active incidents: {len(status.incidents)}")
+            for incident in status.incidents:
+                en_title = next((t for t in incident.titles if t.locale == "en_US"), None)
+                if en_title:
+                    print(f"  - {en_title.content}")
+        else:
+            print("No active incidents")
+
+        if status.maintenances:
+            print(f"Maintenances: {len(status.maintenances)}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

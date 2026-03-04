@@ -1,0 +1,37 @@
+---
+title: Account Objects
+description: Data objects returned by account-related methods
+---
+
+## AccountDto
+
+Returned by `GET_getByPuuid`, `GET_getByRiotId`, and `GET_getByAccessToken`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `puuid` | `str` | The player's unique identifier |
+| `gameName` | `str \| None` | The player's in-game name (left of `#`) |
+| `tagLine` | `str \| None` | The player's tag line (right of `#`) |
+
+```python
+account = await client.GET_getByRiotId("PlayerName", "NA1")
+print(f"{account.gameName}#{account.tagLine}")
+print(f"PUUID: {account.puuid}")
+```
+
+---
+
+## ActiveShardDto
+
+Returned by `GET_getActiveShard`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `puuid` | `str` | The player's unique identifier |
+| `game` | `str` | The game identifier (always `"val"` for VALORANT) |
+| `activeShard` | `str` | The player's active region (e.g., `"na"`, `"eu"`, `"ap"`) |
+
+```python
+shard = await client.GET_getActiveShard("player-puuid")
+print(f"Active region: {shard.activeShard}")
+```

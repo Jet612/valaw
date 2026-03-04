@@ -1,0 +1,44 @@
+---
+title: "Get Account by PUUID"
+description: "Retrieve account information using a player's PUUID"
+---
+
+## GET\_getByPuuid
+
+```python
+await client.GET_getByPuuid(puuid, cluster=None)
+```
+
+Get an account by PUUID (Player Universally Unique Identifier).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `cluster` | `str`, optional | Overrides the default cluster. Valid values: `americas`, `asia`, `esports`, `europe` |
+
+**Returns:** [`AccountDto`](/api-reference/objects/account-objects#accountdto) or `dict`
+
+**Raises:** [`InvalidCluster`](/api-reference/exceptions#invalidcluster), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByPuuid("player-puuid-here")
+        print(f"{account.gameName}#{account.tagLine}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  The PUUID is a persistent identifier that stays the same even if a player changes their Riot ID.
+</Note>

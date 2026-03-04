@@ -1,0 +1,270 @@
+---
+title: Valaw Documentation
+description: Async Python wrapper for the Official VALORANT API. Fast, typed, and easy to use.
+mode: custom
+---
+
+<div className="relative overflow-hidden dark:bg-[#0f1117] bg-white py-20">
+  <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="space-y-6">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold dark:text-white text-gray-900 leading-tight">
+          Build with the VALORANT API
+        </h1>
+        <p className="text-lg sm:text-xl dark:text-gray-400 text-gray-600 max-w-2xl">
+          Valaw is an async Python wrapper for the Official VALORANT API by Riot Games. Get typed responses, full endpoint coverage, and a developer-friendly interface.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <a 
+            href="/quickstart" 
+            className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-colors bg-[#f0dc6d] text-gray-900 hover:bg-[#e8d45f] no-underline"
+          >
+            Get Started
+          </a>
+          <a 
+            href="/api-reference/client" 
+            className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-colors border dark:border-white/30 border-gray-300 dark:bg-white/10 bg-gray-50 dark:text-white text-gray-900 dark:hover:bg-white/20 hover:bg-gray-100 no-underline"
+          >
+            API Reference
+          </a>
+        </div>
+      </div>
+      <div className="hidden lg:block">
+        <div className="dark:bg-[#1a1d27] bg-gray-50 rounded-2xl p-6 dark:border-[#27272a] border border-gray-200">
+          <div className="space-y-2 mb-4">
+            <div className="h-3 w-3 rounded-full bg-red-500 inline-block"></div>
+            <div className="h-3 w-3 rounded-full bg-yellow-500 inline-block ml-2"></div>
+            <div className="h-3 w-3 rounded-full bg-green-500 inline-block ml-2"></div>
+          </div>
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_RIOT_API_TOKEN", "americas")
+    try:
+        # Get account by Riot ID
+        account = await client.GET_getByRiotId("Player", "TAG")
+        print(f"Found: {account.gameName}#{account.tagLine}")
+        
+        # Get match history
+        matches = await client.GET_getMatchlist(
+            account.puuid, 
+            "na"
+        )
+        print(f"Matches: {len(matches.history)}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-semibold dark:text-white text-gray-900 mb-3">
+      Get started in minutes
+    </h2>
+    <p className="text-lg dark:text-gray-400 text-gray-600">
+      Install Valaw and make your first API call
+    </p>
+  </div>
+
+  <Steps>
+    <Step title="Install the package">
+      Install Valaw using pip or uv:
+
+      <CodeGroup>
+      ```bash pip
+      pip install valaw
+      ```
+
+      ```bash uv
+      uv add valaw
+      ```
+      </CodeGroup>
+    </Step>
+
+    <Step title="Get your Riot API key">
+      Create a free developer account at [developer.riotgames.com](https://developer.riotgames.com/) and generate your API key. Keep it secure and never commit it to version control.
+
+      <Note>
+        Development API keys expire after 24 hours. For production use, apply for a production key through the Riot Developer Portal.
+      </Note>
+    </Step>
+
+    <Step title="Initialize the client">
+      Create a client instance with your API key and preferred cluster:
+
+      ```python
+      import valaw
+
+      # Choose your cluster: americas, asia, europe, or esports
+      client = valaw.Client("YOUR_RIOT_API_TOKEN", "americas")
+      ```
+
+      <Tip>
+        Select the cluster closest to your server location for best performance.
+      </Tip>
+    </Step>
+
+    <Step title="Make your first request">
+      Query the API and get typed responses:
+
+      ```python
+      import asyncio
+
+      async def main():
+          client = valaw.Client("YOUR_RIOT_API_TOKEN", "americas")
+          try:
+              # Get game content
+              content = await client.GET_getContent("na", "en-US")
+              print(f"Acts: {len(content.acts)}")
+              print(f"Characters: {len(content.characters)}")
+          finally:
+              await client.close()
+
+      asyncio.run(main())
+      ```
+
+      <Accordion title="Example output">
+      ```
+      Acts: 15
+      Characters: 25
+      ```
+      </Accordion>
+    </Step>
+  </Steps>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-semibold dark:text-white text-gray-900 mb-3">
+      Explore by topic
+    </h2>
+    <p className="text-lg dark:text-gray-400 text-gray-600">
+      Everything you need to build with the VALORANT API
+    </p>
+  </div>
+
+  <CardGroup cols={2}>
+    <Card
+      title="Account endpoints"
+      icon="user"
+      href="/api-reference/account/get-by-riot-id"
+    >
+      Look up players by Riot ID, PUUID, or access token
+    </Card>
+    <Card
+      title="Match data"
+      icon="trophy"
+      href="/api-reference/match/get-match"
+    >
+      Retrieve detailed match history and statistics
+    </Card>
+    <Card
+      title="Ranked leaderboards"
+      icon="ranking-star"
+      href="/api-reference/ranked/get-leaderboard"
+    >
+      Access competitive leaderboards by act and region
+    </Card>
+    <Card
+      title="Console support"
+      icon="gamepad"
+      href="/examples/console-support"
+    >
+      Query PlayStation and Xbox VALORANT data
+    </Card>
+    <Card
+      title="Error handling"
+      icon="triangle-exclamation"
+      href="/guides/error-handling"
+    >
+      Handle API errors and response codes gracefully
+    </Card>
+    <Card
+      title="Examples"
+      icon="code"
+      href="/examples/match-history"
+    >
+      Real-world code samples and usage patterns
+    </Card>
+  </CardGroup>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="text-center mb-12">
+    <h2 className="text-3xl font-semibold dark:text-white text-gray-900 mb-3">
+      Why choose Valaw?
+    </h2>
+    <p className="text-lg dark:text-gray-400 text-gray-600">
+      Built for developers who need speed, type safety, and reliability
+    </p>
+  </div>
+
+  <div className="grid md:grid-cols-3 gap-6">
+    <div className="dark:bg-[#1a1d27] bg-gray-50 rounded-2xl p-6 dark:border-[#27272a] border border-gray-200">
+      <div className="text-[#f0dc6d] mb-4">
+        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <h3 className="text-xl font-semibold dark:text-white text-gray-900 mb-2">
+        Async-first
+      </h3>
+      <p className="dark:text-gray-400 text-gray-600">
+        Built on aiohttp for non-blocking requests. Perfect for high-throughput applications and concurrent API calls.
+      </p>
+    </div>
+
+    <div className="dark:bg-[#1a1d27] bg-gray-50 rounded-2xl p-6 dark:border-[#27272a] border border-gray-200">
+      <div className="text-[#f0dc6d] mb-4">
+        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h3 className="text-xl font-semibold dark:text-white text-gray-900 mb-2">
+        Fully typed
+      </h3>
+      <p className="dark:text-gray-400 text-gray-600">
+        Returns typed Python objects instead of raw JSON. Get autocomplete and type checking in your IDE.
+      </p>
+    </div>
+
+    <div className="dark:bg-[#1a1d27] bg-gray-50 rounded-2xl p-6 dark:border-[#27272a] border border-gray-200">
+      <div className="text-[#f0dc6d] mb-4">
+        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      </div>
+      <h3 className="text-xl font-semibold dark:text-white text-gray-900 mb-2">
+        Complete coverage
+      </h3>
+      <p className="dark:text-gray-400 text-gray-600">
+        All official VALORANT API endpoints including PC, console, ranked, match, and content data.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="dark:bg-[#1a1d27] bg-gray-50 rounded-2xl p-8 dark:border-[#27272a] border border-gray-200 text-center">
+    <h2 className="text-2xl font-semibold dark:text-white text-gray-900 mb-3">
+      Ready to start building?
+    </h2>
+    <p className="text-lg dark:text-gray-400 text-gray-600 mb-6 max-w-2xl mx-auto">
+      Follow the quickstart guide to make your first API call in under 5 minutes.
+    </p>
+    <a 
+      href="/quickstart" 
+      className="inline-flex items-center px-6 py-3 rounded-lg font-semibold transition-colors bg-[#f0dc6d] text-gray-900 hover:bg-[#e8d45f] no-underline"
+    >
+      View Quickstart
+    </a>
+  </div>
+</div>

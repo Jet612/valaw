@@ -1,0 +1,61 @@
+---
+title: "Create RSO Link"
+description: "Construct a Riot Sign-On (RSO) OAuth authorization URL"
+---
+
+## create\_RSO\_link
+
+```python
+client.create_RSO_link(redirect_uri, client_id, response_type, scopes, login_hint=None, ui_locales=None, state=None)
+```
+
+Constructs a Riot Sign-On (RSO) OAuth authorization URL. This is a **synchronous** method — no `await` needed.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `redirect_uri` | `str` | OAuth2 callback URL |
+| `client_id` | `str` | Your RSO application's client ID |
+| `response_type` | `str` | OAuth2 response type, typically `"code"` |
+| `scopes` | `list[str]` | Scopes to request. Must include `openid`. Additional: `cpid`, `offline_access` |
+| `login_hint` | `str`, optional | Pre-populate login page data |
+| `ui_locales` | `list[str]`, optional | Preferred UI locales in order |
+| `state` | `str`, optional | Opaque value returned to your redirect URI for CSRF protection |
+
+**Returns:** `str` — the constructed authorization URL
+
+---
+
+## Example
+
+```python
+import valaw
+import secrets
+
+client = valaw.Client("YOUR_TOKEN", "americas")
+
+# Generate a CSRF state token
+state_token = secrets.token_urlsafe(32)
+
+auth_url = client.create_RSO_link(
+    redirect_uri="https://yourapp.com/callback",
+    client_id="your-client-id",
+    response_type="code",
+    scopes=["openid", "cpid"],
+    state=state_token
+)
+
+print(f"Redirect user to: {auth_url}")
+```
+
+## OAuth2 Flow
+
+1. Call `create_RSO_link` to generate the authorization URL
+2. Redirect the user to that URL
+3. The user logs in and grants permissions
+4. Riot redirects back to your `redirect_uri` with an authorization code
+5. Exchange the code for an access token (via Riot's token endpoint)
+6. Use the access token with [`GET_getByAccessToken`](/api-reference/account/get-by-access-token)
+
+<Warning>
+  Always validate the `state` parameter in your callback to prevent CSRF attacks.
+</Warning>

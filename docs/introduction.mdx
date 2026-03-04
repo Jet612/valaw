@@ -1,0 +1,65 @@
+---
+title: Introduction
+description: Fast, typed, async Python wrapper for the official VALORANT API
+---
+
+## What is Valaw?
+
+Valaw is a fast, typed, asynchronous Python wrapper for the [Official VALORANT API](https://developer.riotgames.com/) by Riot Games. It provides a clean, Pythonic interface for accessing match history, leaderboards, content, platform status, and console endpoints.
+
+## Why use Valaw?
+
+Valaw is designed to make working with the VALORANT API simple and efficient:
+
+<CardGroup cols={2}>
+  <Card title="Async-first" icon="bolt">
+    Built on `aiohttp` for non-blocking, high-performance requests
+  </Card>
+  <Card title="Typed responses" icon="code">
+    Returns typed objects instead of raw JSON for better IDE support and type safety
+  </Card>
+  <Card title="Full coverage" icon="globe">
+    Supports all official PC and console endpoints for match, ranked, content, account, and status data
+  </Card>
+  <Card title="Modern Python" icon="python">
+    Compatible with Python 3.9 through 3.14
+  </Card>
+</CardGroup>
+
+## System requirements
+
+- **Python**: 3.9 or higher
+- **Riot Games API Key**: Required for authentication ([Get your API key](https://developer.riotgames.com/))
+- **Dependencies**: `aiohttp` (3.13.3) and `dataclass_wizard` (0.39.1)
+
+## Typed vs raw responses
+
+By default, Valaw returns typed Python objects for all API responses:
+
+```python client.py:149-150
+client = valaw.Client("YOUR_API_KEY", "americas")
+content = await client.GET_getContent("na", "en-US")
+print(content.version)  # IDE autocomplete works!
+```
+
+If you prefer working with raw JSON dictionaries, you can opt out:
+
+```python client.py:149-150
+client = valaw.Client("YOUR_API_KEY", "americas", raw_data=True)
+content = await client.GET_getContent("na", "en-US")
+print(content["version"])  # Returns dict instead of ContentDto
+```
+
+## Getting started
+
+Ready to start building with Valaw? Follow our installation guide to get set up:
+
+<Card title="Installation" icon="download" href="/installation">
+  Install Valaw using pip or uv
+</Card>
+
+## Resources
+
+- **[Riot Games Developer Portal](https://developer.riotgames.com/)**: Register for an API key and view official documentation
+- **[Discord Community](https://discord.gg/mVXpvunBbF)**: Get help and connect with other developers
+- **[GitHub Repository](https://github.com/Jet612/valaw)**: View source code and report issues

@@ -1,0 +1,46 @@
+---
+title: "Get Account by Riot ID"
+description: "Retrieve account information using a player's Riot ID (gameName#tagLine)"
+---
+
+## GET\_getByRiotId
+
+```python
+await client.GET_getByRiotId(gameName, tagLine, cluster=None)
+```
+
+Get an account by Riot ID. The Riot ID is the player's display name in the format `gameName#tagLine`.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `gameName` | `str` | The game name (left of `#`) |
+| `tagLine` | `str` | The tag line (right of `#`) |
+| `cluster` | `str`, optional | Overrides the default cluster. Valid values: `americas`, `asia`, `esports`, `europe` |
+
+**Returns:** [`AccountDto`](/api-reference/objects/account-objects#accountdto) or `dict`
+
+**Raises:** [`InvalidCluster`](/api-reference/exceptions#invalidcluster), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(f"PUUID: {account.puuid}")
+        print(f"Riot ID: {account.gameName}#{account.tagLine}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Warning>
+  This endpoint queries across the entire cluster. Use the cluster closest to the player's region for best results.
+</Warning>

@@ -1,0 +1,45 @@
+---
+title: "Get Console Matchlist"
+description: "Get match history for a console player by PUUID"
+---
+
+## GET\_getConsoleMatchlist
+
+```python
+await client.GET_getConsoleMatchlist(puuid, region, platformType)
+```
+
+Get a console player's match history.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `region` | `str` | The player's region. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+| `platformType` | `str` | The console platform. Valid values: `playstation`, `xbox` |
+
+**Returns:** [`MatchlistDto`](/api-reference/objects/match-objects#matchlistdto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`InvalidPlatformType`](/api-reference/exceptions#invalidplatformtype), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        matchlist = await client.GET_getConsoleMatchlist(
+            puuid="player-puuid-here",
+            region="na",
+            platformType="playstation"
+        )
+        print(f"Total matches: {len(matchlist.history)}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

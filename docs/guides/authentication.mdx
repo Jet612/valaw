@@ -1,0 +1,109 @@
+---
+title: Authentication
+description: Learn how to authenticate with the Riot Games API using Valaw
+---
+
+## Getting a Riot API key
+
+To use Valaw, you need a Riot Games API key from the [Riot Developer Portal](https://developer.riotgames.com/).
+
+### Development vs production keys
+
+Riot Games provides two types of API keys:
+
+- **Development keys**: Free, automatically generated keys that expire every 24 hours. These have significant restrictions — only a small subset of endpoints are accessible, making them unsuitable for most real use cases.
+- **Production keys**: Require an application and approval process. These keys have full endpoint access, higher rate limits, and don't expire.
+
+<Warning>
+  A production key is strongly recommended. Development keys only have access to a handful of endpoints and will return 403 errors for most of the API.
+</Warning>
+
+## Storing keys securely
+
+Never hardcode your API key directly in your source code. Use environment variables instead.
+
+Create a `.env` file in your project root:
+
+```bash
+RIOT_API_TOKEN=RGAPI-your-api-key-here
+```
+
+Then load it in Python using `python-dotenv`:
+
+```python
+import os
+from dotenv import load_dotenv
+import valaw
+
+load_dotenv()
+
+RIOT_API_TOKEN = os.getenv("RIOT_API_TOKEN")
+```
+
+<Warning>
+  Add `.env` to your `.gitignore` to prevent accidentally committing your API key.
+</Warning>
+
+## Initializing the client
+
+```python
+import valaw
+import os
+
+client = valaw.Client(
+    token=os.getenv("RIOT_API_TOKEN"),
+    cluster="americas"
+)
+```
+
+### Choosing a cluster
+
+The cluster determines which Riot API server handles your requests:
+
+- `americas` — North America, Latin America, Brazil
+- `europe` — Europe, Turkey, Russia, Middle East
+- `asia` — Asia Pacific, Korea
+- `esports` — Esports data
+
+Choose the cluster nearest to your server for best performance. Note that the cluster is for the API routing, not the player's region — use `region` parameters on individual method calls for player-specific data.
+
+### Client validation
+
+The client validates your API key and cluster on initialization:
+
+```python
+try:
+    client = valaw.Client(token="", cluster="invalid")
+except valaw.Exceptions.InvalidRiotAPIKey:
+    print("API key is required")
+except valaw.Exceptions.InvalidCluster:
+    print("Invalid cluster")
+```
+
+## Closing the client
+
+Always close the client session when you're done:
+
+```python
+import valaw
+import asyncio
+import os
+
+async def main():
+    client = valaw.Client(token=os.getenv("RIOT_API_TOKEN"), cluster="americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(f"Found: {account.gameName}#{account.tagLine}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Best practices
+
+1. **Use a production key** — development keys only work with a few endpoints
+2. **Use environment variables** — never commit API keys to version control
+3. **Always close the session** — call `await client.close()` in a `finally` block
+4. **Choose the right cluster** — use the cluster closest to your server
+5. **Handle auth errors** — implement proper handling for expired or invalid keys

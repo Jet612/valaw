@@ -1,0 +1,172 @@
+---
+title: Error handling
+description: Handle exceptions raised by Valaw
+---
+
+All exceptions are available under `valaw.Exceptions`. See the [Exceptions reference](/api-reference/exceptions) for the full list.
+
+## Basic error handling
+
+Wrap API calls in a `try/except` to handle errors gracefully:
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(f"Found: {account.gameName}#{account.tagLine}")
+    except valaw.Exceptions.RiotAPIResponseError as e:
+        print(f"API error {e.status_code}: {e.status_message}")
+    except valaw.Exceptions.InvalidCluster as e:
+        print(f"Invalid cluster: {e}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Handling rate limits (429)
+
+When you exceed the rate limit, a `RiotAPIResponseError` is raised with status code `429`. Retry after a delay:
+
+```python
+import valaw
+import asyncio
+
+async def request_with_retry(fn, max_retries=2):
+    """Call fn(), retrying once on 429 after a delay."""
+    for attempt in range(max_retries):
+        try:
+            return await fn()
+        except valaw.Exceptions.RiotAPIResponseError as e:
+            if e.status_code == 429 and attempt == 0:
+                print("Rate limited, retrying in 10s...")
+                await asyncio.sleep(10)
+            else:
+                raise
+
+# Usage
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await request_with_retry(
+            lambda: client.GET_getByRiotId("PlayerName", "NA1")
+        )
+        print(account.gameName)
+    finally:
+        await client.close()
+```
+
+## Handling not found (404)
+
+```python
+async def get_account(client, game_name, tag_line):
+    try:
+        return await client.GET_getByRiotId(game_name, tag_line)
+    except valaw.Exceptions.RiotAPIResponseError as e:
+        if e.status_code == 404:
+            print(f"{game_name}#{tag_line} not found")
+            return None
+        raise  # re-raise other errors
+```
+
+## Handling auth errors (401/403)
+
+```python
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+    except valaw.Exceptions.RiotAPIResponseError as e:
+        if e.status_code == 401:
+            print("API key expired or invalid")
+        elif e.status_code == 403:
+            print("API key doesn't have access to this endpoint — use a production key")
+        else:
+            raise
+    finally:
+        await client.close()
+```
+
+## Handling validation errors
+
+Validation errors are raised before making any network request:
+
+```python
+import valaw
+
+# InvalidRiotAPIKey — raised in Client.__init__
+try:
+    client = valaw.Client(token="", cluster="americas")
+except valaw.Exceptions.InvalidRiotAPIKey:
+    print("API key is required")
+
+# InvalidCluster — raised in Client.__init__
+try:
+    client = valaw.Client(token="YOUR_TOKEN", cluster="invalid")
+except valaw.Exceptions.InvalidCluster as e:
+    print(f"Invalid cluster: {e}")
+
+# InvalidQueue — raised before the API call
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        matches = await client.GET_getRecent("not-a-queue", "na")
+    except valaw.Exceptions.InvalidQueue as e:
+        print(f"Invalid queue: {e}")
+    finally:
+        await client.close()
+```
+
+## Full example
+
+```python
+import asyncio
+import os
+import valaw
+from dotenv import load_dotenv
+
+load_dotenv()
+
+async def request_with_retry(fn, max_retries=2):
+    for attempt in range(max_retries):
+        try:
+            return await fn()
+        except valaw.Exceptions.RiotAPIResponseError as e:
+            if e.status_code == 429 and attempt == 0:
+                print("Rate limited, retrying in 10s...")
+                await asyncio.sleep(10)
+            else:
+                raise
+
+async def main():
+    api_token = os.getenv("RIOT_API_TOKEN")
+    if not api_token:
+        raise ValueError("RIOT_API_TOKEN is not set")
+
+    client = valaw.Client(api_token, "americas")
+
+    try:
+        recent = await request_with_retry(
+            lambda: client.GET_getRecent("competitive", "na")
+        )
+        print(f"Found {len(recent.matchIds)} recent matches")
+    except valaw.Exceptions.RiotAPIResponseError as e:
+        if e.status_code == 403:
+            print("403 Forbidden — make sure you're using a production key")
+        elif e.status_code == 404:
+            print("No data found")
+        else:
+            print(f"API error {e.status_code}: {e.status_message}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  Full details on response codes can be found in the [Riot Games documentation](https://developer.riotgames.com/docs/portal#web-apis_response-codes).
+</Note>

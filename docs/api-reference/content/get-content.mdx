@@ -1,0 +1,47 @@
+---
+title: "Get Content"
+description: "Get VALORANT game content, optionally filtered by locale"
+---
+
+## GET\_getContent
+
+```python
+await client.GET_getContent(region, locale="")
+```
+
+Get game content (characters, maps, skins, etc.), optionally filtered by locale. Providing a locale results in faster response times.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `region` | `str` | Region to query. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+| `locale` | `str`, optional | Locale for localized names. Input is case-insensitive (e.g. `en-US`, `en-us`). Leave empty to return all locales |
+
+**Returns:** [`ContentDto`](/api-reference/objects/content-objects#contentdto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`InvalidLocale`](/api-reference/exceptions#invalidlocale), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+<Tip>
+  Always pass a locale for faster API responses. See the [glossary](/glossary) for all valid locales.
+</Tip>
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        content = await client.GET_getContent("na", "en-US")
+        print(f"Version: {content.version}")
+        print(f"Characters: {len(content.characters)}")
+        for character in content.characters:
+            print(f"  {character.name}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

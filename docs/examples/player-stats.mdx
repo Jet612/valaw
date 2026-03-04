@@ -1,0 +1,109 @@
+---
+title: "Player stats"
+description: "Calculate and analyze player statistics from match data"
+---
+
+Player statistics aren't directly available from the API. You need to fetch match history, retrieve each match's details, and aggregate the data yourself.
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        # Step 1: Look up player
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(f"Found: {account.gameName}#{account.tagLine}")
+
+        # Step 2: Get match history
+        matchlist = await client.GET_getMatchlist(account.puuid, "na")
+        print(f"Matches found: {len(matchlist.history)}")
+
+        # Step 3: Aggregate stats across recent matches
+        total_kills = total_deaths = total_assists = total_score = 0
+        wins = losses = 0
+        matches_counted = 0
+
+        for entry in matchlist.history[:10]:
+            match = await client.GET_getMatch(entry.matchId, "na")
+
+            player = next((p for p in match.players if p.puuid == account.puuid), None)
+            if not player or not player.stats:
+                continue
+
+            total_kills += player.stats.kills
+            total_deaths += player.stats.deaths
+            total_assists += player.stats.assists
+            total_score += player.stats.score
+            matches_counted += 1
+
+            player_team = next((t for t in match.teams if t.teamId == player.teamId), None)
+            if player_team and player_team.won:
+                wins += 1
+            else:
+                losses += 1
+
+        # Step 4: Display results
+        if matches_counted > 0:
+            kda = (total_kills + total_assists) / max(total_deaths, 1)
+            win_rate = (wins / matches_counted) * 100
+            print(f"\nStats over {matches_counted} matches:")
+            print(f"  Record: {wins}W / {losses}L ({win_rate:.1f}% win rate)")
+            print(f"  Avg K/D/A: {total_kills/matches_counted:.1f}/{total_deaths/matches_counted:.1f}/{total_assists/matches_counted:.1f}")
+            print(f"  KDA: {kda:.2f}")
+            print(f"  Avg Score: {total_score/matches_counted:.0f}")
+
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Per-round headshot percentage
+
+Round-level data lets you calculate headshot percentage from damage stats:
+
+```python
+async def headshot_percentage(client, match_id, puuid, region):
+    match = await client.GET_getMatch(match_id, region)
+
+    total_shots = headshots = 0
+    for round_result in match.roundResults:
+        player_round = next(
+            (ps for ps in round_result.playerStats if ps.puuid == puuid), None
+        )
+        if not player_round:
+            continue
+        for dmg in player_round.damage:
+            total_shots += dmg.headshots + dmg.bodyshots + dmg.legshots
+            headshots += dmg.headshots
+
+    return (headshots / total_shots * 100) if total_shots > 0 else 0.0
+```
+
+## Filtering by queue
+
+```python
+competitive = [e for e in matchlist.history if e.queueId == "competitive"]
+print(f"Competitive matches: {len(competitive)}")
+```
+
+## Error handling
+
+```python
+try:
+    match = await client.GET_getMatch(entry.matchId, "na")
+    player = next((p for p in match.players if p.puuid == account.puuid), None)
+    if not player:
+        print("Player not found in this match")
+    elif not player.stats:
+        print("Stats unavailable for this match")
+except valaw.Exceptions.RiotAPIResponseError as e:
+    print(f"Failed to fetch match: {e.status_code} - {e.status_message}")
+```
+
+<Tip>
+  When analyzing many matches, use `asyncio.gather()` with a semaphore to fetch them concurrently while staying within rate limits.
+</Tip>

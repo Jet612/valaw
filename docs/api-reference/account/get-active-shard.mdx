@@ -1,0 +1,48 @@
+---
+title: "Get Active Shard"
+description: "Retrieve the active game shard for a player"
+---
+
+## GET\_getActiveShard
+
+```python
+await client.GET_getActiveShard(puuid, cluster=None)
+```
+
+Get the active shard (region) where a player is currently playing VALORANT. Use this to determine which region to query for match history and other player data.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `cluster` | `str`, optional | Overrides the default cluster. Valid values: `americas`, `asia`, `esports`, `europe` |
+
+**Returns:** [`ActiveShardDto`](/api-reference/objects/account-objects#activesharddto) or `dict`
+
+**Raises:** [`InvalidCluster`](/api-reference/exceptions#invalidcluster), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        shard = await client.GET_getActiveShard(account.puuid)
+
+        # Use the active shard as the region for match queries
+        matches = await client.GET_getMatchlist(account.puuid, shard.activeShard)
+        print(f"Found {len(matches.history)} matches in {shard.activeShard}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Info>
+  Always query the active shard before fetching match history — using the wrong region returns a 404 error.
+</Info>
