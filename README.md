@@ -47,7 +47,7 @@ asyncio.run(main())
 
 ## Documentation
 
-Full documentation including all endpoints, parameters, and examples can be found at [valaw.readthedocs.io](https://valaw.madebyjet.dev/).
+Full documentation including all endpoints, parameters, and examples can be found at [valaw.madebyjet.dev](https://valaw.madebyjet.dev/).
 
 ## Help & Support
 
