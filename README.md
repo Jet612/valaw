@@ -47,7 +47,7 @@ asyncio.run(main())
 
 ## Documentation
 
-Full documentation including all endpoints, parameters, and examples can be found at [valaw.readthedocs.io](https://valaw.readthedocs.io/).
+Full documentation including all endpoints, parameters, and examples can be found at [valaw.readthedocs.io](https://valaw.madebyjet.dev/).
 
 ## Help & Support
 
@@ -56,7 +56,7 @@ Full documentation including all endpoints, parameters, and examples can be foun
 
 ## Quick Links
 
-- [Documentation](https://valaw.readthedocs.io/)
+- [Documentation](https://valaw.madebyjet.dev/)
 - [PyPI](https://pypi.org/project/valaw/)
 - [GitHub](https://github.com/Jet612/valaw)
 - [Discord](https://discord.gg/mVXpvunBbF)
