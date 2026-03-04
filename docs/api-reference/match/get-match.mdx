@@ -1,0 +1,51 @@
+---
+title: "Get Match"
+description: "Get full match details by match ID"
+---
+
+## GET\_getMatch
+
+```python
+await client.GET_getMatch(matchId, region)
+```
+
+Get full match details by match ID.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `matchId` | `str` | The match ID |
+| `region` | `str` | Region the match was played in. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+
+**Returns:** [`MatchDto`](/api-reference/objects/match-objects#matchdto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        match = await client.GET_getMatch("match-id-here", "na")
+
+        print(f"Map: {match.matchInfo.mapId}")
+        print(f"Duration: {match.matchInfo.gameLengthMillis / 1000 / 60:.1f} minutes")
+
+        for player in match.players:
+            if player.stats:
+                kda = f"{player.stats.kills}/{player.stats.deaths}/{player.stats.assists}"
+                print(f"  {player.gameName}#{player.tagLine}: {kda}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  Match IDs are typically obtained from [`GET_getMatchlist`](/api-reference/match/get-matchlist) or [`GET_getRecent`](/api-reference/match/get-recent).
+</Note>

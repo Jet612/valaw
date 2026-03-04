@@ -1,0 +1,55 @@
+---
+title: "Get Console Leaderboard"
+description: "Get the console competitive leaderboard for an act"
+---
+
+## GET\_getConsoleLeaderboard
+
+```python
+await client.GET_getConsoleLeaderboard(actId, region, platformType, size=200, startIndex=0)
+```
+
+Get the console competitive leaderboard for an act.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `actId` | `str` | The act ID |
+| `region` | `str` | Region to query. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+| `platformType` | `str` | The console platform. Valid values: `playstation`, `xbox` |
+| `size` | `int` | Number of entries to return (1–200). Defaults to `200` |
+| `startIndex` | `int` | Starting index for pagination. Defaults to `0` |
+
+**Returns:** [`LeaderboardDto`](/api-reference/objects/ranked-objects#leaderboarddto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`InvalidPlatformType`](/api-reference/exceptions#invalidplatformtype), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        leaderboard = await client.GET_getConsoleLeaderboard(
+            actId="act-id-here",
+            region="na",
+            platformType="playstation",
+            size=50
+        )
+        print(f"Total players: {leaderboard.totalPlayers}")
+        for player in leaderboard.players:
+            name = player.gameName if player.gameName != "Private" else "[Private]"
+            print(f"  #{player.leaderboardRank} {name} — {player.rankedRating} RR")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  PlayStation and Xbox leaderboards are separate. For PC leaderboards, use [`GET_getLeaderboard`](/api-reference/ranked/get-leaderboard).
+</Note>

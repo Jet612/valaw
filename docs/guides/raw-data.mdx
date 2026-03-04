@@ -1,0 +1,105 @@
+---
+title: Raw data mode
+description: Return raw JSON dicts instead of typed objects
+---
+
+By default, Valaw converts API responses into typed Python objects using `dataclass-wizard`. This gives you attribute access, IDE autocomplete, and type safety.
+
+If you'd rather work with plain dictionaries — for example, to forward the response directly to another service — you can enable raw data mode.
+
+## Enabling raw data mode
+
+Pass `raw_data=True` when initializing the client:
+
+```python
+import valaw
+
+client = valaw.Client("YOUR_TOKEN", "americas", raw_data=True)
+```
+
+## Typed vs raw
+
+**Typed (default):**
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(account.gameName)  # attribute access, IDE autocomplete works
+        print(account.tagLine)
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+**Raw:**
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas", raw_data=True)
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(account["gameName"])  # dictionary access
+        print(account["tagLine"])
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## When to use raw mode
+
+Use raw mode when:
+- You're forwarding the response directly to another service or API
+- You want the exact JSON structure as Riot returns it
+- You're debugging and want to inspect the raw response
+
+Use typed mode (default) when:
+- You want IDE autocomplete and type checking
+- You're building an application that works with the data
+
+## Error handling
+
+Error handling works the same in both modes — `RiotAPIResponseError` is raised regardless.
+
+```python
+import valaw
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas", raw_data=True)
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+    except valaw.Exceptions.RiotAPIResponseError as e:
+        print(f"Error: {e.status_code} - {e.status_message}")
+    finally:
+        await client.close()
+```
+
+## Serializing to JSON
+
+Raw mode is useful when you want to save the API response directly:
+
+```python
+import valaw
+import asyncio
+import json
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas", raw_data=True)
+    try:
+        match = await client.GET_getMatch("match-id", "na")
+        with open("match.json", "w") as f:
+            json.dump(match, f, indent=2)
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

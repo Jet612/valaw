@@ -1,0 +1,138 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "Valaw",
+  "theme": "palm",
+  "colors": {
+    "primary": "#f0dc6d",
+    "light": "#487da2",
+    "dark": "#a9b48f"
+  },
+  "favicon": "https://media.brand.dev/6bab28f3-f32e-4cc2-ae29-751b17535ca2.png",
+  "logo": {
+    "light": "https://media.brand.dev/6bab28f3-f32e-4cc2-ae29-751b17535ca2.png",
+    "dark": "https://media.brand.dev/25f3ffb3-6117-4c59-9039-63262a1a3940.png"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/jet612/valaw"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/jet612/valaw"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/authentication",
+              "guides/error-handling",
+              "guides/rate-limits",
+              "guides/raw-data"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "examples/match-history",
+              "examples/leaderboard",
+              "examples/player-stats",
+              "examples/console-support"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Client",
+            "pages": [
+              "api-reference/client"
+            ]
+          },
+          {
+            "group": "Account Endpoints",
+            "pages": [
+              "api-reference/account/get-by-puuid",
+              "api-reference/account/get-by-riot-id",
+              "api-reference/account/get-by-access-token",
+              "api-reference/account/get-active-shard"
+            ]
+          },
+          {
+            "group": "Content Endpoints",
+            "pages": [
+              "api-reference/content/get-content"
+            ]
+          },
+          {
+            "group": "Match Endpoints",
+            "pages": [
+              "api-reference/match/get-match",
+              "api-reference/match/get-matchlist",
+              "api-reference/match/get-recent"
+            ]
+          },
+          {
+            "group": "Ranked Endpoints",
+            "pages": [
+              "api-reference/ranked/get-leaderboard"
+            ]
+          },
+          {
+            "group": "Console Endpoints",
+            "pages": [
+              "api-reference/console/get-console-match",
+              "api-reference/console/get-console-matchlist",
+              "api-reference/console/get-console-recent",
+              "api-reference/console/get-console-leaderboard"
+            ]
+          },
+          {
+            "group": "Status Endpoints",
+            "pages": [
+              "api-reference/status/get-platform-data"
+            ]
+          },
+          {
+            "group": "RSO",
+            "pages": [
+              "api-reference/rso/create-rso-link"
+            ]
+          },
+          {
+            "group": "Data Objects",
+            "pages": [
+              "api-reference/objects/account-objects",
+              "api-reference/objects/match-objects",
+              "api-reference/objects/ranked-objects",
+              "api-reference/objects/content-objects",
+              "api-reference/objects/status-objects"
+            ]
+          },
+          {
+            "group": "Exceptions",
+            "pages": [
+              "api-reference/exceptions"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

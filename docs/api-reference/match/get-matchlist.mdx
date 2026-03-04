@@ -1,0 +1,44 @@
+---
+title: "Get Matchlist"
+description: "Get match history for a player by PUUID"
+---
+
+## GET\_getMatchlist
+
+```python
+await client.GET_getMatchlist(puuid, region)
+```
+
+Get a player's match history.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `region` | `str` | The player's region. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+
+**Returns:** [`MatchlistDto`](/api-reference/objects/match-objects#matchlistdto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        matchlist = await client.GET_getMatchlist(account.puuid, "na")
+
+        print(f"Total matches: {len(matchlist.history)}")
+        for entry in matchlist.history[:5]:
+            print(f"  {entry.matchId} — {entry.queueId}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

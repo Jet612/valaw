@@ -1,0 +1,118 @@
+---
+title: "Console support"
+description: "Access VALORANT console data for PlayStation and Xbox platforms"
+---
+
+VALORANT console (PlayStation and Xbox) has separate API endpoints. They mirror the PC endpoints but require a `platformType` parameter. Valid values are `playstation` and `xbox` (case-insensitive).
+
+## Match history
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        # Account lookup is the same as PC
+        account = await client.GET_getByRiotId("ConsolePlayer", "PS5")
+        print(f"Found: {account.gameName}#{account.tagLine}")
+
+        # Get console match history — requires platformType
+        matchlist = await client.GET_getConsoleMatchlist(
+            puuid=account.puuid,
+            region="na",
+            platformType="playstation"
+        )
+        print(f"PlayStation matches: {len(matchlist.history)}")
+
+        # Get details for recent matches
+        for entry in matchlist.history[:3]:
+            match = await client.GET_getConsoleMatch(entry.matchId, "na")
+            print(f"\nMap: {match.matchInfo.mapId}")
+
+            player = next((p for p in match.players if p.puuid == account.puuid), None)
+            if player and player.stats:
+                kda = f"{player.stats.kills}/{player.stats.deaths}/{player.stats.assists}"
+                print(f"K/D/A: {kda}")
+
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Recent console matches
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        recent = await client.GET_getConsoleRecent("console_competitive", "na")
+        print(f"Recent matches: {len(recent.matchIds)}")
+
+        for match_id in recent.matchIds[:3]:
+            match = await client.GET_getConsoleMatch(match_id, "na")
+            print(f"  {match_id} — {match.matchInfo.mapId} ({len(match.players)} players)")
+
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+Valid console queues: `console_unrated`, `console_swiftplay`, `console_hurm`, `console_competitive`, `console_deathmatch`
+
+## Console leaderboard
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        leaderboard = await client.GET_getConsoleLeaderboard(
+            actId="act-id-here",
+            region="na",
+            platformType="playstation",
+            size=10
+        )
+
+        print(f"PlayStation Top {len(leaderboard.players)}:")
+        for player in leaderboard.players:
+            name = f"{player.gameName}#{player.tagLine}" if player.gameName != "Private" else "[Private]"
+            print(f"  #{player.leaderboardRank}: {name} — {player.rankedRating} RR")
+
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  PlayStation and Xbox leaderboards are separate — each platform has its own rankings.
+</Note>
+
+## Error handling
+
+```python
+try:
+    matchlist = await client.GET_getConsoleMatchlist(
+        puuid=account.puuid,
+        region="na",
+        platformType="playstation"
+    )
+except valaw.Exceptions.InvalidPlatformType as e:
+    print(f"Invalid platform: {e}")
+except valaw.Exceptions.InvalidRegion as e:
+    print(f"Invalid region: {e}")
+except valaw.Exceptions.RiotAPIResponseError as e:
+    print(f"API error {e.status_code}: {e.status_message}")
+```

@@ -1,0 +1,46 @@
+---
+title: "Get Account by Access Token"
+description: "Retrieve account information for the authenticated user using an RSO access token"
+---
+
+## GET\_getByAccessToken
+
+```python
+await client.GET_getByAccessToken(authorization, cluster=None)
+```
+
+Get the account associated with an RSO (Riot Sign-On) access token. Use this after completing the OAuth2 flow via [`create_RSO_link`](/api-reference/rso/create-rso-link).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `authorization` | `str` | The RSO access token |
+| `cluster` | `str`, optional | Overrides the default cluster. Valid values: `americas`, `asia`, `esports`, `europe` |
+
+**Returns:** [`AccountDto`](/api-reference/objects/account-objects#accountdto) or `dict`
+
+**Raises:** [`InvalidCluster`](/api-reference/exceptions#invalidcluster), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        # access_token comes from your OAuth2 callback handler
+        access_token = "Bearer <token-from-oauth-flow>"
+        account = await client.GET_getByAccessToken(access_token)
+        print(f"Authenticated as: {account.gameName}#{account.tagLine}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Warning>
+  Never expose access tokens in client-side code or logs. Always transmit tokens over HTTPS.
+</Warning>

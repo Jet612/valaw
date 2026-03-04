@@ -1,0 +1,111 @@
+---
+title: Exceptions
+description: Exceptions raised by the valaw client.
+---
+
+All exceptions are accessible via `valaw.Exceptions`.
+
+```python
+import valaw
+
+try:
+    account = await client.GET_getByPuuid("puuid-here")
+except valaw.Exceptions.RiotAPIResponseError as e:
+    print(e.status_code, e.status_message)
+```
+
+---
+
+## RiotAPIResponseError
+
+Raised when the Riot API returns an error response.
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `status_code` | `int` | HTTP status code returned by the API |
+| `status_message` | `str` | Error message returned by the API |
+| `message` | `str` | Formatted as `"{status_code} - {status_message}"` |
+
+| Code | Meaning |
+|------|---------|
+| `400` | Bad request |
+| `401` | Unauthorized — invalid or missing API token |
+| `403` | Forbidden |
+| `404` | Data not found |
+| `429` | Rate limit exceeded |
+| `500` | Internal server error |
+| `503` | Service unavailable |
+
+```python
+try:
+    match = await client.GET_getMatch("match-id", "na")
+except valaw.Exceptions.RiotAPIResponseError as e:
+    if e.status_code == 429:
+        print("Rate limited, try again later")
+    elif e.status_code == 404:
+        print("Match not found")
+    else:
+        print(f"Error {e.status_code}: {e.status_message}")
+```
+
+<Note>
+  Full details on response codes can be found in the [Riot Games documentation](https://developer.riotgames.com/docs/portal#web-apis_response-codes).
+</Note>
+
+---
+
+## InvalidRegion
+
+Raised when an invalid region is passed to a method.
+
+Valid regions: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na`
+
+---
+
+## InvalidCluster
+
+Raised when an invalid cluster is passed to the client or a method.
+
+Valid clusters: `americas`, `asia`, `esports`, `europe`
+
+---
+
+## InvalidLocale
+
+Raised when an invalid locale is passed to `GET_getContent`.
+
+Valid locales: `ar-AE`, `de-DE`, `en-GB`, `en-US`, `es-ES`, `es-MX`, `fr-FR`, `id-ID`, `it-IT`, `ja-JP`, `ko-KR`, `pl-PL`, `pt-BR`, `ru-RU`, `th-TH`, `tr-TR`, `vi-VN`, `zh-CN`, `zh-TW`
+
+<Tip>
+  Locale input is case-insensitive — `en-US`, `en-us`, and `EN-US` all work.
+</Tip>
+
+---
+
+## InvalidQueue
+
+Raised when an invalid queue is passed to `GET_getRecent` or `GET_getConsoleRecent`.
+
+Valid PC queues: `competitive`, `unrated`, `spikerush`, `tournamentmode`, `deathmatch`, `onefa`, `ggteam`, `hurm`
+
+Valid console queues: `console_unrated`, `console_swiftplay`, `console_hurm`, `console_competitive`, `console_deathmatch`
+
+---
+
+## InvalidPlatformType
+
+Raised when an invalid platform type is passed to a console method.
+
+Valid values: `playstation`, `xbox`
+
+---
+
+## InvalidRiotAPIKey
+
+Raised when `None` or an empty string is passed as the API token.
+
+---
+
+## FailedToParseJSON
+
+Raised when the API response cannot be parsed as JSON. This is uncommon and usually indicates an unexpected response from the Riot API.

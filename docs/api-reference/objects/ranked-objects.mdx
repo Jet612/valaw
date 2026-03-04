@@ -1,0 +1,101 @@
+---
+title: Ranked Objects
+description: Data objects returned by ranked and leaderboard methods
+---
+
+## LeaderboardDto
+
+Returned by `GET_getLeaderboard` and `GET_getConsoleLeaderboard`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `actId` | `str` | The act identifier |
+| `players` | `list[PlayerDto]` | Leaderboard entries |
+| `totalPlayers` | `int` | Total number of players on the leaderboard |
+| `immortalStartingPage` | `int` | Page where Immortal rank begins |
+| `immortalStartingIndex` | `int` | Index where Immortal rank begins |
+| `topTierRRThreshold` | `int` | RR threshold for top tier players |
+| `tierDetails` | `dict` | Tier-specific thresholds |
+| `startIndex` | `int` | Starting index for this page |
+| `shard` | `str` | Region/shard for this leaderboard |
+| `query` | `str \| None` | Optional filter query |
+
+---
+
+## PlayerDto
+
+A player entry on the leaderboard. Note: this is different from the `PlayerDto` in match objects.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `leaderboardRank` | `int` | Position on the leaderboard (1 = top) |
+| `rankedRating` | `int` | Current Ranked Rating (RR) |
+| `numberOfWins` | `int` | Competitive wins for the act |
+| `competitiveTier` | `int` | Competitive rank tier |
+| `puuid` | `str` | Player's PUUID (empty for private profiles) |
+| `gameName` | `str` | In-game name (`"Private"` for private profiles) |
+| `tagLine` | `str` | Tag line (empty for private profiles) |
+
+<Note>
+  Players with private profiles will have `gameName = "Private"` and empty `puuid` and `tagLine` fields.
+</Note>
+
+---
+
+## Competitive Tier Reference
+
+| Tier | Rank |
+|------|------|
+| 0 | Unranked |
+| 3 | Iron 1 |
+| 4 | Iron 2 |
+| 5 | Iron 3 |
+| 6 | Bronze 1 |
+| 7 | Bronze 2 |
+| 8 | Bronze 3 |
+| 9 | Silver 1 |
+| 10 | Silver 2 |
+| 11 | Silver 3 |
+| 12 | Gold 1 |
+| 13 | Gold 2 |
+| 14 | Gold 3 |
+| 15 | Platinum 1 |
+| 16 | Platinum 2 |
+| 17 | Platinum 3 |
+| 18 | Diamond 1 |
+| 19 | Diamond 2 |
+| 20 | Diamond 3 |
+| 21 | Ascendant 1 |
+| 22 | Ascendant 2 |
+| 23 | Ascendant 3 |
+| 24 | Immortal 1 |
+| 25 | Immortal 2 |
+| 26 | Immortal 3 |
+| 27 | Radiant |
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        leaderboard = await client.GET_getLeaderboard(
+            actId="act-id-here",
+            region="na",
+            size=10
+        )
+
+        print(f"Total players: {leaderboard.totalPlayers}")
+        for player in leaderboard.players:
+            if player.gameName != "Private":
+                print(f"  #{player.leaderboardRank} {player.gameName}#{player.tagLine} — {player.rankedRating} RR")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

@@ -1,0 +1,118 @@
+---
+title: Content Objects
+description: Data objects returned by the content method
+---
+
+## ContentDto
+
+Returned by `GET_getContent`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `version` | `str` | Content version identifier |
+| `characters` | `list[ContentItemDto]` | VALORANT agents |
+| `maps` | `list[ContentItemDto]` | Maps |
+| `chromas` | `list[ContentItemDto]` | Weapon skin chromas |
+| `skins` | `list[ContentItemDto]` | Weapon skins |
+| `skinLevels` | `list[ContentItemDto]` | Skin levels |
+| `equips` | `list[ContentItemDto]` | Equippable items |
+| `gameModes` | `list[ContentItemDto]` | Game modes |
+| `totems` | `list[ContentItemDto]` | Totems |
+| `sprays` | `list[ContentItemDto]` | Sprays |
+| `sprayLevels` | `list[ContentItemDto]` | Spray levels |
+| `charms` | `list[ContentItemDto]` | Gun buddies |
+| `charmLevels` | `list[ContentItemDto]` | Charm levels |
+| `playerCards` | `list[ContentItemDto]` | Player cards |
+| `playerTitles` | `list[ContentItemDto]` | Player titles |
+| `acts` | `list[ActDto]` | Acts and episodes |
+| `ceremonies` | `list[ContentItemDto]` | Ceremonies |
+
+---
+
+## ContentItemDto
+
+A single content item (agent, map, skin, etc.).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | `str` | English name of the item |
+| `id` | `str` | Unique identifier |
+| `assetName` | `str` | Internal asset name |
+| `localizedNames` | `LocalizedNamesDto \| None` | Localized names in all supported languages |
+| `assetPath` | `str \| None` | Asset path |
+
+---
+
+## ActDto
+
+An act or episode in VALORANT.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | `str` | Name of the act/episode |
+| `id` | `str` | Unique identifier (use as `actId` for leaderboard endpoints) |
+| `isActive` | `bool` | Whether this act is currently active |
+| `type` | `str` | Type (`"act"` or `"episode"`) |
+| `localizedNames` | `LocalizedNamesDto \| None` | Localized names |
+| `parentId` | `str \| None` | Parent episode ID (for acts) |
+
+---
+
+## LocalizedNamesDto
+
+Contains the item name in all supported locales. Field names use underscores instead of hyphens.
+
+| Field | Locale |
+|-------|--------|
+| `ar_AE` | Arabic (UAE) |
+| `de_DE` | German |
+| `en_GB` | English (UK) |
+| `en_US` | English (US) |
+| `es_ES` | Spanish (Spain) |
+| `es_MX` | Spanish (Mexico) |
+| `fr_FR` | French |
+| `id_ID` | Indonesian |
+| `it_IT` | Italian |
+| `ja_JP` | Japanese |
+| `ko_KR` | Korean |
+| `pl_PL` | Polish |
+| `pt_BR` | Portuguese (Brazil) |
+| `ru_RU` | Russian |
+| `th_TH` | Thai |
+| `tr_TR` | Turkish |
+| `vi_VN` | Vietnamese |
+| `zh_CN` | Chinese (Simplified) |
+| `zh_TW` | Chinese (Traditional) |
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        content = await client.GET_getContent("na", "en-US")
+
+        print(f"Version: {content.version}")
+
+        # List agents
+        for character in content.characters:
+            print(f"  {character.name} ({character.id})")
+
+        # Find the current active act (useful for leaderboard actId)
+        for act in content.acts:
+            if act.isActive and act.type == "act":
+                print(f"Current act: {act.name} — ID: {act.id}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Tip>
+  Use the `id` from an active `ActDto` as the `actId` parameter for `GET_getLeaderboard`.
+</Tip>

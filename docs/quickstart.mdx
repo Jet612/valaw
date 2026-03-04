@@ -1,0 +1,65 @@
+---
+title: Quickstart
+description: Get up and running with Valaw
+---
+
+First, install valaw. See the [Installation](/installation) guide for directions.
+
+After installing, import valaw into your project:
+
+```python
+import valaw
+import asyncio
+```
+
+Then initialize the client with your API token and the [cluster](/api-reference/client#constructor) closest to you:
+
+```python
+client = valaw.Client("YOUR_API_TOKEN", "americas")
+```
+
+<Warning>
+  A production key is strongly recommended — development keys only have access to a handful of endpoints and will return 403 errors for most of the API. You can apply for a production key through the [Riot Developer Portal](https://developer.riotgames.com/).
+</Warning>
+
+<Note>
+  All API methods are `async` and must be called inside an `async` function. Always call `client.close()` when you are done to cleanly shut down the session.
+</Note>
+
+After initializing the client, you can use it to make requests. For example, to get content for the `na` region:
+
+```python
+async def main():
+    content = await client.GET_getContent("na", "en-US")
+    print(content)
+    await client.close()
+
+asyncio.run(main())
+```
+
+A full working example:
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_API_TOKEN", "americas")
+    try:
+        content = await client.GET_getContent("na", "en-US")
+        print(content)
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Raw data
+
+If you want raw JSON dictionaries instead of typed objects, pass `raw_data=True`:
+
+```python
+client = valaw.Client("YOUR_API_TOKEN", "americas", raw_data=True)
+```
+
+This returns the raw API response as a `dict` instead of a typed object like `ContentDto`.

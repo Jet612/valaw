@@ -1,0 +1,99 @@
+---
+title: Rate limits
+description: Understand and manage Riot API rate limits
+---
+
+<Warning>
+  A production key is strongly recommended. Development keys only have access to a handful of endpoints and will return 403 errors for most of the API.
+</Warning>
+
+## Riot API rate limits
+
+Rate limits are applied per API key. When exceeded, the API returns a `429` status code and valaw raises `RiotAPIResponseError`.
+
+### Development key limits
+
+- **20 requests per second**
+- **100 requests per 2 minutes**
+
+### Production key limits
+
+Higher limits that vary by application approval level. See the [Riot Developer Portal](https://developer.riotgames.com/) for your specific limits.
+
+## Handling rate limits
+
+Valaw does not automatically retry rate-limited requests — this is intentional so you have full control. Handle `429` responses yourself:
+
+```python
+import valaw
+import asyncio
+
+async def request_with_retry(fn, max_retries=2):
+    """Call fn(), retrying once on 429 after a delay."""
+    for attempt in range(max_retries):
+        try:
+            return await fn()
+        except valaw.Exceptions.RiotAPIResponseError as e:
+            if e.status_code == 429 and attempt == 0:
+                print("Rate limited, retrying in 10s...")
+                await asyncio.sleep(10)
+            else:
+                raise
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await request_with_retry(
+            lambda: client.GET_getByRiotId("PlayerName", "NA1")
+        )
+        print(account.gameName)
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Best practices
+
+**Space out requests** — avoid making many requests in rapid succession, especially in loops.
+
+**Cache responses** — data like account info and content rarely changes. Store results rather than re-fetching:
+
+```python
+cache = {}
+
+async def get_account(client, game_name, tag_line):
+    key = f"{game_name}#{tag_line}"
+    if key not in cache:
+        cache[key] = await client.GET_getByRiotId(game_name, tag_line)
+    return cache[key]
+```
+
+**Limit concurrency** — when making multiple requests at once, use a semaphore:
+
+```python
+import asyncio
+import valaw
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    semaphore = asyncio.Semaphore(5)  # max 5 concurrent requests
+
+    async def fetch(match_id):
+        async with semaphore:
+            return await client.GET_getMatch(match_id, "na")
+
+    match_ids = ["id1", "id2", "id3", "id4", "id5", "id6", "id7", "id8", "id9", "id10"]
+
+    try:
+        matches = await asyncio.gather(*[fetch(mid) for mid in match_ids])
+        print(f"Fetched {len(matches)} matches")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  More information on rate limiting can be found in the [Riot API documentation](https://developer.riotgames.com/docs/portal#web-apis_rate-limiting).
+</Note>

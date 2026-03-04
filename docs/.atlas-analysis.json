@@ -1,0 +1,155 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "Valaw",
+  "projectDescription": "Async Python wrapper for the Official VALORANT API (Riot Games). Fast, typed, and easy to use.",
+  "theme": "palm",
+  "primaryColor": "#f0dc6d",
+  "lightColor": "#487da2",
+  "darkColor": "#a9b48f",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "guides/authentication",
+              "guides/error-handling",
+              "guides/rate-limits",
+              "guides/raw-data"
+            ]
+          },
+          {
+            "group": "Examples",
+            "pages": [
+              "examples/match-history",
+              "examples/leaderboard",
+              "examples/player-stats",
+              "examples/console-support"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Client",
+            "pages": [
+              "api-reference/client"
+            ]
+          },
+          {
+            "group": "Account Endpoints",
+            "pages": [
+              "api-reference/account/get-by-puuid",
+              "api-reference/account/get-by-riot-id",
+              "api-reference/account/get-by-access-token",
+              "api-reference/account/get-active-shard"
+            ]
+          },
+          {
+            "group": "Content Endpoints",
+            "pages": [
+              "api-reference/content/get-content"
+            ]
+          },
+          {
+            "group": "Match Endpoints",
+            "pages": [
+              "api-reference/match/get-match",
+              "api-reference/match/get-matchlist",
+              "api-reference/match/get-recent"
+            ]
+          },
+          {
+            "group": "Ranked Endpoints",
+            "pages": [
+              "api-reference/ranked/get-leaderboard"
+            ]
+          },
+          {
+            "group": "Console Endpoints",
+            "pages": [
+              "api-reference/console/get-console-match",
+              "api-reference/console/get-console-matchlist",
+              "api-reference/console/get-console-recent",
+              "api-reference/console/get-console-leaderboard"
+            ]
+          },
+          {
+            "group": "Status Endpoints",
+            "pages": [
+              "api-reference/status/get-platform-data"
+            ]
+          },
+          {
+            "group": "RSO",
+            "pages": [
+              "api-reference/rso/create-rso-link"
+            ]
+          },
+          {
+            "group": "Data Objects",
+            "pages": [
+              "api-reference/objects/account-objects",
+              "api-reference/objects/match-objects",
+              "api-reference/objects/ranked-objects",
+              "api-reference/objects/content-objects",
+              "api-reference/objects/status-objects"
+            ]
+          },
+          {
+            "group": "Exceptions",
+            "pages": [
+              "api-reference/exceptions"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Async-first design built on aiohttp for non-blocking requests",
+    "Fully typed responses with opt-out raw JSON support",
+    "Complete coverage of PC and console VALORANT API endpoints",
+    "Support for Account, Match, Ranked, Content, Status, and RSO endpoints",
+    "Python 3.9-3.14 compatibility"
+  ],
+  "publicApiSurface": [
+    "Client",
+    "Exceptions",
+    "GET_getByPuuid",
+    "GET_getByRiotId",
+    "GET_getByAccessToken",
+    "GET_getActiveShard",
+    "GET_getContent",
+    "GET_getMatch",
+    "GET_getMatchlist",
+    "GET_getRecent",
+    "GET_getLeaderboard",
+    "GET_getConsoleMatch",
+    "GET_getConsoleMatchlist",
+    "GET_getConsoleRecent",
+    "GET_getConsoleLeaderboard",
+    "GET_getPlatformData",
+    "create_RSO_link",
+    "AccountDto",
+    "ActiveShardDto",
+    "ContentDto",
+    "MatchDto",
+    "MatchlistDto",
+    "RecentMatchesDto",
+    "LeaderboardDto",
+    "PlatformDataDto"
+  ]
+}

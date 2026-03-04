@@ -1,0 +1,321 @@
+---
+title: Client
+description: The main client used to interact with the VALORANT API.
+---
+
+## Constructor
+
+```python
+valaw.Client(token, cluster, raw_data=False)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `token` | `str` | Your Riot Games API token |
+| `cluster` | `str` | Default cluster for requests. Valid values: `americas`, `asia`, `esports`, `europe` |
+| `raw_data` | `bool` | If `True`, returns raw JSON dicts instead of typed objects. Defaults to `False` |
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(f"{account.gameName}#{account.tagLine}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Warning>
+  Always call `client.close()` when done. Use a `try/finally` block to ensure it is always called even if an error occurs.
+</Warning>
+
+---
+
+## Account
+
+### GET\_getByPuuid
+
+```python
+await client.GET_getByPuuid(puuid, cluster=None)
+```
+
+Get an account by PUUID.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `cluster` | `str`, optional | Overrides the default cluster |
+
+**Returns:** [`AccountDto`](/api-reference/objects/account-objects#accountdto) or `dict`
+
+---
+
+### GET\_getByRiotId
+
+```python
+await client.GET_getByRiotId(gameName, tagLine, cluster=None)
+```
+
+Get an account by Riot ID (`gameName#tagLine`).
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `gameName` | `str` | The game name (left of `#`) |
+| `tagLine` | `str` | The tag line (right of `#`) |
+| `cluster` | `str`, optional | Overrides the default cluster |
+
+**Returns:** [`AccountDto`](/api-reference/objects/account-objects#accountdto) or `dict`
+
+---
+
+### GET\_getByAccessToken
+
+```python
+await client.GET_getByAccessToken(authorization, cluster=None)
+```
+
+Get the account associated with an RSO access token.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `authorization` | `str` | The RSO access token |
+| `cluster` | `str`, optional | Overrides the default cluster |
+
+**Returns:** [`AccountDto`](/api-reference/objects/account-objects#accountdto) or `dict`
+
+---
+
+### GET\_getActiveShard
+
+```python
+await client.GET_getActiveShard(puuid, cluster=None)
+```
+
+Get the active shard for a player.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `cluster` | `str`, optional | Overrides the default cluster |
+
+**Returns:** [`ActiveShardDto`](/api-reference/objects/account-objects#activesharddto) or `dict`
+
+---
+
+## Content
+
+### GET\_getContent
+
+```python
+await client.GET_getContent(region, locale="")
+```
+
+Get game content (characters, maps, skins, etc.), optionally filtered by locale.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `region` | `str` | Region to query. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+| `locale` | `str`, optional | Locale for localized names. See [Glossary](/glossary) for valid values. Input is case-insensitive |
+
+**Returns:** [`ContentDto`](/api-reference/objects/content-objects#contentdto) or `dict`
+
+<Tip>
+  Providing a locale results in faster response times from the API.
+</Tip>
+
+---
+
+## Match
+
+### GET\_getMatch
+
+```python
+await client.GET_getMatch(matchId, region)
+```
+
+Get full match details by match ID.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `matchId` | `str` | The match ID |
+| `region` | `str` | Region the match was played in |
+
+**Returns:** [`MatchDto`](/api-reference/objects/match-objects#matchdto) or `dict`
+
+---
+
+### GET\_getMatchlist
+
+```python
+await client.GET_getMatchlist(puuid, region)
+```
+
+Get a player's match history.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `region` | `str` | The player's region |
+
+**Returns:** [`MatchlistDto`](/api-reference/objects/match-objects#matchlistdto) or `dict`
+
+---
+
+### GET\_getRecent
+
+```python
+await client.GET_getRecent(queue, region)
+```
+
+Get recent match IDs for a queue. Returns matches completed in the last 10 minutes (or 12 hours for esports). NA, LATAM, and BR share a match history deployment.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `queue` | `str` | Valid values: `competitive`, `unrated`, `spikerush`, `tournamentmode`, `deathmatch`, `onefa`, `ggteam`, `hurm` |
+| `region` | `str` | Region to query |
+
+**Returns:** [`RecentMatchesDto`](/api-reference/objects/match-objects#recentmatchesdto) or `dict`
+
+---
+
+## Ranked
+
+### GET\_getLeaderboard
+
+```python
+await client.GET_getLeaderboard(actId, region, size=200, startIndex=0)
+```
+
+Get the competitive leaderboard for an act.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `actId` | `str` | The act ID |
+| `region` | `str` | Region to query |
+| `size` | `int` | Number of entries to return (1–200). Defaults to `200` |
+| `startIndex` | `int` | Starting index for pagination. Defaults to `0` |
+
+**Returns:** [`LeaderboardDto`](/api-reference/objects/ranked-objects#leaderboarddto) or `dict`
+
+---
+
+## Console Match
+
+### GET\_getConsoleMatch
+
+```python
+await client.GET_getConsoleMatch(matchId, region)
+```
+
+Get full console match details by match ID.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `matchId` | `str` | The match ID |
+| `region` | `str` | Region the match was played in |
+
+**Returns:** [`MatchDto`](/api-reference/objects/match-objects#matchdto) or `dict`
+
+---
+
+### GET\_getConsoleMatchlist
+
+```python
+await client.GET_getConsoleMatchlist(puuid, region, platformType)
+```
+
+Get a console player's match history.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `region` | `str` | The player's region |
+| `platformType` | `str` | Valid values: `playstation`, `xbox` |
+
+**Returns:** [`MatchlistDto`](/api-reference/objects/match-objects#matchlistdto) or `dict`
+
+---
+
+### GET\_getConsoleRecent
+
+```python
+await client.GET_getConsoleRecent(queue, region)
+```
+
+Get recent console match IDs for a queue.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `queue` | `str` | Valid values: `console_unrated`, `console_swiftplay`, `console_hurm`, `console_competitive`, `console_deathmatch` |
+| `region` | `str` | Region to query |
+
+**Returns:** [`RecentMatchesDto`](/api-reference/objects/match-objects#recentmatchesdto) or `dict`
+
+---
+
+## Console Ranked
+
+### GET\_getConsoleLeaderboard
+
+```python
+await client.GET_getConsoleLeaderboard(actId, region, platformType, size=200, startIndex=0)
+```
+
+Get the console competitive leaderboard for an act.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `actId` | `str` | The act ID |
+| `region` | `str` | Region to query |
+| `platformType` | `str` | Valid values: `playstation`, `xbox` |
+| `size` | `int` | Number of entries to return (1–200). Defaults to `200` |
+| `startIndex` | `int` | Starting index for pagination. Defaults to `0` |
+
+**Returns:** [`LeaderboardDto`](/api-reference/objects/ranked-objects#leaderboarddto) or `dict`
+
+---
+
+## Status
+
+### GET\_getPlatformData
+
+```python
+await client.GET_getPlatformData(region)
+```
+
+Get VALORANT platform status (maintenances and incidents) for a region.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `region` | `str` | Region to query |
+
+**Returns:** [`PlatformDataDto`](/api-reference/objects/status-objects#platformdatadto) or `dict`
+
+---
+
+## RSO
+
+### create\_RSO\_link
+
+```python
+client.create_RSO_link(redirect_uri, client_id, response_type, scopes, login_hint=None, ui_locales=None, state=None)
+```
+
+Constructs a Riot Sign-On (RSO) OAuth authorization URL. This is a regular synchronous method — no `await` needed.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `redirect_uri` | `str` | OAuth2 callback URL |
+| `client_id` | `str` | Your RSO application's client ID |
+| `response_type` | `str` | OAuth2 response type, typically `code` |
+| `scopes` | `list[str]` | Scopes to request. Must include `openid`. Additional: `cpid`, `offline_access` |
+| `login_hint` | `str`, optional | Pre-populate login page data |
+| `ui_locales` | `list[str]`, optional | Preferred UI locales in order |
+| `state` | `str`, optional | Opaque value returned to your redirect URI |
+
+**Returns:** `str` — the constructed authorization URL

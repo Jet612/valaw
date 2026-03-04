@@ -1,0 +1,45 @@
+---
+title: "Get Console Match"
+description: "Get full console match details by match ID"
+---
+
+## GET\_getConsoleMatch
+
+```python
+await client.GET_getConsoleMatch(matchId, region)
+```
+
+Get full console match details by match ID.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `matchId` | `str` | The match ID |
+| `region` | `str` | Region the match was played in. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+
+**Returns:** [`MatchDto`](/api-reference/objects/match-objects#matchdto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        match = await client.GET_getConsoleMatch("match-id-here", "na")
+        print(f"Map: {match.matchInfo.mapId}")
+        print(f"Duration: {match.matchInfo.gameLengthMillis / 1000 / 60:.1f} minutes")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  For PC matches, use [`GET_getMatch`](/api-reference/match/get-match) instead.
+</Note>

@@ -1,0 +1,80 @@
+---
+title: "Match history"
+description: "Retrieve and display a player's match history"
+---
+
+This example shows how to fetch a player's match history and retrieve detailed information about their recent games.
+
+To get match history you need to:
+1. Look up the account by Riot ID to get the PUUID
+2. Fetch the matchlist using the PUUID
+3. Optionally retrieve detailed match data for specific games
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        # Step 1: Get account by Riot ID
+        account = await client.GET_getByRiotId("PlayerName", "NA1")
+        print(f"Found: {account.gameName}#{account.tagLine}")
+
+        # Step 2: Get match history
+        matchlist = await client.GET_getMatchlist(account.puuid, "na")
+        print(f"Total matches: {len(matchlist.history)}")
+
+        # Step 3: Get details for recent matches
+        for entry in matchlist.history[:5]:
+            match = await client.GET_getMatch(entry.matchId, "na")
+
+            print(f"\nMatch: {entry.matchId}")
+            print(f"  Map: {match.matchInfo.mapId}")
+            print(f"  Mode: {match.matchInfo.gameMode}")
+            print(f"  Duration: {match.matchInfo.gameLengthMillis // 1000 // 60} minutes")
+
+            # Find the player's stats in this match
+            player = next((p for p in match.players if p.puuid == account.puuid), None)
+            if player and player.stats:
+                kda = f"{player.stats.kills}/{player.stats.deaths}/{player.stats.assists}"
+                print(f"  K/D/A: {kda} — Score: {player.stats.score}")
+
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Filtering by queue type
+
+The `queueId` field on each `MatchlistEntryDto` lets you filter by game mode:
+
+```python
+competitive_matches = [
+    entry for entry in matchlist.history
+    if entry.queueId == "competitive"
+]
+print(f"Competitive matches: {len(competitive_matches)}")
+```
+
+Common queue IDs: `competitive`, `unrated`, `spikerush`, `deathmatch`
+
+## Error handling
+
+```python
+try:
+    matchlist = await client.GET_getMatchlist(account.puuid, "na")
+except valaw.Exceptions.RiotAPIResponseError as e:
+    if e.status_code == 404:
+        print("Player not found")
+    else:
+        print(f"API error {e.status_code}: {e.status_message}")
+except valaw.Exceptions.InvalidRegion as e:
+    print(f"Invalid region: {e}")
+```
+
+<Tip>
+  The matchlist returns matches in reverse chronological order — most recent first.
+</Tip>

@@ -1,0 +1,124 @@
+---
+title: "Leaderboard"
+description: "Fetch and display competitive leaderboard rankings"
+---
+
+This example shows how to retrieve the competitive leaderboard for a specific act and region.
+
+To get the `actId`, use `GET_getContent` and find the active act — see the [content objects reference](/api-reference/objects/content-objects) for details.
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        leaderboard = await client.GET_getLeaderboard(
+            actId="act-id-here",
+            region="na",
+            size=10,
+            startIndex=0
+        )
+
+        print(f"Total players: {leaderboard.totalPlayers}")
+        print(f"Immortal starts at index: {leaderboard.immortalStartingIndex}")
+
+        for player in leaderboard.players:
+            name = f"{player.gameName}#{player.tagLine}" if player.gameName != "Private" else "[Private]"
+            print(f"#{player.leaderboardRank}: {name} — {player.rankedRating} RR ({player.numberOfWins} wins)")
+
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Pagination
+
+The leaderboard returns up to 200 entries per request. Use `startIndex` to paginate:
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        all_players = []
+        page_size = 200
+
+        for page in range(5):  # fetch first 1000 players
+            leaderboard = await client.GET_getLeaderboard(
+                actId="act-id-here",
+                region="na",
+                size=page_size,
+                startIndex=page * page_size
+            )
+            all_players.extend(leaderboard.players)
+
+            if len(leaderboard.players) < page_size:
+                break  # reached the end
+
+        print(f"Fetched {len(all_players)} players")
+
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Getting the act ID
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+
+    try:
+        content = await client.GET_getContent("na")
+        for act in content.acts:
+            if act.isActive and act.type == "act":
+                print(f"Current act: {act.name}")
+                print(f"Act ID: {act.id}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+## Competitive tier reference
+
+| Tier | Rank |
+|------|------|
+| 0 | Unranked |
+| 3–5 | Iron 1–3 |
+| 6–8 | Bronze 1–3 |
+| 9–11 | Silver 1–3 |
+| 12–14 | Gold 1–3 |
+| 15–17 | Platinum 1–3 |
+| 18–20 | Diamond 1–3 |
+| 21–23 | Ascendant 1–3 |
+| 24–26 | Immortal 1–3 |
+| 27 | Radiant |
+
+<Tip>
+  The `immortalStartingIndex` field tells you where Immortal+ players begin, useful if you only need top-tier entries.
+</Tip>
+
+## Error handling
+
+```python
+try:
+    leaderboard = await client.GET_getLeaderboard(actId="...", region="na", size=250)
+except ValueError as e:
+    print(f"Invalid size: {e}")  # size must be 1–200
+except valaw.Exceptions.RiotAPIResponseError as e:
+    print(f"API error {e.status_code}: {e.status_message}")
+except valaw.Exceptions.InvalidRegion as e:
+    print(f"Invalid region: {e}")
+```

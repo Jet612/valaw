@@ -1,0 +1,267 @@
+---
+title: Match Objects
+description: Data objects returned by match-related methods
+---
+
+## MatchDto
+
+Returned by `GET_getMatch` and `GET_getConsoleMatch`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `matchInfo` | `MatchInfoDto` | General match information |
+| `players` | `list[PlayerDto]` | All players in the match |
+| `coaches` | `list[CoachDto]` | Coaches (used in tournament mode) |
+| `teams` | `list[TeamDto]` | Team results |
+| `roundResults` | `list[RoundResultDto]` | Per-round data |
+
+---
+
+## MatchInfoDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `matchId` | `str` | Unique match identifier |
+| `mapId` | `str` | Map identifier |
+| `gameLengthMillis` | `int` | Match duration in milliseconds |
+| `gameStartMillis` | `int` | Unix timestamp when the match started |
+| `provisioningFlowId` | `str` | Provisioning flow identifier |
+| `isCompleted` | `bool` | Whether the match has completed |
+| `customGameName` | `str` | Custom game name (empty if not custom) |
+| `queueId` | `str` | Queue type identifier |
+| `gameMode` | `str` | Game mode |
+| `isRanked` | `bool` | Whether the match was ranked |
+| `seasonId` | `str` | Season identifier |
+
+---
+
+## MatchlistDto
+
+Returned by `GET_getMatchlist` and `GET_getConsoleMatchlist`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `history` | `list[MatchlistEntryDto]` | Match history entries |
+
+---
+
+## MatchlistEntryDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `matchId` | `str` | Unique match identifier |
+| `gameStartTimeMillis` | `int` | Unix timestamp when the match started |
+| `queueId` | `str` | Queue type (e.g., `"competitive"`, `"unrated"`) |
+
+---
+
+## RecentMatchesDto
+
+Returned by `GET_getRecent` and `GET_getConsoleRecent`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `currentTime` | `int` | Current Unix timestamp in milliseconds |
+| `matchIds` | `list[str]` | Recently completed match IDs |
+
+---
+
+## PlayerDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `gameName` | `str` | In-game name |
+| `tagLine` | `str` | Tag line |
+| `teamId` | `str` | Team (`"Red"` or `"Blue"`) |
+| `partyId` | `str` | Party identifier |
+| `characterId` | `str` | Agent identifier |
+| `stats` | `PlayerStatsDto \| None` | Overall match statistics |
+| `competitiveTier` | `int` | Competitive rank tier |
+| `isObserver` | `bool` | Whether the player was an observer |
+| `playerCard` | `str` | Player card identifier |
+| `playerTitle` | `str` | Player title identifier |
+| `accountLevel` | `int` | Account level |
+
+---
+
+## PlayerStatsDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `score` | `int` | Total score |
+| `roundsPlayed` | `int` | Rounds participated in |
+| `kills` | `int` | Total kills |
+| `deaths` | `int` | Total deaths |
+| `assists` | `int` | Total assists |
+| `playtimeMillis` | `int` | Total playtime in milliseconds |
+| `abilityCasts` | `AbilityCastsDto \| None` | Ability usage counts |
+
+---
+
+## TeamDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `teamId` | `str` | Team identifier (`"Red"` or `"Blue"`) |
+| `won` | `bool` | Whether the team won |
+| `roundsPlayed` | `int` | Rounds played |
+| `roundsWon` | `int` | Rounds won |
+| `numPoints` | `int` | Total points scored |
+
+---
+
+## CoachDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `puuid` | `str` | The coach's PUUID |
+| `teamId` | `str` | The team the coach belongs to |
+
+---
+
+## RoundResultDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `roundNum` | `int` | Round number (0-indexed) |
+| `roundResult` | `str` | Result type (e.g., `"Eliminated"`, `"Detonate"`) |
+| `roundCeremony` | `str` | Ceremony type |
+| `winningTeam` | `str` | Winning team (`"Red"` or `"Blue"`) |
+| `bombPlanter` | `str \| None` | PUUID of spike planter |
+| `bombDefuser` | `str \| None` | PUUID of spike defuser |
+| `plantRoundTime` | `int \| None` | Time of plant in milliseconds |
+| `plantSite` | `str \| None` | Spike site (`"A"`, `"B"`, or `"C"`) |
+| `defuseRoundTime` | `int \| None` | Time of defuse in milliseconds |
+| `playerStats` | `list[PlayerRoundStatsDto]` | Per-player round statistics |
+| `roundResultCode` | `str` | Round result code |
+
+---
+
+## PlayerRoundStatsDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `kills` | `list[KillDto]` | Kills by this player in the round |
+| `damage` | `list[DamageDto]` | Damage dealt to each opponent |
+| `score` | `int` | Score earned in the round |
+| `economy` | `EconomyDto` | Economic information |
+| `ability` | `AbilityDto` | Ability usage |
+
+---
+
+## AbilityCastsDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `grenadeCasts` | `int` | C ability casts |
+| `ability1Casts` | `int` | Q ability casts |
+| `ability2Casts` | `int` | E ability casts |
+| `ultimateCasts` | `int` | X (ultimate) casts |
+
+---
+
+## AbilityDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `grenadeEffects` | `str` | C ability effects |
+| `ability1Effects` | `str` | Q ability effects |
+| `ability2Effects` | `str` | E ability effects |
+| `ultimateEffects` | `str` | X ability effects |
+
+---
+
+## EconomyDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `loadoutValue` | `int` | Total loadout value |
+| `weapon` | `str` | Weapon identifier |
+| `armor` | `str` | Armor identifier |
+| `remaining` | `int` | Credits remaining after purchase |
+| `spent` | `int` | Credits spent in the round |
+
+---
+
+## KillDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `timeSinceGameStartMillis` | `int` | Time since match start |
+| `timeSinceRoundStartMillis` | `int` | Time since round start |
+| `killer` | `str` | Killer's PUUID |
+| `victim` | `str` | Victim's PUUID |
+| `victimLocation` | `LocationDto` | Victim's map coordinates |
+| `assistants` | `list[str] \| None` | PUUIDs of assistants |
+| `playerLocations` | `list[PlayerLocationsDto]` | All player positions at time of kill |
+| `finishingDamage` | `FinishingDamageDto` | Final damage details |
+
+---
+
+## DamageDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `receiver` | `str` | Receiver's PUUID |
+| `damage` | `int` | Total damage dealt |
+| `legshots` | `int` | Leg shot count |
+| `bodyshots` | `int` | Body shot count |
+| `headshots` | `int` | Headshot count |
+
+---
+
+## FinishingDamageDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `damageType` | `str` | Type of damage (`"Weapon"`, `"Ability"`, `"Bomb"`) |
+| `damageItem` | `str` | Item or ability that dealt damage |
+| `isSecondaryFireMode` | `bool` | Whether secondary fire was used |
+
+---
+
+## LocationDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `x` | `int` | X coordinate |
+| `y` | `int` | Y coordinate |
+
+---
+
+## PlayerLocationsDto
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `puuid` | `str` | The player's PUUID |
+| `viewRadians` | `float` | Direction the player is facing (radians) |
+| `location` | `LocationDto` | Map coordinates |
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        match = await client.GET_getMatch("match-id", "na")
+
+        print(f"Map: {match.matchInfo.mapId}")
+        print(f"Duration: {match.matchInfo.gameLengthMillis / 1000 / 60:.1f} min")
+
+        for player in match.players:
+            if player.stats:
+                kda = f"{player.stats.kills}/{player.stats.deaths}/{player.stats.assists}"
+                print(f"  {player.gameName}#{player.tagLine}: {kda}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

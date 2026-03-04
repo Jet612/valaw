@@ -1,0 +1,95 @@
+---
+title: Status Objects
+description: Data objects returned by the platform status method
+---
+
+## PlatformDataDto
+
+Returned by `GET_getPlatformData`.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `str` | Platform identifier |
+| `name` | `str` | Platform name |
+| `locales` | `list[str]` | Supported locales |
+| `maintenances` | `list[StatusDto]` | Current and scheduled maintenances |
+| `incidents` | `list[StatusDto]` | Active incidents |
+
+---
+
+## StatusDto
+
+Represents a maintenance or incident.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `int` | Unique identifier |
+| `maintenance_status` | `str` | Maintenance status (e.g., `"scheduled"`, `"in_progress"`, `"complete"`) |
+| `incident_severity` | `str` | Incident severity (e.g., `"info"`, `"warning"`, `"critical"`) |
+| `titles` | `list[ContentDto]` | Localized titles |
+| `updates` | `list[UpdateDto]` | Status updates |
+| `created_at` | `str` | ISO 8601 creation timestamp |
+| `updated_at` | `str` | ISO 8601 last updated timestamp |
+| `archived_at` | `str \| None` | ISO 8601 archive timestamp (`None` if still active) |
+| `platforms` | `list[str]` | Affected platforms |
+
+<Note>
+  `maintenance_status` applies to maintenance entries; `incident_severity` applies to incident entries.
+</Note>
+
+---
+
+## ContentDto
+
+Localized content for a status title or update body.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `locale` | `str` | Locale code (e.g., `"en_US"`) |
+| `content` | `str` | Localized text |
+
+---
+
+## UpdateDto
+
+An update or announcement for a maintenance or incident.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `int` | Unique identifier |
+| `author` | `str` | Author of the update |
+| `publish` | `bool` | Whether this update is published |
+| `publish_locations` | `list[str]` | Where the update is published |
+| `created_at` | `str` | ISO 8601 creation timestamp |
+| `updated_at` | `str` | ISO 8601 last updated timestamp |
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        status = await client.GET_getPlatformData("na")
+        print(f"Platform: {status.name}")
+
+        for incident in status.incidents:
+            en_title = next((t for t in incident.titles if t.locale == "en_US"), None)
+            if en_title:
+                print(f"Incident: {en_title.content}")
+                print(f"  Severity: {incident.incident_severity}")
+
+        for maintenance in status.maintenances:
+            en_title = next((t for t in maintenance.titles if t.locale == "en_US"), None)
+            if en_title:
+                print(f"Maintenance: {en_title.content}")
+                print(f"  Status: {maintenance.maintenance_status}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```

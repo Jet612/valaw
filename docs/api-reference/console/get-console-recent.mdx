@@ -1,0 +1,48 @@
+---
+title: "Get Console Recent Matches"
+description: "Get recently completed console match IDs for a queue"
+---
+
+## GET\_getConsoleRecent
+
+```python
+await client.GET_getConsoleRecent(queue, region)
+```
+
+Get recently completed console match IDs for a queue. Returns matches from the last 10 minutes for live regions, or 12 hours for the esports routing value.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `queue` | `str` | Console queue type. Valid values: `console_unrated`, `console_swiftplay`, `console_hurm`, `console_competitive`, `console_deathmatch` |
+| `region` | `str` | Region to query. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+
+**Returns:** [`RecentMatchesDto`](/api-reference/objects/match-objects#recentmatchesdto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`InvalidQueue`](/api-reference/exceptions#invalidqueue), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+<Warning>
+  NA, LATAM, and BR share a match history deployment. Results may be inconsistent due to load balancing.
+</Warning>
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        recent = await client.GET_getConsoleRecent("console_competitive", "na")
+        print(f"Recent matches: {len(recent.matchIds)}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
+
+<Note>
+  Console queues are prefixed with `console_`. For PC queues, use [`GET_getRecent`](/api-reference/match/get-recent).
+</Note>

@@ -1,0 +1,46 @@
+---
+title: "Get Recent Matches"
+description: "Get recently completed match IDs for a queue"
+---
+
+## GET\_getRecent
+
+```python
+await client.GET_getRecent(queue, region)
+```
+
+Get recently completed match IDs for a queue. Returns matches from the last 10 minutes for live regions, or 12 hours for the esports routing value.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `queue` | `str` | Queue type. Valid values: `competitive`, `unrated`, `spikerush`, `tournamentmode`, `deathmatch`, `onefa`, `ggteam`, `hurm` |
+| `region` | `str` | Region to query. Valid values: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na` |
+
+**Returns:** [`RecentMatchesDto`](/api-reference/objects/match-objects#recentmatchesdto) or `dict`
+
+**Raises:** [`InvalidRegion`](/api-reference/exceptions#invalidregion), [`InvalidQueue`](/api-reference/exceptions#invalidqueue), [`RiotAPIResponseError`](/api-reference/exceptions#riotapiresponseerror)
+
+<Info>
+  NA, LATAM, and BR share a match history deployment. Results from those regions will be combined and may be inconsistent due to load balancing.
+</Info>
+
+---
+
+## Example
+
+```python
+import valaw
+import asyncio
+
+async def main():
+    client = valaw.Client("YOUR_TOKEN", "americas")
+    try:
+        recent = await client.GET_getRecent("competitive", "na")
+        print(f"Recent competitive matches: {len(recent.matchIds)}")
+        for match_id in recent.matchIds[:3]:
+            print(f"  {match_id}")
+    finally:
+        await client.close()
+
+asyncio.run(main())
+```
