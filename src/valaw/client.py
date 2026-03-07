@@ -128,7 +128,12 @@ async def verify_content(response: aiohttp.ClientResponse):
     valid_json_types = {"application/json", "text/json"}
 
     if mime_type in valid_json_types:
-        return await response.json(content_type=None)
+        try:
+            return await response.json(content_type=None)
+        except json.JSONDecodeError as exc:
+            raise Exceptions.FailedToParseJSON(
+                f"Failed to parse JSON, content-type: {content_type or 'missing'}."
+            ) from exc
 
     raw_text = await response.text()
     try:
