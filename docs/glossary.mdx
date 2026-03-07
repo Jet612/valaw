@@ -1,0 +1,68 @@
+---
+title: Glossary
+description: Definitions for common terms used throughout the valaw documentation
+---
+
+## Cluster
+
+A cluster is a group of servers used to connect to the Riot Games API. Valid clusters: `americas`, `asia`, `esports`, `europe`.
+
+You can use any cluster to retrieve data, though using the one closest to you may be faster. Clusters are set when initializing the client and used for account-related endpoints.
+
+---
+
+## Region
+
+A region is used for game data endpoints (match history, leaderboards, etc.). Valid regions: `ap`, `br`, `esports`, `eu`, `kr`, `latam`, `na`.
+
+Always use the region associated with the account — using the wrong region returns a `404` error.
+
+---
+
+## Locale
+
+The locale controls the language of localized content returned by `GET_getContent`. Valid locales:
+
+`ar-AE`, `de-DE`, `en-GB`, `en-US`, `es-ES`, `es-MX`, `fr-FR`, `id-ID`, `it-IT`, `ja-JP`, `ko-KR`, `pl-PL`, `pt-BR`, `ru-RU`, `th-TH`, `tr-TR`, `vi-VN`, `zh-CN`, `zh-TW`
+
+<Tip>
+  Locale input is case-insensitive — `en-US`, `en-us`, and `EN-US` all work.
+</Tip>
+
+---
+
+## Riot ID
+
+The Riot ID is the display name of an account, formatted as `gameName#tagLine` (e.g. `PlayerName#NA1`).
+
+---
+
+## gameName
+
+The gameName is the part of the Riot ID to the left of the `#` (e.g. `PlayerName` in `PlayerName#NA1`).
+
+---
+
+## tagLine
+
+The tagLine is the part of the Riot ID to the right of the `#` (e.g. `NA1` in `PlayerName#NA1`).
+
+---
+
+## PUUID
+
+A PUUID (Player Universally Unique Identifier) is a player's unique ID used across Riot Games APIs. The PUUID returned by the API is an encrypted form of the actual user ID.
+
+---
+
+## Queue
+
+A queue identifies the type of match. Valid PC queues: `competitive`, `unrated`, `spikerush`, `tournamentmode`, `deathmatch`, `onefa`, `ggteam`, `hurm`.
+
+Valid console queues: `console_unrated`, `console_swiftplay`, `console_hurm`, `console_competitive`, `console_deathmatch`.
+
+---
+
+## platformType
+
+The platformType identifies which console platform to query. Valid values: `playstation`, `xbox`. Used only for console endpoints.
