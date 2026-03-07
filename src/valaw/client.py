@@ -124,7 +124,7 @@ async def verify_content(response: aiohttp.ClientResponse):
     :return: Parsed JSON response.
     """
     content_type = (response.headers.get("Content-Type") or "").strip().lower()
-    mime_type = content_type.split(";", 1)[0]
+    mime_type = content_type.split(";", 1)[0].strip()
     valid_json_types = {"application/json", "text/json"}
 
     if mime_type in valid_json_types:
@@ -192,14 +192,17 @@ class Client:
         """Make a GET request and return parsed JSON."""
         session = self._ensure_session()
         async with session.get(url, headers=headers) as resp:
-            payload = await verify_content(resp)
             if resp.status >= 400:
-                status_message = (
-                    payload.get("status", {}).get("message")
-                    if isinstance(payload, dict) else None
-                ) or str(payload)
+                try:
+                    payload = await verify_content(resp)
+                    status_message = (
+                        payload.get("status", {}).get("message")
+                        if isinstance(payload, dict) else None
+                    ) or str(payload)
+                except Exceptions.FailedToParseJSON:
+                    status_message = await resp.text()
                 raise Exceptions.RiotAPIResponseError(resp.status, status_message)
-            return payload
+            return await verify_content(resp)
 
     async def GET_getByPuuid(self, puuid: str, cluster: Optional[str] = None) -> Union[AccountDto, Dict]:
         """Get account by PUUID.
@@ -219,8 +222,6 @@ class Client:
         raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(AccountDto, raw_response)
 
     async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: Optional[str] = None) -> Union[AccountDto, Dict]:
@@ -244,8 +245,6 @@ class Client:
         raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(AccountDto, raw_response)
 
     async def GET_getByAccessToken(self, authorization: str, cluster: Optional[str] = None) -> Union[AccountDto, Dict]:
@@ -266,8 +265,6 @@ class Client:
         raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me", headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(AccountDto, raw_response)
 
     async def GET_getActiveShard(self, puuid: str, cluster: Optional[str] = None) -> Union[ActiveShardDto, Dict]:
@@ -288,8 +285,6 @@ class Client:
         raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(ActiveShardDto, raw_response)
 
     ######################
@@ -314,13 +309,11 @@ class Client:
 
         if locale and locale.lower() not in LOCALES:
             raise Exceptions.InvalidLocale(f"Invalid locale, valid locales are: {list(LOCALES.values())}.")
-        locale_query = f"?locale={LOCALES[locale.lower()]}" if locale else ""
+        locale_query = f"?locale={quote(LOCALES[locale.lower()], safe='')}" if locale else ""
 
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/content/v1/contents{locale_query}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(ContentDto, raw_response)
 
     ####################
@@ -344,8 +337,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(MatchDto, raw_response)
 
     async def GET_getMatchlist(self, puuid: str, region: str) -> Union[MatchlistDto, Dict]:
@@ -365,8 +356,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(MatchlistDto, raw_response)
 
     async def GET_getRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, Dict]:
@@ -398,8 +387,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(RecentMatchesDto, raw_response)
 
     #####################
@@ -431,8 +418,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(LeaderboardDto, raw_response)
         
     ############################
@@ -455,8 +440,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/console/v1/matches/{matchId}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(MatchDto, raw_response)
         
     async def GET_getConsoleMatchlist(self, puuid: str, region: str, platformType: str) -> Union[MatchlistDto, Dict]:
@@ -481,8 +464,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/console/v1/matchlists/by-puuid/{puuid}?platformType={platformType}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(MatchlistDto, raw_response)
         
     async def GET_getConsoleRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, Dict]:
@@ -514,8 +495,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/console/v1/recent-matches/by-queue/{queue}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(RecentMatchesDto, raw_response)
         
     #############################
@@ -552,8 +531,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/console/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}&platformType={platformType}", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(LeaderboardDto, raw_response)
 
     #####################
@@ -574,8 +551,6 @@ class Client:
         raw_response = await self._request(f"https://{region}.api.riotgames.com/val/status/v1/platform-data", self._headers)
         if self.raw_data:
             return raw_response
-        if "status" in raw_response:
-            raise Exceptions.RiotAPIResponseError(raw_response["status"]["status_code"], raw_response["status"]["message"])
         return fromdict(PlatformDataDto, raw_response)
 
     ###########
