@@ -31,7 +31,7 @@ from .ranked import (
 
 from .status import (
     UpdateDto,
-    ContentDto,
+    ContentDto as StatusContentDto,
     StatusDto,
     PlatformDataDto,
 )
@@ -40,8 +40,10 @@ from .content import (
     LocalizedNamesDto,
     ActDto,
     ContentItemDto,
-    ContentDto,
+    ContentDto as GameContentDto,
 )
+
+ContentDto = GameContentDto
 
 __all__ = [
     "AccountDto",
@@ -67,11 +69,12 @@ __all__ = [
     "PlayerDto",
     "LeaderboardDto",
     "UpdateDto",
+    "StatusContentDto",
     "ContentDto",
     "StatusDto",
     "PlatformDataDto",
     "LocalizedNamesDto",
     "ActDto",
     "ContentItemDto",
-    "ContentDto",
+    "GameContentDto",
 ]
