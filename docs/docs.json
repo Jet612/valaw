@@ -33,7 +33,8 @@
             "pages": [
               "introduction",
               "installation",
-              "quickstart"
+              "quickstart",
+              "glossary"
             ]
           },
           {
