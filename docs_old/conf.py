@@ -7,9 +7,9 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'valaw'
-copyright = '2023, Jet612'
+copyright = '2023–2026, Jet612'
 author = 'Jet612'
-release = '0.1.02'
+release = '0.1.12.dev1'
 
 # -- Path setup --------------------------------------------------------------
 import os
@@ -45,7 +45,6 @@ html_theme_options = {
     'analytics_id': 'G-ZM9GVL505C',  #  Provided by Google in your dashboard
     'analytics_anonymize_ip': False,
     'logo_only': True,
-    'display_version': True,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
     'vcs_pageview_mode': '',

@@ -1,19 +1,19 @@
 ### Imports ###
-import aiohttp
 import json
-from dataclass_wizard import fromdict
-from typing import Union, Dict, List, Optional
 from urllib.parse import quote
+
+import aiohttp
+from dataclass_wizard import fromdict
 
 from .objects import (
     AccountDto,
     ActiveShardDto,
     ContentDto,
+    LeaderboardDto,
     MatchDto,
     MatchlistDto,
+    PlatformDataDto,
     RecentMatchesDto,
-    LeaderboardDto,
-    PlatformDataDto
 )
 
 ### Constants ###
@@ -22,42 +22,67 @@ REGIONS = {"ap", "br", "esports", "eu", "kr", "latam", "na"}
 CLUSTERS = {"americas", "asia", "esports", "europe"}
 """Set of valid clusters."""
 LOCALES = {
-    'ar-ae': 'ar-AE', 'de-de': 'de-DE', 'en-gb': 'en-GB', 'en-us': 'en-US',
-    'es-es': 'es-ES', 'es-mx': 'es-MX', 'fr-fr': 'fr-FR', 'id-id': 'id-ID',
-    'it-it': 'it-IT', 'ja-jp': 'ja-JP', 'ko-kr': 'ko-KR', 'pl-pl': 'pl-PL',
-    'pt-br': 'pt-BR', 'ru-ru': 'ru-RU', 'th-th': 'th-TH', 'tr-tr': 'tr-TR',
-    'vi-vn': 'vi-VN', 'zh-cn': 'zh-CN', 'zh-tw': 'zh-TW'
+    "ar-ae": "ar-AE",
+    "de-de": "de-DE",
+    "en-gb": "en-GB",
+    "en-us": "en-US",
+    "es-es": "es-ES",
+    "es-mx": "es-MX",
+    "fr-fr": "fr-FR",
+    "id-id": "id-ID",
+    "it-it": "it-IT",
+    "ja-jp": "ja-JP",
+    "ko-kr": "ko-KR",
+    "pl-pl": "pl-PL",
+    "pt-br": "pt-BR",
+    "ru-ru": "ru-RU",
+    "th-th": "th-TH",
+    "tr-tr": "tr-TR",
+    "vi-vn": "vi-VN",
+    "zh-cn": "zh-CN",
+    "zh-tw": "zh-TW",
 }
 """Dict mapping lowercase locale to its properly-cased form for the API."""
 QUEUES = {
-    "competitive", "unrated", "spikerush", "tournamentmode",
-    "deathmatch", "onefa", "ggteam", "hurm"
+    "competitive",
+    "unrated",
+    "spikerush",
+    "tournamentmode",
+    "deathmatch",
+    "onefa",
+    "ggteam",
+    "hurm",
 }
 """Set of valid queues."""
 
 CONSOLE_QUEUES = {
-    "console_unrated", "console_swiftplay", "console_hurm", "console_competitive",
-    "console_deathmatch"
+    "console_unrated",
+    "console_swiftplay",
+    "console_hurm",
+    "console_competitive",
+    "console_deathmatch",
 }
 """Set of valid console queues."""
 
 PLATFORM_TYPES = {"playstation", "xbox"}
 """Set of valid platform types."""
 
+
 ### Custom Exceptions ###
 class Exceptions:
     class InvalidCluster(ValueError):
         """Invalid Cluster. Valid clusters are: americas, asia, esports, europe."""
-    
+
     class InvalidRegion(ValueError):
         """Invalid Region. Valid regions are: ap, br, esports, eu, kr, latam, na."""
-    
+
     class RiotAPIResponseError(Exception):
         """Riot API Response Error.
 
         More information about response errors can be found at:
         https://developer.riotgames.com/docs/portal#web-apis_response-codes
         """
+
         def __init__(self, status_code: int, status_message: str):
             self.status_code = status_code
             self.status_message = status_message
@@ -66,10 +91,10 @@ class Exceptions:
 
     class FailedToParseJSON(Exception):
         """Failed to parse JSON."""
-    
+
     class InvalidLocale(ValueError):
         """Invalid Locale. Valid locales are: ar-ae, de-de, en-gb, en-us, ..."""
-    
+
     class InvalidQueue(ValueError):
         """Invalid Queue. Valid queues are: competitive, unrated, spikerush, ..."""
 
@@ -78,6 +103,7 @@ class Exceptions:
 
     class InvalidRiotAPIKey(ValueError):
         """Invalid Riot API Key. A Riot API key is required."""
+
 
 ### Helper Functions ###
 def validate_region(region: str):
@@ -89,6 +115,7 @@ def validate_region(region: str):
     if region.lower() not in REGIONS:
         raise Exceptions.InvalidRegion(f"Invalid region, valid regions are: {REGIONS}.")
 
+
 def validate_cluster(cluster: str):
     """Validate the provided cluster.
 
@@ -97,7 +124,8 @@ def validate_cluster(cluster: str):
     """
     if cluster.lower() not in CLUSTERS:
         raise Exceptions.InvalidCluster(f"Invalid cluster, valid clusters are: {CLUSTERS}.")
-    
+
+
 def validate_platform_type(platformType: str):
     """Validate the provided platform.
 
@@ -105,8 +133,11 @@ def validate_platform_type(platformType: str):
     :raises InvalidPlatformType: If the platform type is not valid.
     """
     if platformType.lower() not in PLATFORM_TYPES:
-        raise Exceptions.InvalidPlatformType(f"Invalid platform type, valid platforms are: {PLATFORM_TYPES}.")
-    
+        raise Exceptions.InvalidPlatformType(
+            f"Invalid platform type, valid platforms are: {PLATFORM_TYPES}."
+        )
+
+
 def validate_key(key: str):
     """Validate the provided key.
 
@@ -115,6 +146,7 @@ def validate_key(key: str):
     """
     if key is None or key == "":
         raise Exceptions.InvalidRiotAPIKey("A Riot API key is required.")
+
 
 async def verify_content(response: aiohttp.ClientResponse):
     """Helper function to verify response content-type and handle the response appropriately.
@@ -155,7 +187,7 @@ class Client:
     :param raw_data: Whether or not to send raw JSON data or not. If False, Riot Games API requests will return an object. Defaults to False.
     :type raw_data: bool
     """
-    
+
     def __init__(self, token: str, cluster: str, raw_data: bool = False):
         """Initialize the client."""
         validate_cluster(cluster)
@@ -166,15 +198,15 @@ class Client:
         self.raw_data = raw_data
         self._headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                          "AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/112.0.0.0 Safari/537.36",
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/112.0.0.0 Safari/537.36",
             "Accept-Language": "en-US,en;q=0.9",
             "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
             "Origin": "https://developer.riotgames.com",
-            "X-Riot-Token": self.token
+            "X-Riot-Token": self.token,
         }
         self._timeout = aiohttp.ClientTimeout(total=30)
-        self.session: Optional[aiohttp.ClientSession] = None
+        self.session: aiohttp.ClientSession | None = None
 
     async def __aenter__(self):
         self._ensure_session()
@@ -202,14 +234,15 @@ class Client:
                     payload = await verify_content(resp)
                     status_message = (
                         payload.get("status", {}).get("message")
-                        if isinstance(payload, dict) else None
+                        if isinstance(payload, dict)
+                        else None
                     ) or str(payload)
                 except Exceptions.FailedToParseJSON:
                     status_message = await resp.text()
                 raise Exceptions.RiotAPIResponseError(resp.status, status_message)
             return await verify_content(resp)
 
-    async def GET_getByPuuid(self, puuid: str, cluster: Optional[str] = None) -> Union[AccountDto, Dict]:
+    async def GET_getByPuuid(self, puuid: str, cluster: str | None = None) -> AccountDto | dict:
         """Get account by PUUID.
 
         :param puuid: The PUUID of the account.
@@ -224,12 +257,17 @@ class Client:
         validate_cluster(cluster)
 
         puuid = quote(puuid, safe="")
-        raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}", self._headers)
+        raw_response = await self._request(
+            f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(AccountDto, raw_response)
 
-    async def GET_getByRiotId(self, gameName: str, tagLine: str, cluster: Optional[str] = None) -> Union[AccountDto, Dict]:
+    async def GET_getByRiotId(
+        self, gameName: str, tagLine: str, cluster: str | None = None
+    ) -> AccountDto | dict:
         """Get account by Riot ID.
 
         :param gameName: The game name of the account (gameName#tagLine).
@@ -247,12 +285,17 @@ class Client:
 
         gameName = quote(gameName, safe="")
         tagLine = quote(tagLine, safe="")
-        raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}", self._headers)
+        raw_response = await self._request(
+            f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(AccountDto, raw_response)
 
-    async def GET_getByAccessToken(self, authorization: str, cluster: Optional[str] = None) -> Union[AccountDto, Dict]:
+    async def GET_getByAccessToken(
+        self, authorization: str, cluster: str | None = None
+    ) -> AccountDto | dict:
         """Get account by access token.
 
         :param authorization: The access token.
@@ -267,12 +310,16 @@ class Client:
         validate_cluster(cluster)
 
         headers = {**self._headers, "Authorization": authorization}
-        raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me", headers)
+        raw_response = await self._request(
+            f"https://{cluster}.api.riotgames.com/riot/account/v1/accounts/me", headers
+        )
         if self.raw_data:
             return raw_response
         return fromdict(AccountDto, raw_response)
 
-    async def GET_getActiveShard(self, puuid: str, cluster: Optional[str] = None) -> Union[ActiveShardDto, Dict]:
+    async def GET_getActiveShard(
+        self, puuid: str, cluster: str | None = None
+    ) -> ActiveShardDto | dict:
         """Get active shard for a player.
 
         :param puuid: The PUUID of the account.
@@ -287,7 +334,10 @@ class Client:
         validate_cluster(cluster)
 
         puuid = quote(puuid, safe="")
-        raw_response = await self._request(f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}", self._headers)
+        raw_response = await self._request(
+            f"https://{cluster}.api.riotgames.com/riot/account/v1/active-shards/by-game/val/by-puuid/{puuid}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(ActiveShardDto, raw_response)
@@ -296,7 +346,7 @@ class Client:
     ### VAL-CONTENT-V1 ###
     ######################
 
-    async def GET_getContent(self, region: str, locale: Optional[str] = "") -> Union[ContentDto, Dict]:
+    async def GET_getContent(self, region: str, locale: str | None = "") -> ContentDto | dict:
         """Get content optionally filtered by locale.
 
         A locale is recommended to be used for faster response times.
@@ -313,19 +363,24 @@ class Client:
         validate_region(region)
 
         if locale and locale.lower() not in LOCALES:
-            raise Exceptions.InvalidLocale(f"Invalid locale, valid locales are: {list(LOCALES.values())}.")
+            raise Exceptions.InvalidLocale(
+                f"Invalid locale, valid locales are: {list(LOCALES.values())}."
+            )
         locale_query = f"?locale={quote(LOCALES[locale.lower()], safe='')}" if locale else ""
 
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/content/v1/contents{locale_query}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/content/v1/contents{locale_query}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(ContentDto, raw_response)
 
     ####################
     ### VAL-MATCH-V1 ###
-    #################### 
+    ####################
 
-    async def GET_getMatch(self, matchId: str, region: str) -> Union[MatchDto, Dict]:
+    async def GET_getMatch(self, matchId: str, region: str) -> MatchDto | dict:
         """Get match by id.
 
         :param matchId: The match id.
@@ -339,12 +394,14 @@ class Client:
         validate_region(region)
 
         matchId = quote(matchId, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/match/v1/matches/{matchId}", self._headers
+        )
         if self.raw_data:
             return raw_response
         return fromdict(MatchDto, raw_response)
 
-    async def GET_getMatchlist(self, puuid: str, region: str) -> Union[MatchlistDto, Dict]:
+    async def GET_getMatchlist(self, puuid: str, region: str) -> MatchlistDto | dict:
         """Get matchlist for games played by puuid.
 
         :param puuid: The PUUID of the account.
@@ -358,21 +415,24 @@ class Client:
         validate_region(region)
 
         puuid = quote(puuid, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/match/v1/matchlists/by-puuid/{puuid}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(MatchlistDto, raw_response)
 
-    async def GET_getRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, Dict]:
+    async def GET_getRecent(self, queue: str, region: str) -> RecentMatchesDto | dict:
         """Get recent matches.
 
-        Returns a list of match ids that have completed 
-        in the last 10 minutes for live regions and 12 hours 
-        for the esports routing value. NA/LATAM/BR share a 
-        match history deployment. As such, recent matches 
-        will return a combined list of matches from those 
-        three regions. Requests are load balanced so you may 
-        see some inconsistencies as matches are added/removed 
+        Returns a list of match ids that have completed
+        in the last 10 minutes for live regions and 12 hours
+        for the esports routing value. NA/LATAM/BR share a
+        match history deployment. As such, recent matches
+        will return a combined list of matches from those
+        three regions. Requests are load balanced so you may
+        see some inconsistencies as matches are added/removed
         from the list.
 
         :param queue: The queue to retrieve recent matches for.
@@ -389,7 +449,10 @@ class Client:
             raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {QUEUES}.")
 
         queue = quote(queue, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/match/v1/recent-matches/by-queue/{queue}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(RecentMatchesDto, raw_response)
@@ -398,7 +461,9 @@ class Client:
     ### VAL-RANKED-V1 ###
     #####################
 
-    async def GET_getLeaderboard(self, actId: str, region: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, Dict]:
+    async def GET_getLeaderboard(
+        self, actId: str, region: str, size: int = 200, startIndex: int = 0
+    ) -> LeaderboardDto | dict:
         """Get leaderboard for the competitive queue.
 
         :param actId: The act id.
@@ -418,18 +483,21 @@ class Client:
 
         if size > 200 or size < 1:
             raise ValueError("Invalid size, valid values: 1 to 200.")
-        
+
         actId = quote(actId, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(LeaderboardDto, raw_response)
-        
+
     ############################
     ### VAL-CONSOLE-MATCH-V1 ###
     ############################
 
-    async def GET_getConsoleMatch(self, matchId: str, region: str) -> Union[MatchDto, Dict]:
+    async def GET_getConsoleMatch(self, matchId: str, region: str) -> MatchDto | dict:
         """Get match console data.
 
         :param matchId: The match id.
@@ -442,12 +510,17 @@ class Client:
         """
         validate_region(region)
         matchId = quote(matchId, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/console/v1/matches/{matchId}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/match/console/v1/matches/{matchId}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(MatchDto, raw_response)
-        
-    async def GET_getConsoleMatchlist(self, puuid: str, region: str, platformType: str) -> Union[MatchlistDto, Dict]:
+
+    async def GET_getConsoleMatchlist(
+        self, puuid: str, region: str, platformType: str
+    ) -> MatchlistDto | dict:
         """Get matchlist for console games played by puuid.
 
         :param puuid: The PUUID of the account.
@@ -466,21 +539,24 @@ class Client:
 
         puuid = quote(puuid, safe="")
         platformType = quote(platformType, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/console/v1/matchlists/by-puuid/{puuid}?platformType={platformType}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/match/console/v1/matchlists/by-puuid/{puuid}?platformType={platformType}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(MatchlistDto, raw_response)
-        
-    async def GET_getConsoleRecent(self, queue: str, region: str) -> Union[RecentMatchesDto, Dict]:
+
+    async def GET_getConsoleRecent(self, queue: str, region: str) -> RecentMatchesDto | dict:
         """Get recent console matches.
 
-        Returns a list of match ids that have completed 
-        in the last 10 minutes for live regions and 12 hours 
-        for the esports routing value. NA/LATAM/BR share a 
-        match history deployment. As such, recent matches 
-        will return a combined list of matches from those 
-        three regions. Requests are load balanced so you may 
-        see some inconsistencies as matches are added/removed 
+        Returns a list of match ids that have completed
+        in the last 10 minutes for live regions and 12 hours
+        for the esports routing value. NA/LATAM/BR share a
+        match history deployment. As such, recent matches
+        will return a combined list of matches from those
+        three regions. Requests are load balanced so you may
+        see some inconsistencies as matches are added/removed
         from the list.
 
         :param queue: The queue to retrieve recent matches for.
@@ -497,16 +573,21 @@ class Client:
             raise Exceptions.InvalidQueue(f"Invalid queue, valid queues are: {CONSOLE_QUEUES}.")
 
         queue = quote(queue, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/match/console/v1/recent-matches/by-queue/{queue}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/match/console/v1/recent-matches/by-queue/{queue}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(RecentMatchesDto, raw_response)
-        
+
     #############################
     ### VAL-CONSOLE-RANKED-V1 ###
     #############################
 
-    async def GET_getConsoleLeaderboard(self, actId: str, region: str, platformType: str, size: int = 200, startIndex: int = 0) -> Union[LeaderboardDto, Dict]:
+    async def GET_getConsoleLeaderboard(
+        self, actId: str, region: str, platformType: str, size: int = 200, startIndex: int = 0
+    ) -> LeaderboardDto | dict:
         """Get leaderboard for the console competitive queue.
 
         :param actId: The act id.
@@ -530,10 +611,13 @@ class Client:
 
         if size > 200 or size < 1:
             raise ValueError("Invalid size, valid values: 1 to 200.")
-        
+
         actId = quote(actId, safe="")
         platformType = quote(platformType, safe="")
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/console/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}&platformType={platformType}", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/console/ranked/v1/leaderboards/by-act/{actId}?size={size}&startIndex={startIndex}&platformType={platformType}",
+            self._headers,
+        )
         if self.raw_data:
             return raw_response
         return fromdict(LeaderboardDto, raw_response)
@@ -542,7 +626,7 @@ class Client:
     ### VAL-STATUS-V1 ###
     #####################
 
-    async def GET_getPlatformData(self, region: str) -> Union[PlatformDataDto, Dict]:
+    async def GET_getPlatformData(self, region: str) -> PlatformDataDto | dict:
         """Get VALORANT status for the given platform.
 
         :param region: The region to execute against.
@@ -553,7 +637,9 @@ class Client:
         """
         validate_region(region)
 
-        raw_response = await self._request(f"https://{region}.api.riotgames.com/val/status/v1/platform-data", self._headers)
+        raw_response = await self._request(
+            f"https://{region}.api.riotgames.com/val/status/v1/platform-data", self._headers
+        )
         if self.raw_data:
             return raw_response
         return fromdict(PlatformDataDto, raw_response)
@@ -562,7 +648,16 @@ class Client:
     ### RSO ###
     ###########
 
-    def create_RSO_link(self, redirect_uri: str, client_id: str, response_type: str, scopes: List[str], login_hint: Optional[str] = None, ui_locales: Optional[List[str]] = None, state: Optional[str] = None) -> str:
+    def create_RSO_link(
+        self,
+        redirect_uri: str,
+        client_id: str,
+        response_type: str,
+        scopes: list[str],
+        login_hint: str | None = None,
+        ui_locales: list[str] | None = None,
+        state: str | None = None,
+    ) -> str:
         """Create a Riot Sign-On Link.
 
         :param redirect_uri: OAuth2 callback route.
@@ -585,7 +680,9 @@ class Client:
         scope = "+".join(quote(s, safe="") for s in scopes)
 
         login_hint_query = f"&login_hint={quote(login_hint, safe='')}" if login_hint else ""
-        ui_locales_query = f"&ui_locales={quote(' '.join(ui_locales), safe='')}" if ui_locales else ""
+        ui_locales_query = (
+            f"&ui_locales={quote(' '.join(ui_locales), safe='')}" if ui_locales else ""
+        )
         state_query = f"&state={quote(state, safe='')}" if state else ""
 
         return (

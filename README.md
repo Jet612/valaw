@@ -14,7 +14,7 @@
 - **Async-first** — built on `aiohttp` for non-blocking requests
 - **Typed responses** — returns typed objects instead of raw JSON (opt-out available)
 - **Full endpoint coverage** — PC and console match, ranked, content, account, and status endpoints
-- **Python 3.9–3.14** support
+- **Python 3.10–3.14** support
 
 ## Installation
 
