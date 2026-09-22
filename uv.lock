@@ -692,7 +692,7 @@ wheels = [
 
 [[package]]
 name = "valaw"
-version = "0.1.12.dev1"
+version = "0.1.12"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
