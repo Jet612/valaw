@@ -1,8 +1,10 @@
-import valaw
-import os
-from dotenv import load_dotenv
 import asyncio
+import os
 import sys
+
+from dotenv import load_dotenv
+
+import valaw
 
 load_dotenv()
 
@@ -117,6 +119,7 @@ async def main():
         followup_tasks = []
 
         if account_by_puuid is not None:
+
             async def safe_get_by_riot_id():
                 try:
                     game_name = getattr(account_by_puuid, "gameName", None) or ""
@@ -152,7 +155,9 @@ async def main():
 
         async def run_console_chain():
             try:
-                console_recent = await request(lambda: client.GET_getConsoleRecent("console_competitive", "na"))
+                console_recent = await request(
+                    lambda: client.GET_getConsoleRecent("console_competitive", "na")
+                )
             except Exception as e:
                 fail(f"GET_getConsoleRecent: {e}")
                 return
@@ -163,7 +168,9 @@ async def main():
                 return
 
             try:
-                console_match = await request(lambda: client.GET_getConsoleMatch(console_match_ids[0], "na"))
+                console_match = await request(
+                    lambda: client.GET_getConsoleMatch(console_match_ids[0], "na")
+                )
             except Exception as e:
                 fail(f"GET_getConsoleMatch: {e}")
                 return
@@ -181,7 +188,11 @@ async def main():
 
             async def safe_get_console_matchlist():
                 try:
-                    await request(lambda: client.GET_getConsoleMatchlist(console_player_puuid, "na", "playstation"))
+                    await request(
+                        lambda: client.GET_getConsoleMatchlist(
+                            console_player_puuid, "na", "playstation"
+                        )
+                    )
                 except Exception as e:
                     fail(f"GET_getConsoleMatchlist: {e}")
 
@@ -192,7 +203,11 @@ async def main():
 
                 async def safe_get_console_leaderboard():
                     try:
-                        await request(lambda: client.GET_getConsoleLeaderboard(console_act_id, "na", "playstation"))
+                        await request(
+                            lambda: client.GET_getConsoleLeaderboard(
+                                console_act_id, "na", "playstation"
+                            )
+                        )
                     except Exception as e:
                         fail(f"GET_getConsoleLeaderboard: {e}")
 

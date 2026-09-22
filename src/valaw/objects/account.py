@@ -1,11 +1,12 @@
 from dataclasses import dataclass
-from typing import Optional
+
 
 @dataclass
 class AccountDto:
     puuid: str
-    gameName: Optional[str] = None
-    tagLine: Optional[str] = None
+    gameName: str | None = None
+    tagLine: str | None = None
+
 
 @dataclass
 class ActiveShardDto:

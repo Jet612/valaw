@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional 
+
 
 @dataclass
 class LocalizedNamesDto:
@@ -23,39 +23,42 @@ class LocalizedNamesDto:
     zh_CN: str
     zh_TW: str
 
+
 @dataclass
 class ActDto:
     name: str
     id: str
     isActive: bool
     type: str
-    localizedNames: Optional[LocalizedNamesDto] = None
-    parentId: Optional[str] = None
+    localizedNames: LocalizedNamesDto | None = None
+    parentId: str | None = None
+
 
 @dataclass
 class ContentItemDto:
     name: str
     id: str
     assetName: str
-    localizedNames: Optional[LocalizedNamesDto] = None
-    assetPath: Optional[str] = None
+    localizedNames: LocalizedNamesDto | None = None
+    assetPath: str | None = None
+
 
 @dataclass
 class ContentDto:
     version: str
-    characters: List[ContentItemDto]
-    maps: List[ContentItemDto]
-    chromas: List[ContentItemDto]
-    skins: List[ContentItemDto]
-    skinLevels: List[ContentItemDto]
-    equips: List[ContentItemDto]
-    gameModes: List[ContentItemDto]
-    totems: List[ContentItemDto]
-    sprays: List[ContentItemDto]
-    sprayLevels: List[ContentItemDto]
-    charms: List[ContentItemDto]
-    charmLevels: List[ContentItemDto]
-    playerCards: List[ContentItemDto]
-    playerTitles: List[ContentItemDto]
-    acts: List[ActDto]
-    ceremonies: List[ContentItemDto]
+    characters: list[ContentItemDto]
+    maps: list[ContentItemDto]
+    chromas: list[ContentItemDto]
+    skins: list[ContentItemDto]
+    skinLevels: list[ContentItemDto]
+    equips: list[ContentItemDto]
+    gameModes: list[ContentItemDto]
+    totems: list[ContentItemDto]
+    sprays: list[ContentItemDto]
+    sprayLevels: list[ContentItemDto]
+    charms: list[ContentItemDto]
+    charmLevels: list[ContentItemDto]
+    playerCards: list[ContentItemDto]
+    playerTitles: list[ContentItemDto]
+    acts: list[ActDto]
+    ceremonies: list[ContentItemDto]

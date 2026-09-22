@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,13 +7,12 @@ name = "valaw"
 version = "0.1.12.dev1"
 description = "Async Python wrapper for the Official VALORANT API (Riot Games). Fast, typed, and easy to use."
 readme = "README.md"
-requires-python = ">=3.9"
-license = { text = "MIT" }
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Jet612" }]
 keywords = ["valorant", "riot-games", "api-wrapper", "python-valorant", "async", "gaming"]
 classifiers = [
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -25,8 +24,8 @@ classifiers = [
     "Topic :: Software Development",
 ]
 dependencies = [
-    "dataclass_wizard==0.39.1",
-    "aiohttp==3.13.5",
+    "aiohttp>=3.14.3,<4",
+    "dataclass-wizard>=1.0.0,<2",
 ]
 
 [project.urls]
@@ -36,7 +35,17 @@ Documentation = "https://valaw.madebyjet.dev"
 "Chat/Support" = "https://discord.gg/mVXpvunBbF"
 
 [project.optional-dependencies]
-dev = ["python-dotenv"]
+dev = [
+    "python-dotenv>=1.2.3,<2",
+    "ruff>=0.16.8,<1",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP"]

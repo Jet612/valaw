@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+
 
 @dataclass
 class MatchlistEntryDto:
@@ -7,15 +7,18 @@ class MatchlistEntryDto:
     gameStartTimeMillis: int
     queueId: str
 
+
 @dataclass
 class MatchlistDto:
     puuid: str
-    history: List[MatchlistEntryDto]
+    history: list[MatchlistEntryDto]
+
 
 @dataclass
 class RecentMatchesDto:
     currentTime: int
-    matchIds: List[str]
+    matchIds: list[str]
+
 
 @dataclass
 class AbilityDto:
@@ -23,6 +26,7 @@ class AbilityDto:
     ability1Effects: str
     ability2Effects: str
     ultimateEffects: str
+
 
 @dataclass
 class EconomyDto:
@@ -32,6 +36,7 @@ class EconomyDto:
     remaining: int
     spent: int
 
+
 @dataclass
 class DamageDto:
     receiver: str
@@ -40,22 +45,26 @@ class DamageDto:
     bodyshots: int
     headshots: int
 
+
 @dataclass
 class FinishingDamageDto:
     damageType: str
     damageItem: str
     isSecondaryFireMode: bool
 
+
 @dataclass
 class LocationDto:
     x: int
     y: int
+
 
 @dataclass
 class PlayerLocationsDto:
     puuid: str
     viewRadians: float
     location: LocationDto
+
 
 @dataclass
 class KillDto:
@@ -64,18 +73,20 @@ class KillDto:
     killer: str
     victim: str
     victimLocation: LocationDto
-    assistants: Optional[List[str]]
-    playerLocations: List[PlayerLocationsDto]
+    assistants: list[str] | None
+    playerLocations: list[PlayerLocationsDto]
     finishingDamage: FinishingDamageDto
+
 
 @dataclass
 class PlayerRoundStatsDto:
     puuid: str
-    kills: List[KillDto]
-    damage: List[DamageDto]
+    kills: list[KillDto]
+    damage: list[DamageDto]
     score: int
     economy: EconomyDto
     ability: AbilityDto
+
 
 @dataclass
 class RoundResultDto:
@@ -83,17 +94,18 @@ class RoundResultDto:
     roundResult: str
     roundCeremony: str
     winningTeam: str
-    bombPlanter: Optional[str]
-    bombDefuser: Optional[str]
-    plantRoundTime: Optional[int]
-    plantPlayerLocations: Optional[List[PlayerLocationsDto]]
-    plantLocation: Optional[LocationDto]
-    plantSite: Optional[str]
-    defuseRoundTime: Optional[int]
-    defusePlayerLocations: Optional[List[PlayerLocationsDto]]
-    defuseLocation: Optional[LocationDto]
-    playerStats: List[PlayerRoundStatsDto]
+    bombPlanter: str | None
+    bombDefuser: str | None
+    plantRoundTime: int | None
+    plantPlayerLocations: list[PlayerLocationsDto] | None
+    plantLocation: LocationDto | None
+    plantSite: str | None
+    defuseRoundTime: int | None
+    defusePlayerLocations: list[PlayerLocationsDto] | None
+    defuseLocation: LocationDto | None
+    playerStats: list[PlayerRoundStatsDto]
     roundResultCode: str
+
 
 @dataclass
 class TeamDto:
@@ -103,10 +115,12 @@ class TeamDto:
     roundsWon: int
     numPoints: int
 
+
 @dataclass
 class CoachDto:
     puuid: str
     teamId: str
+
 
 @dataclass
 class AbilityCastsDto:
@@ -114,6 +128,7 @@ class AbilityCastsDto:
     ability1Casts: int
     ability2Casts: int
     ultimateCasts: int
+
 
 @dataclass
 class PlayerStatsDto:
@@ -123,7 +138,8 @@ class PlayerStatsDto:
     deaths: int
     assists: int
     playtimeMillis: int
-    abilityCasts: Optional[AbilityCastsDto]
+    abilityCasts: AbilityCastsDto | None
+
 
 @dataclass
 class PlayerDto:
@@ -133,12 +149,13 @@ class PlayerDto:
     teamId: str
     partyId: str
     characterId: str
-    stats: Optional[PlayerStatsDto]
+    stats: PlayerStatsDto | None
     competitiveTier: int
     isObserver: bool
     playerCard: str
     playerTitle: str
     accountLevel: int
+
 
 @dataclass
 class MatchInfoDto:
@@ -154,10 +171,11 @@ class MatchInfoDto:
     isRanked: bool
     seasonId: str
 
+
 @dataclass
 class MatchDto:
-    matchInfo: MatchInfoDto	
-    players: List[PlayerDto]	
-    coaches: List[CoachDto]	
-    teams: List[TeamDto]	
-    roundResults: List[RoundResultDto]
+    matchInfo: MatchInfoDto
+    players: list[PlayerDto]
+    coaches: list[CoachDto]
+    teams: list[TeamDto]
+    roundResults: list[RoundResultDto]

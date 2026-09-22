@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+
 
 @dataclass
 class PlayerDto:
@@ -11,10 +11,11 @@ class PlayerDto:
     gameName: str = "Private"
     tagLine: str = ""
 
+
 @dataclass
 class LeaderboardDto:
     actId: str
-    players: List[PlayerDto]
+    players: list[PlayerDto]
     totalPlayers: int
     immortalStartingPage: int
     immortalStartingIndex: int
@@ -22,4 +23,4 @@ class LeaderboardDto:
     tierDetails: dict
     startIndex: int
     shard: str
-    query: Optional[str]
+    query: str | None
