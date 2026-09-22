@@ -4,6 +4,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Published GitHub release tag to retry
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -16,10 +21,23 @@ jobs:
       name: pypi
       url: https://pypi.org/p/valaw
     permissions:
+      contents: read
       id-token: write
     steps:
+      - name: Validate release tag
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+        run: |
+          published_tag="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${RELEASE_TAG}" --jq 'select(.draft == false) | .tag_name')"
+          test "${published_tag}" = "${RELEASE_TAG}"
+          echo "tag=${RELEASE_TAG}" >> "${GITHUB_OUTPUT}"
+
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.release.outputs.tag }}
 
       - name: Set up uv
         uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
